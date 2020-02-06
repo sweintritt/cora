@@ -13,10 +13,13 @@ Without a URL cora will use a default radio station.
 
 # Dependencies
 
-cora uses [libvlc](https://www.videolan.org/vlc/libvlc.html).
+cora uses [Qt Multimedia Module](https://doc.qt.io/qt-5/multimediaoverview.html).
 
 # Build
 
 The project can be build with
 
-    make cora
+    mkdir build
+    cd build
+    cmake ..
+    make
