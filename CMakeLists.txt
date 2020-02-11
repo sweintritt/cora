@@ -14,7 +14,7 @@ endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic -Wextra -Wall -Wundef -Wunused -Wshadow -ftrapv -Wunreachable-code")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic -Wextra -Wall -Wundef -Wunused -Wshadow -Wfatal-errors -Wfloat-equal -ftrapv -Wunreachable-code -Weffc++")
 
    if (CMAKE_BUILD_TYPE MATCHES "Debug")
       message(STATUS "Activating profiling and gdb options")
@@ -22,7 +22,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
    endif()
 else()
    message(WARNING, "Unsupported compiler ${CMAKE_CXX_COMPILER_ID}. No options set.")
-   # set(COMPILER_OPTIONS "${COMPILER_OPTIONS} ")
 endif()
 
 message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")

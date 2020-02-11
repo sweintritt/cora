@@ -1,23 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <QMediaPlayer>
-#include <QUrl>
-
 #include <string>
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <memory>
+
+#include "qt_media_player.hpp"
 
 const std::string DEFAULT_URL = "http://webstream.gong971.de/gong971";
 
 void play(const std::string& url) {
-    QMediaPlayer player;
-    player.setMedia(QUrl(QString::fromStdString(url)));
-    player.setVolume(50);
-    player.play();
+    std::shared_ptr<MediaPlayer> player = std::make_shared<QtMediaPlayer>();
+    player->setUrl(url);
+    player->setVolume(50);
+    player->play();
     std::cout << "Press enter to stop and quit";
     while (std::cin.get() != '\n') {}
+    player->stop();
 }
 
 int main(int argc, char* argv[]) {

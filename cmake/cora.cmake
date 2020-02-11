@@ -1,9 +1,9 @@
 set(cora_sources
-    # ${cora_source_dir}/
+    ${cora_source_dir}/qt_media_player.cpp
 )
 
 set(cora_includes
-    # ${cora_source_dir}/
+    ${cora_source_dir}
 )
 
 add_executable(cora ${cora_source_dir}/main.cpp ${cora_sources} ${cora_includes})
