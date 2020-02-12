@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(cora VERSION 0.7.0 LANGUAGES CXX)
+project(cora VERSION 0.2.0 LANGUAGES CXX)
 
 option(CORA_BUILD_TESTS "Build unit tests"       ON)
 option(CORA_INSTALL     "Build unit tests"       ON)
