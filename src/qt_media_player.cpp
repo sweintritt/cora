@@ -2,30 +2,32 @@
 
 #include <QUrl>
 
-QtMediaPlayer::QtMediaPlayer() : player() {
+QtMediaPlayer::QtMediaPlayer() : player(new QMediaPlayer) { }
 
+QtMediaPlayer::~QtMediaPlayer() {
+    player->stop();
 }
 
 void QtMediaPlayer::setUrl(const std::string& url) {
-    player.setMedia(QUrl(QString::fromStdString(url)));
+    player->setMedia(QUrl(QString::fromStdString(url)));
 }
 
 void QtMediaPlayer::play() {
-    player.play();
+    player->play();
 }
 
 void QtMediaPlayer::pause() {
-    player.pause();
+    player->pause();
 }
 
 void QtMediaPlayer::stop() {
-    player.stop();
+    player->stop();
 }
 
 void QtMediaPlayer::mute(const bool mute) {
-    player.setMuted(mute);
+    player->setMuted(mute);
 }
 
 void QtMediaPlayer::setVolume(const int level) {
-    player.setVolume(level);
+    player->setVolume(level);
 }

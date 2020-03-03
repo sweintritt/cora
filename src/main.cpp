@@ -12,7 +12,8 @@
 const std::string DEFAULT_URL = "http://webstream.gong971.de/gong971";
 
 void play(const std::string& url) {
-    std::shared_ptr<MediaPlayer> player = std::make_shared<QtMediaPlayer>();
+    //std::shared_ptr<MediaPlayer> player = MediaPlayer::getPayer();
+    auto player = std::make_shared<QtMediaPlayer>();
     player->setUrl(url);
     player->setVolume(50);
     player->play();
@@ -30,6 +31,7 @@ int main(int argc, char* argv[]) {
         url = DEFAULT_URL;
     }
 
+    // MediaPlayer::setPayer(std::make_shared<QtMediaPlayer>());
     play(url);
     return EXIT_SUCCESS;
 }

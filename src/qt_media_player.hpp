@@ -9,6 +9,8 @@ class QtMediaPlayer : public MediaPlayer {
     public:
         QtMediaPlayer();
 
+        virtual ~QtMediaPlayer();
+
         virtual void setUrl(const std::string& url) override;
 
         virtual void play() override;
@@ -22,5 +24,5 @@ class QtMediaPlayer : public MediaPlayer {
         virtual void setVolume(const int level) override;
 
     private:
-        QMediaPlayer player;
+        QMediaPlayer* player;
 };

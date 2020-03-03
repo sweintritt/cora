@@ -1,4 +1,5 @@
 set(cora_sources
+    ${cora_source_dir}/media_player.cpp
     ${cora_source_dir}/qt_media_player.cpp
 )
 
