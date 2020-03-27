@@ -11,27 +11,29 @@ set_property(CACHE CORA_SQLITE3_PROVIDER PROPERTY STRINGS "module" "package")
 macro(CoraUseSQLite3)
     if ("${CORA_SQLITE3_PROVIDER}" STREQUAL "module")
         if (NOT SQLITE3_FOUND)
-          set(SQLITE3_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sqlite)
+            set(SQLITE3_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sqlite)
+            set(SQLITE3_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/sqlite3)
             if (EXISTS "${SQLITE3_ROOT_DIR}")
                 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
                 find_package(Threads REQUIRED)
 
                 message(INFO "--- SQLITE3_ROOT_DIR:${SQLITE3_ROOT_DIR}")
                 ExternalProject_Add(project_sqlite3
-                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/sqlite3
+                    PREFIX ${SQLITE3_BINARY_DIR}
                     SOURCE_DIR ${SQLITE3_ROOT_DIR}
-                    BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/sqlite3
+                    BINARY_DIR ${SQLITE3_BINARY_DIR}
                     CONFIGURE_COMMAND ${SQLITE3_ROOT_DIR}/configure
                     BUILD_COMMAND make
                     INSTALL_COMMAND "")
 
-                ExternalProject_Get_Property(project_sqlite3 install_dir)
-                add_library(sqlite3 STATIC IMPORTED)
-                set_property(TARGET sqlite3 PROPERTY IMPORTED_LOCATION ${install_dir}/libsqlite3.la)
+                find_package(Threads REQUIRED)
+                add_library(sqlite3 STATIC ${SQLITE3_BINARY_DIR}/sqlite3.c)
+                target_include_directories(sqlite3 PUBLIC ${SQLITE3_BINARY_DIR})
+                target_link_libraries(sqlite3 ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
                 add_dependencies(sqlite3 project_sqlite3)
 
                 set(SQLITE3_FOUND TRUE)
-                set(SQLITE3_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/sqlite3)
+                set(SQLITE3_INCLUDE_DIR ${SQLITE3_BINARY_DIR})
                 set(SQLITE3_LIBRARY sqlite3)
                 message(INFO "--- SQLITE3_INCLUDE_DIR:${SQLITE3_INCLUDE_DIR}")
                 message(INFO "--- SQLITE3_LIBRARY:${SQLITE3_LIBRARY}")
