@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(cora VERSION 0.2.0 LANGUAGES CXX)
+project(cora VERSION 0.2.0 LANGUAGES C CXX)
 
 option(CORA_BUILD_TESTS "Build unit tests"       ON)
 option(CORA_INSTALL     "Build unit tests"       ON)
@@ -12,19 +12,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic -Wextra -Wall -Wundef -Wunused -Wshadow -Wfatal-errors -Wfloat-equal -ftrapv -Wunreachable-code -Weffc++")
-
-   if (CMAKE_BUILD_TYPE MATCHES "Debug")
-      message(STATUS "Activating profiling and gdb options")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -p -pg -ggdb3 -O0 --coverage")
-   endif()
-else()
-   message(WARNING, "Unsupported compiler ${CMAKE_CXX_COMPILER_ID}. No options set.")
-endif()
-
-message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")
 
 set(cora_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(cora_binary_dir ${CMAKE_CURRENT_BINARY_DIR})
