@@ -26,6 +26,13 @@ macro(CoraUseSQLite3)
                     BUILD_COMMAND make
                     INSTALL_COMMAND "")
 
+                # Otherwise cmake searches tor the source file
+                add_custom_command(
+                    OUTPUT  ${SQLITE3_BINARY_DIR}/sqlite3.c
+                    COMMAND ""
+                    DEPENDS project_sqlite3
+                )
+
                 find_package(Threads REQUIRED)
                 add_library(sqlite3 STATIC ${SQLITE3_BINARY_DIR}/sqlite3.c)
                 target_include_directories(sqlite3 PUBLIC ${SQLITE3_BINARY_DIR})
@@ -53,3 +60,34 @@ macro(CoraUseSQLite3)
        endif()
     endif()
 endmacro()
+
+macro(CoraUseProtobuf)
+    if ("${CORA_PROTOBUF_PROVIDER}" STREQUAL "module")
+        if (NOT Protobuf_FOUND)
+            set(PROTOBUF_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/protobuf)
+            set(PROTOBUF_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
+            if (EXISTS "${PROTOBUF_ROOT_DIR}")
+                message(INFO "--- PROTOBUF_ROOT_DIR:${PROTOBUF_ROOT_DIR}")
+                set(protobuf_BUILD_TESTS OFF)
+                add_subdirectory(${PROTOBUF_ROOT_DIR}/cmake ${PROTOBUF_BINARY_DIR})
+                set(PROTOBUF_FOUND TRUE)
+                set(PROTOBUF_INCLUDE_DIR ${SQLITE3_BINARY_DIR})
+                set(PROTOBUF_LIBRARY libprotobuf)
+                message(INFO "--- PROTOBUF_INCLUDE_DIR:${PROTOBUF_INCLUDE_DIR}")
+                message(INFO "--- PROTOBUF_LIBRARy:${PROTOBUF_LIBRARy}")
+            else()
+                message(WARNING "CORA_PROTOBUF_PROVIDER is \"module\" but PROTOBUF_ROOT_DIR is wrong: ${PROTOBUF_ROOT_DIR}")
+            endif()
+        endif()
+    elseif ("${CORA_PROTOBUF_PROVIDER}" STREQUAL "package")
+        if (NOT Protobuf_FOUND)
+           find_package(sqlite3)
+
+           if (NOT SQLITE3_FOUND)
+              find_package(PkgConfig REQUIRED)
+              pkg_check_modules(SQLITE3 REQUIRED sqlite3)
+           endif ()
+       endif()
+    endif()
+endmacro()
+

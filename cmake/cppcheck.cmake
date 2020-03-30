@@ -6,7 +6,7 @@ foreach(include IN LISTS includes)
     set(CPPCHECK_INCLUDE_DIRS -I ${include} ${CPPCHECK_INCLUDE_DIRS})
 endforeach()
 
-set(CPPCHECK_FLAGS --std=c++11 --verbose --suppress=missingIncludeSystem --force --enable=all --language=c)
+set(CPPCHECK_FLAGS --std=c++11 --verbose --suppress=missingIncludeSystem --force --enable=all --language=c++)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/cppcheck)
 set(CPPCHECK_LOG_FILE  "${CMAKE_CURRENT_BINARY_DIR}/cppcheck/cppcheck.log")

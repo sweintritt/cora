@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "qt_media_player.hpp"
+#include "sqlite_stations_dao.hpp"
 
 const std::string DEFAULT_URL = "http://webstream.gong971.de/gong971";
 
@@ -22,6 +23,17 @@ void play(const std::string& url) {
     player->stop();
 }
 
+void open() {
+    try {
+        auto stationsDao = std::make_shared<SqliteStationsDao>();
+        stationsDao->create("stations.sqlite");
+        stationsDao->close();
+        std::cout << "done" << std::endl;
+    } catch (const std::string& error) {
+        std::cout << "ERROR " << error << std::endl;
+    }
+}
+
 int main(int argc, char* argv[]) {
     std::string url;
 
@@ -32,7 +44,8 @@ int main(int argc, char* argv[]) {
     }
 
     // MediaPlayer::setPayer(std::make_shared<QtMediaPlayer>());
-    play(url);
+    // play(url);
+    open();
     return EXIT_SUCCESS;
 }
 

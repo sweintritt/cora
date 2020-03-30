@@ -11,14 +11,17 @@ set(cora_includes
 
 CoraUseQtMultimedia()
 CoraUseSQLite3()
+CoraUseProtobuf()
 
 include_directories(${cora_source_dir}
-    ${SQLITE3_INCLUDE_DIR})
+    ${SQLITE3_INCLUDE_DIR}
+    ${PROTOBUF_INCLUDE_DIR})
 
 set(cora_link_libraries
     Qt5::Core
     Qt5::Multimedia
-    ${SQLITE3_LIBRARY})
+    ${SQLITE3_LIBRARY}
+    ${PROTOBUF_LIBRARY})
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
