@@ -14,10 +14,7 @@ macro(CoraUseSQLite3)
             set(SQLITE3_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sqlite)
             set(SQLITE3_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/sqlite3)
             if (EXISTS "${SQLITE3_ROOT_DIR}")
-                set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-                find_package(Threads REQUIRED)
-
-                message(INFO "--- SQLITE3_ROOT_DIR:${SQLITE3_ROOT_DIR}")
+                message(STATUS "SQLITE3_ROOT_DIR:${SQLITE3_ROOT_DIR}")
                 ExternalProject_Add(project_sqlite3
                     PREFIX ${SQLITE3_BINARY_DIR}
                     SOURCE_DIR ${SQLITE3_ROOT_DIR}
@@ -26,25 +23,12 @@ macro(CoraUseSQLite3)
                     BUILD_COMMAND make
                     INSTALL_COMMAND "")
 
-                # Otherwise cmake searches tor the source file
-                add_custom_command(
-                    OUTPUT  ${SQLITE3_BINARY_DIR}/sqlite3.c
-                    COMMAND ""
-                    DEPENDS project_sqlite3
-                )
-
-                find_package(Threads REQUIRED)
-                add_library(sqlite3 STATIC ${SQLITE3_BINARY_DIR}/sqlite3.c)
-                target_include_directories(sqlite3 PUBLIC ${SQLITE3_BINARY_DIR})
-                target_link_libraries(sqlite3 ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
-                add_dependencies(sqlite3 project_sqlite3)
-
                 set(SQLITE3_FOUND TRUE)
                 set(SQLITE3_INCLUDE_DIR ${SQLITE3_BINARY_DIR})
                 set(SQLITE3_LIBRARY sqlite3)
-                message(INFO "--- SQLITE3_INCLUDE_DIR:${SQLITE3_INCLUDE_DIR}")
-                message(INFO "--- SQLITE3_LIBRARY:${SQLITE3_LIBRARY}")
-                link_directories(${CMAKE_CURRENT_BINARY_DIR}/sqlite3 ${LINK_DIRECTORIES})
+                message(STATUS "SQLITE3_INCLUDE_DIR:${SQLITE3_INCLUDE_DIR}")
+                message(STATUS "SQLITE3_LIBRARY:${SQLITE3_LIBRARY}")
+                link_directories(${CMAKE_CURRENT_BINARY_DIR}/sqlite3/.libs ${LINK_DIRECTORIES})
             else()
                 message(WARNING "CORA_SQLITE3_PROVIDER is \"module\" but SQLITE3_ROOT_DIR is wrong: ${SQLITE3_ROOT_DIR}")
             endif()
@@ -61,31 +45,41 @@ macro(CoraUseSQLite3)
     endif()
 endmacro()
 
+
+set(CORA_PROTOBUF_PROVIDER "module" CACHE STRING "Provider of protobuf library")
+set_property(CACHE CORA_PROTOBUF_PROVIDER PROPERTY STRINGS "module" "package")
+
 macro(CoraUseProtobuf)
     if ("${CORA_PROTOBUF_PROVIDER}" STREQUAL "module")
         if (NOT Protobuf_FOUND)
+            # This is called to include the find module for protobuf
+            find_package(Protobuf QUIET)
             set(PROTOBUF_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/protobuf)
             set(PROTOBUF_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
             if (EXISTS "${PROTOBUF_ROOT_DIR}")
-                message(INFO "--- PROTOBUF_ROOT_DIR:${PROTOBUF_ROOT_DIR}")
-                set(protobuf_BUILD_TESTS OFF)
+                message(STATUS "PROTOBUF_ROOT_DIR:${PROTOBUF_ROOT_DIR}")
+                set(protobuf_BUILD_TESTS OFF CACHE BOOL "")
                 add_subdirectory(${PROTOBUF_ROOT_DIR}/cmake ${PROTOBUF_BINARY_DIR})
                 set(PROTOBUF_FOUND TRUE)
-                set(PROTOBUF_INCLUDE_DIR ${SQLITE3_BINARY_DIR})
+                set(PROTOBUF_INCLUDE_DIR ${PROTOBUF_ROOT_DIR}/protobuf/src)
                 set(PROTOBUF_LIBRARY libprotobuf)
-                message(INFO "--- PROTOBUF_INCLUDE_DIR:${PROTOBUF_INCLUDE_DIR}")
-                message(INFO "--- PROTOBUF_LIBRARy:${PROTOBUF_LIBRARy}")
+                set(Protobuf_PROTOC_EXECUTABLE ${CMAKE_CURRENT_BINARY_DIR}/protobuf/protoc)
+
+                message(STATUS "Protobuf_PROTOC_EXECUTABLE:${Protobuf_PROTOC_EXECUTABLE}")
+                message(STATUS "PROTOBUF_INCLUDE_DIR:${PROTOBUF_INCLUDE_DIR}")
+                message(STATUS "PROTOBUF_LIBRARY:${PROTOBUF_LIBRARY}")
+                # TODO set protoc
             else()
                 message(WARNING "CORA_PROTOBUF_PROVIDER is \"module\" but PROTOBUF_ROOT_DIR is wrong: ${PROTOBUF_ROOT_DIR}")
             endif()
         endif()
     elseif ("${CORA_PROTOBUF_PROVIDER}" STREQUAL "package")
         if (NOT Protobuf_FOUND)
-           find_package(sqlite3)
+           find_package(Protobuf)
 
-           if (NOT SQLITE3_FOUND)
+           if (NOT Protobuf_FOUND)
               find_package(PkgConfig REQUIRED)
-              pkg_check_modules(SQLITE3 REQUIRED sqlite3)
+              pkg_check_modules(Protobuf REQUIRED protobuf)
            endif ()
        endif()
     endif()
