@@ -6,11 +6,13 @@
 
 class SqliteStationsDao : public StationsDao {
     public:
+        SqliteStationsDao();
+
         virtual ~SqliteStationsDao() override;
 
-        virtual void open(const std::string& url) override;
+        SqliteStationsDao(const SqliteStationsDao& other);
 
-        virtual void create(const std::string& url) override;
+        virtual void open(const std::string& url) override;
 
         virtual void close() override;
 
@@ -37,7 +39,19 @@ class SqliteStationsDao : public StationsDao {
     private:
         int version;
 
+        std::string file;
+
         sqlite3* db;
 
+        sqlite3_stmt* insertStationStmnt;
+
+        sqlite3_stmt* getStationStmnt;
+
         std::string getError();
+
+        void prepare(sqlite3_stmt** prepared, const std::string stmnt);
+
+        std::string serializeUrls(const std::vector<std::string>& urls);
+
+        std::vector<std::string> deserializeUrls(const std::string& urls);
 };

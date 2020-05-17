@@ -7,6 +7,10 @@
 #include <iostream>
 #include <memory>
 
+#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
+
 #include "qt_media_player.hpp"
 #include "sqlite_stations_dao.hpp"
 
@@ -26,15 +30,21 @@ void play(const std::string& url) {
 void open() {
     try {
         auto stationsDao = std::make_shared<SqliteStationsDao>();
-        stationsDao->create("stations.sqlite");
+        stationsDao->open("stations.sqlite");
         stationsDao->close();
-        std::cout << "done" << std::endl;
+    } catch (const std::exception& error) {
+        LOG(ERROR) << error.what();
     } catch (const std::string& error) {
-        std::cout << "ERROR " << error << std::endl;
+        LOG(ERROR) << error;
+    } catch (const char* error) {
+        LOG(ERROR) << error;
+    } catch (...) {
+        LOG(ERROR) << "error of unknown type";
     }
 }
 
 int main(int argc, char* argv[]) {
+    LOG(INFO) << "Starting cora";
     std::string url;
 
     if (argc > 1) {

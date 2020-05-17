@@ -10,8 +10,6 @@ class StationsDao {
 
         virtual void open(const std::string& url) = 0;
 
-        virtual void create(const std::string& url) = 0;
-
         virtual void close() = 0;
 
         virtual void save(const Station& station) = 0;
@@ -33,5 +31,4 @@ class StationsDao {
         virtual std::vector<std::string> getCountries() = 0;
 
         virtual std::vector<std::string> getLanguages() = 0;
-
 };

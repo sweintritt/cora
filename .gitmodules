@@ -7,3 +7,9 @@
 [submodule "third_party/glog"]
 	path = third_party/glog
 	url = https://github.com/google/glog
+[submodule "third_party/easyloggingpp"]
+	path = third_party/easyloggingpp
+	url = https://github.com/amrayn/easyloggingpp
+[submodule "third_party/cpputest"]
+	path = third_party/cpputest
+	url = https://github.com/cpputest/cpputest

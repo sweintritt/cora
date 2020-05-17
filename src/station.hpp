@@ -1,45 +1,45 @@
 #pragma once
 
+#include "author.hpp"
 #include <string>
 #include <vector>
 
 class Station {
     public:
         Station();
+        ~Station();
 
-        long getId() const;
+        void setIdHash(const long idHash);
+        long getIdHash();
 
-        void setId(long id);
-
-        const std::string& getName() const;
+        void setAuthor(const Author author);
+        Author getAuthor();
 
         void setName(const std::string& name);
-
-        const std::string& getDescription() const;
-
-        void setDescription(const std::string& description);
-
-        const std::string& getGenre() const;
+        const std::string& getName();
 
         void setGenre(const std::string& genre);
-
-        const std::string& getCountry() const;
+        const std::string& getGenre();
 
         void setCountry(const std::string& country);
-
-        const std::string& getLanguage() const;
+        const std::string& getCountry();
 
         void setLanguage(const std::string& language);
+        const std::string& getLanguage();
 
-        const std::vector<std::string>& getUrls() const;
+        void setDescription(const std::string& description);
+        const std::string& getDescription();
 
-        std::vector<std::string> getMutableUrls();
+        void addUrl(const std::string& url);
+        const std::vector<std::string>& getUrls();
+
     private:
-        long id;
+        long idHash; // Build from name, genre, country and language
+        Author author;
         std::string name;
-        std::string description;
         std::string genre;
         std::string country;
         std::string language;
+        std::string description;
         std::vector<std::string> urls;
 };
