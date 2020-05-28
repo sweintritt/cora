@@ -13,3 +13,6 @@
 [submodule "third_party/cpputest"]
 	path = third_party/cpputest
 	url = https://github.com/cpputest/cpputest
+[submodule "third_party/plog"]
+	path = third_party/plog
+	url = https://github.com/SergiusTheBest/plog

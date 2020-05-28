@@ -12,7 +12,7 @@ class StationsDao {
 
         virtual void close() = 0;
 
-        virtual void save(const Station& station) = 0;
+        virtual void save(Station& station) = 0;
 
         virtual Station get(const long id) = 0;
 

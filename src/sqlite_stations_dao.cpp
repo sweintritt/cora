@@ -1,19 +1,20 @@
 #include "sqlite_stations_dao.hpp"
 
 #include <stdexcept>
+#include <functional>
 
-#include "easylogging++.h"
+#include <plog/Log.h>
 
 const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS stations ( "
         "id_hash INTEGER PRIMARY KEY NOT NULL UNIQUE, "
         "author INTEGER NOT NULL, "
         "genre TEXT NOT NULL, "
-        "counrty TEXT NOT NULL, "
+        "country TEXT NOT NULL, "
         "language TEXT NOT NULL, "
         "description TEXT, "
         "urls TEXT NOT NULL) WITHOUT ROWID;";
-const std::string GET_STATION_SQL = "SELECT * FROM stations WHERE id_hash = ?";
-
+const std::string GET_STATION_SQL = "SELECT * FROM stations WHERE id_hash = ?;";
+const std::string INSERT_STATION_SQL = "INSERT INTO stations (id_hash, author, genre, country, language, description, urls) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
 SqliteStationsDao::SqliteStationsDao() : version(1), db(nullptr) {
 
@@ -29,23 +30,24 @@ SqliteStationsDao::SqliteStationsDao(const SqliteStationsDao& other) {
 
 void SqliteStationsDao::open(const std::string& url) {
     file = url;
-    DLOG(INFO) << "creating file";
+    LOG(plog::info) << "creating file";
     if (sqlite3_open_v2(file.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr) != SQLITE_OK) {
         throw "unable to open " + file + "': " + getError();
     }
 
-    DLOG(INFO) << "creating table stations";
+    LOG(plog::info) << "creating table stations";
     char* errorMessage;
     if (sqlite3_exec(db, CREATE_TABLE_STATIONS_SQL.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
         throw "unable to create table stations: " + getError();
     }
 
-    DLOG(INFO) << "preparing statements";
+    LOG(plog::info) << "preparing statements";
     prepare(&getStationStmnt, GET_STATION_SQL);
+    prepare(&insertStationStmnt, INSERT_STATION_SQL);
 }
 
 void SqliteStationsDao::close() {
-    DLOG(INFO) << "closing database " << file;
+    LOG(plog::info) << "closing database " << file;
 
     if (db != nullptr) {
         bool result = true;
@@ -58,13 +60,31 @@ void SqliteStationsDao::close() {
             throw getError();
         }
     } else {
-        DLOG(INFO) << "file already closed";
+        LOG(plog::info) << "file already closed";
     }
 }
 
-void SqliteStationsDao::save(const Station& station) {
-    throw std::runtime_error("not implemented");
+void SqliteStationsDao::save(Station& station) {
+    if (station.getIdHash() == 0) {
+        station.setIdHash(calculateHash(station));
+    }
 
+    // TODO check if an existing hash has changed
+    sqlite3_bind_int(insertStationStmnt, 1, station.getIdHash());
+    sqlite3_bind_int(insertStationStmnt, 1, station.getAuthor());
+    sqlite3_bind_text(insertStationStmnt, 1, station.getName().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 1, station.getGenre().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 1, station.getCountry().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 1, station.getLanguage().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 1, station.getDescription().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 1, serializeUrls(station.getUrls()).c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(insertStationStmnt) != SQLITE_OK) {
+        sqlite3_reset(insertStationStmnt);
+        throw "unable to store station: " + getError();
+    }
+
+    sqlite3_reset(insertStationStmnt);
 }
 
 Station SqliteStationsDao::get(const long id) {
@@ -137,7 +157,7 @@ std::string SqliteStationsDao::getError() {
 
 void SqliteStationsDao::prepare(sqlite3_stmt** prepared, const std::string stmnt) {
     if (sqlite3_prepare_v2(db, stmnt.c_str(), -1, prepared, nullptr) != SQLITE_OK) {
-        throw "unable to prepare statement: " + getError();
+        throw "unable to prepare statement '" + stmnt + "': " + getError();
     }
 }
 
@@ -149,3 +169,7 @@ std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& u
     throw std::runtime_error("not implemented");
 }
 
+long SqliteStationsDao::calculateHash(const Station& station) {
+    static std::hash<std::string> hash;
+    return hash(station.getName()) + hash(station.getGenre()) + hash(station.getLanguage()) + hash(station.getCountry());
+}

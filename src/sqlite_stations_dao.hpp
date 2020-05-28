@@ -16,7 +16,7 @@ class SqliteStationsDao : public StationsDao {
 
         virtual void close() override;
 
-        virtual void save(const Station& station) override;
+        virtual void save(Station& station) override;
 
         virtual Station get(const long id) override;
 
@@ -36,6 +36,8 @@ class SqliteStationsDao : public StationsDao {
 
         virtual std::vector<std::string> getLanguages() override;
 
+        virtual long calculateHash(const Station& station);
+
     private:
         int version;
 
@@ -54,4 +56,5 @@ class SqliteStationsDao : public StationsDao {
         std::string serializeUrls(const std::vector<std::string>& urls);
 
         std::vector<std::string> deserializeUrls(const std::string& urls);
+
 };

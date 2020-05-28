@@ -7,9 +7,8 @@
 #include <iostream>
 #include <memory>
 
-#include "easylogging++.h"
-
-INITIALIZE_EASYLOGGINGPP
+#include <plog/Log.h>
+#include <plog/Appenders/ConsoleAppender.h>
 
 #include "qt_media_player.hpp"
 #include "sqlite_stations_dao.hpp"
@@ -33,18 +32,21 @@ void open() {
         stationsDao->open("stations.sqlite");
         stationsDao->close();
     } catch (const std::exception& error) {
-        LOG(ERROR) << error.what();
+        LOG(plog::error) << error.what();
     } catch (const std::string& error) {
-        LOG(ERROR) << error;
+        LOG(plog::error) << error;
     } catch (const char* error) {
-        LOG(ERROR) << error;
+        LOG(plog::error) << error;
     } catch (...) {
-        LOG(ERROR) << "error of unknown type";
+        LOG(plog::error) << "error of unknown type";
     }
 }
 
 int main(int argc, char* argv[]) {
-    LOG(INFO) << "Starting cora";
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+    plog::init(plog::debug, &consoleAppender);
+    LOG(plog::info) << "Starting cora";
+
     std::string url;
 
     if (argc > 1) {
