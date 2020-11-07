@@ -1,6 +1,9 @@
 ToDos
 ======
 
+* Use int64_t in Station
+* get rowid after save
+* load rowid
 * Configure Easyloggging++
 * Configure CppUTest
 * Simplify

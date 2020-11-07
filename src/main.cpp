@@ -55,9 +55,9 @@ int main(int argc, char* argv[]) {
         url = DEFAULT_URL;
     }
 
-    // MediaPlayer::setPayer(std::make_shared<QtMediaPlayer>());
-    // play(url);
-    open();
+    MediaPlayer::setPayer(std::make_shared<QtMediaPlayer>());
+    play(url);
+    //open();
     return EXIT_SUCCESS;
 }
 

@@ -56,5 +56,4 @@ class SqliteStationsDao : public StationsDao {
         std::string serializeUrls(const std::vector<std::string>& urls);
 
         std::vector<std::string> deserializeUrls(const std::string& urls);
-
 };

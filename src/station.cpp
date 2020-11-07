@@ -1,7 +1,8 @@
 #include "station.hpp"
 
 Station::Station()
-    : idHash()
+    : id()
+    , idHash()
     , author(IMPORT)
     , name()
     , genre()
@@ -12,6 +13,14 @@ Station::Station()
 
 Station::~Station() {
 
+}
+
+void Station::setId(const long id) {
+    this->id = id;
+}
+
+long Station::getId() const {
+    return id;
 }
 
 void Station::setIdHash(const long idHash) {

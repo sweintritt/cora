@@ -9,6 +9,9 @@ class Station {
         Station();
         ~Station();
 
+        void setId(const long id);
+        long getId() const;
+
         void setIdHash(const long idHash);
         long getIdHash() const;
 
@@ -34,6 +37,8 @@ class Station {
         const std::vector<std::string>& getUrls() const;
 
     private:
+        // TODO int64_t
+        long id;
         long idHash; // Build from name, genre, country and language
         Author author;
         std::string name;
