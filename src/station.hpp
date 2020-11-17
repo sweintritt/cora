@@ -3,17 +3,18 @@
 #include "author.hpp"
 #include <string>
 #include <vector>
+#include <cstdint>
 
 class Station {
     public:
         Station();
         ~Station();
 
-        void setId(const long id);
-        long getId() const;
+        void setId(const int64_t id);
+        int64_t getId() const;
 
-        void setIdHash(const long idHash);
-        long getIdHash() const;
+        void setIdHash(const int64_t idHash);
+        int64_t getIdHash() const;
 
         void setAuthor(const Author author);
         Author getAuthor() const;
@@ -37,9 +38,8 @@ class Station {
         const std::vector<std::string>& getUrls() const;
 
     private:
-        // TODO int64_t
-        long id;
-        long idHash; // Build from name, genre, country and language
+        int64_t id;
+        int64_t idHash; // Build from name, genre, country and language
         Author author;
         std::string name;
         std::string genre;

@@ -14,7 +14,7 @@ class StationsDao {
 
         virtual void save(Station& station) = 0;
 
-        virtual Station get(const long id) = 0;
+        virtual Station findById(const long id) = 0;
 
         virtual Station getRandom() = 0;
 

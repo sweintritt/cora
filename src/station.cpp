@@ -15,19 +15,19 @@ Station::~Station() {
 
 }
 
-void Station::setId(const long id) {
+void Station::setId(const int64_t id) {
     this->id = id;
 }
 
-long Station::getId() const {
+int64_t Station::getId() const {
     return id;
 }
 
-void Station::setIdHash(const long idHash) {
+void Station::setIdHash(const int64_t idHash) {
     this->idHash = idHash;
 }
 
-long Station::getIdHash() const {
+int64_t Station::getIdHash() const {
     return idHash;
 }
 

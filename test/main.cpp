@@ -8,7 +8,6 @@ int main(int argc, char* argv[]) {
     try {
         static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
         plog::init(plog::debug, &consoleAppender);
-
         LOG(plog::info) << "Starting cora";
         return CommandLineTestRunner::RunAllTests(argc, argv);
     } catch (const std::exception& error) {

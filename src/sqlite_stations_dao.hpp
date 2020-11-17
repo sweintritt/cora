@@ -18,7 +18,7 @@ class SqliteStationsDao : public StationsDao {
 
         virtual void save(Station& station) override;
 
-        virtual Station get(const long id) override;
+        virtual Station findById(const long id) override;
 
         virtual Station getRandom() override;
 

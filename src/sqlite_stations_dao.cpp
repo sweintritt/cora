@@ -14,8 +14,8 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
         "country TEXT NOT NULL, "
         "language TEXT NOT NULL, "
         "description TEXT, "
-        "urls TEXT NOT NULL) WITHOUT ROWID;";
-const std::string GET_STATION_SQL = "SELECT rowid, * FROM stations WHERE id_hash = ?;";
+        "urls TEXT NOT NULL);";
+const std::string GET_STATION_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations (id_hash, author, name, genre, country, language, description, urls) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
 int logStatement(unsigned int t, void* c, void* p, void* x);
@@ -67,7 +67,7 @@ void SqliteStationsDao::close() {
         if (result) {
             db = nullptr;
         } else {
-            throw getError();
+            throw "error closing database: " + getError();
         }
     } else {
         LOG(plog::info) << "file already closed";
@@ -75,10 +75,14 @@ void SqliteStationsDao::close() {
 }
 
 void SqliteStationsDao::save(Station& station) {
+    // TODO check if the station has an id an just needs to be updated
+    // INSERT OR UPDATE
     LOG(plog::debug) << "saving station '" << station.getName() << "'";
     if (station.getIdHash() == 0) {
         station.setIdHash(calculateHash(station));
         LOG(plog::debug) << "generated id hash for '" << station.getName() << "': " << station.getIdHash();
+    } else {
+        throw "station must be updated: id:" + station.getId();
     }
 
     // TODO check if an existing hash has changed
@@ -89,26 +93,28 @@ void SqliteStationsDao::save(Station& station) {
     sqlite3_bind_text(insertStationStmnt, 5, station.getCountry().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(insertStationStmnt, 6, station.getLanguage().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(insertStationStmnt, 7, station.getDescription().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(insertStationStmnt, 8, serializeUrls(station.getUrls()).c_str(), -1, SQLITE_STATIC);
+    const std::string serializedUrls = serializeUrls(station.getUrls());
+    sqlite3_bind_text(insertStationStmnt, 8, serializedUrls.c_str(), -1, SQLITE_STATIC);
 
-    if (sqlite3_step(insertStationStmnt) != SQLITE_OK) {
+    if (sqlite3_step(insertStationStmnt) != SQLITE_DONE) {
+        const std::string error = getError();
         sqlite3_reset(insertStationStmnt);
-        throw "unable to store station: " + getError();
+        throw "unable to store station: " + error;
     }
-    // TODO get rowid
+
+    const int64_t rowid = sqlite3_last_insert_rowid(db);
+    station.setId(rowid);
     sqlite3_reset(insertStationStmnt);
 }
 
-Station SqliteStationsDao::get(const long id) {
+Station SqliteStationsDao::findById(const long id) {
     sqlite3_bind_int(getStationStmnt, 1, id);
     const int rc = sqlite3_step(getStationStmnt);
     Station station;
 
     if (rc == SQLITE_ROW) {
-        // TODO get rowid
-        const long rowid = sqlite3_column_int(getStationStmnt, 0);
-        // TODO use sqlite3_column_int64
-        const long idHash = sqlite3_column_int(getStationStmnt, 1);
+        const uint64_t rowid = sqlite3_column_int(getStationStmnt, 0);
+        const uint64_t idHash = sqlite3_column_int64(getStationStmnt, 1);
         const std::string name{(const char*) sqlite3_column_text(getStationStmnt, 2)};
         const std::string genre{(const char*) sqlite3_column_text(getStationStmnt, 3)};
         const std::string country{(const char*) sqlite3_column_text(getStationStmnt, 5)};
@@ -131,11 +137,9 @@ Station SqliteStationsDao::get(const long id) {
 
     sqlite3_reset(getStationStmnt);
     return station;
-
 }
 
 Station SqliteStationsDao::getRandom() {
-    throw std::runtime_error("getRandom not implemented");
     throw std::runtime_error("getRandom not implemented");
 }
 
@@ -186,8 +190,27 @@ std::string SqliteStationsDao::serializeUrls(const std::vector<std::string>& url
     return stream.str();
 }
 
-std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& urls) {
-    throw std::runtime_error("deserializeUrls not implemented");
+std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& value) {
+    std::vector<std::string> urls;
+
+    size_t pos = 0;
+    while (pos != std::string::npos && pos < value.size()) {
+        if (value[pos] != '{') {
+            throw "no valid serialized url string: '" + value + "'";
+        }
+
+        const size_t start = pos + 1;
+        pos = value.find("}", start);
+
+        if (pos != std::string::npos && pos < value.size()) {
+            const std::string url = value.substr(start, pos - 1);
+            urls.push_back(url);
+        }
+
+        pos++;
+    }
+
+    return urls;
 }
 
 long SqliteStationsDao::calculateHash(const Station& station) {
