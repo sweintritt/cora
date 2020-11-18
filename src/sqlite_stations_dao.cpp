@@ -15,21 +15,21 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
         "language TEXT NOT NULL, "
         "description TEXT, "
         "urls TEXT NOT NULL);";
-const std::string GET_STATION_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
-const std::string INSERT_STATION_SQL = "INSERT INTO stations (id_hash, author, name, genre, country, language, description, urls) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+const std::string FIND_STATION_BY_ID_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
+const std::string INSERT_STATION_SQL = "INSERT INTO stations "
+        "(id_hash, author, name, genre, country, language, description, urls) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+const std::string GET_ALL_IDS_SQL = "SELECT rowid FROM stations;";
 
 int logStatement(unsigned int t, void* c, void* p, void* x);
 
-SqliteStationsDao::SqliteStationsDao() : version(1), db(nullptr) {
-
+SqliteStationsDao::SqliteStationsDao() : version(1), db(nullptr),
+    insertStationStmnt(nullptr), findStationByIdStmnt(nullptr),
+    getAllIdsStmnt(nullptr) {
 }
 
 SqliteStationsDao::~SqliteStationsDao() {
     close();
-}
-
-SqliteStationsDao::SqliteStationsDao(const SqliteStationsDao& other) {
-    throw std::runtime_error{ "SqliteStationsDao cannot be copied" };
 }
 
 void SqliteStationsDao::open(const std::string& url) {
@@ -52,8 +52,9 @@ void SqliteStationsDao::open(const std::string& url) {
     }
 
     LOG(plog::debug) << "preparing statements";
-    prepare(&getStationStmnt, GET_STATION_SQL);
+    prepare(&findStationByIdStmnt, FIND_STATION_BY_ID_SQL);
     prepare(&insertStationStmnt, INSERT_STATION_SQL);
+    prepare(&getAllIdsStmnt, GET_ALL_IDS_SQL);
 }
 
 void SqliteStationsDao::close() {
@@ -61,7 +62,9 @@ void SqliteStationsDao::close() {
 
     if (db != nullptr) {
         bool result = true;
-        result &= sqlite3_finalize(getStationStmnt) == SQLITE_OK;
+        result &= sqlite3_finalize(insertStationStmnt) == SQLITE_OK;
+        result &= sqlite3_finalize(findStationByIdStmnt) == SQLITE_OK;
+        result &= sqlite3_finalize(getAllIdsStmnt) == SQLITE_OK;
         result &= sqlite3_close_v2(db) == SQLITE_OK;
 
         if (result) {
@@ -108,22 +111,24 @@ void SqliteStationsDao::save(Station& station) {
 }
 
 Station SqliteStationsDao::findById(const long id) {
-    sqlite3_bind_int(getStationStmnt, 1, id);
-    const int rc = sqlite3_step(getStationStmnt);
+    sqlite3_bind_int(findStationByIdStmnt, 1, id);
+    const int rc = sqlite3_step(findStationByIdStmnt);
     Station station;
 
     if (rc == SQLITE_ROW) {
-        const uint64_t rowid = sqlite3_column_int(getStationStmnt, 0);
-        const uint64_t idHash = sqlite3_column_int64(getStationStmnt, 1);
-        const std::string name{(const char*) sqlite3_column_text(getStationStmnt, 2)};
-        const std::string genre{(const char*) sqlite3_column_text(getStationStmnt, 3)};
-        const std::string country{(const char*) sqlite3_column_text(getStationStmnt, 5)};
-        const std::string language{(const char*) sqlite3_column_text(getStationStmnt, 6)};
-        const std::string description{(const char*) sqlite3_column_text(getStationStmnt, 7)};
-        const std::string urls{(const char*) sqlite3_column_text(getStationStmnt, 8)};
+        const uint64_t rowid = sqlite3_column_int64(findStationByIdStmnt, 0);
+        const uint64_t idHash = sqlite3_column_int64(findStationByIdStmnt, 1);
+        const std::string name{(const char*) sqlite3_column_text(findStationByIdStmnt, 2)};
+        const Author author = (Author) sqlite3_column_int(findStationByIdStmnt, 3);
+        const std::string genre{(const char*) sqlite3_column_text(findStationByIdStmnt, 4)};
+        const std::string country{(const char*) sqlite3_column_text(findStationByIdStmnt, 5)};
+        const std::string language{(const char*) sqlite3_column_text(findStationByIdStmnt, 6)};
+        const std::string description{(const char*) sqlite3_column_text(findStationByIdStmnt, 7)};
+        const std::string urls{(const char*) sqlite3_column_text(findStationByIdStmnt, 8)};
         station.setId(rowid);
         station.setIdHash(idHash);
         station.setName(name);
+        station.setAuthor(author);
         station.setGenre(genre);
         station.setCountry(country);
         station.setLanguage(language);
@@ -135,7 +140,7 @@ Station SqliteStationsDao::findById(const long id) {
         throw "unable to get station " + std::to_string(id) + ": " + getError();
     }
 
-    sqlite3_reset(getStationStmnt);
+    sqlite3_reset(findStationByIdStmnt);
     return station;
 }
 
@@ -169,6 +174,23 @@ std::vector<std::string> SqliteStationsDao::getCountries() {
 
 std::vector<std::string> SqliteStationsDao::getLanguages() {
     throw std::runtime_error("ngetLanguages ot implemented");
+}
+
+std::vector<long> SqliteStationsDao::getAllIds() {
+    int rc = sqlite3_step(getAllIdsStmnt);
+    std::vector<long> ids;
+
+    while (rc == SQLITE_ROW) {
+        ids.push_back(sqlite3_column_int64(getAllIdsStmnt, 0));
+        rc = sqlite3_step(getAllIdsStmnt);
+    }
+
+    if (rc == SQLITE_ERROR) {
+        throw "error while loading ids: " + getError();
+    }
+
+    sqlite3_reset(getAllIdsStmnt);
+    return ids;
 }
 
 std::string SqliteStationsDao::getError() {

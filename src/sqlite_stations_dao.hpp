@@ -10,8 +10,6 @@ class SqliteStationsDao : public StationsDao {
 
         virtual ~SqliteStationsDao() override;
 
-        SqliteStationsDao(const SqliteStationsDao& other);
-
         virtual void open(const std::string& url) override;
 
         virtual void close() override;
@@ -36,6 +34,8 @@ class SqliteStationsDao : public StationsDao {
 
         virtual std::vector<std::string> getLanguages() override;
 
+        virtual std::vector<long> getAllIds() override;
+
         virtual long calculateHash(const Station& station);
 
     private:
@@ -47,7 +47,9 @@ class SqliteStationsDao : public StationsDao {
 
         sqlite3_stmt* insertStationStmnt;
 
-        sqlite3_stmt* getStationStmnt;
+        sqlite3_stmt* findStationByIdStmnt;
+
+        sqlite3_stmt* getAllIdsStmnt;
 
         std::string getError();
 

@@ -8,6 +8,9 @@ TEST_GROUP(SqliteStationsDaoTest) {
 TEST(SqliteStationsDaoTest, SaveAndGet) {
     SqliteStationsDao dao;
     dao.open(":memory:");
+
+    CHECK_EQUAL(0, dao.getAllIds().size());
+
     Station expected;
     expected.setIdHash(0);
     expected.setAuthor(USER);
@@ -18,7 +21,8 @@ TEST(SqliteStationsDaoTest, SaveAndGet) {
     expected.setDescription("cool station");
     expected.addUrl("http://somehost.co.uk");
     dao.save(expected);
-    
+    CHECK_EQUAL(1, dao.getAllIds().size());
+
     const int64_t id = expected.getId();
     const Station actual = dao.findById(id);
     CHECK_EQUAL(expected.getIdHash(), actual.getIdHash());

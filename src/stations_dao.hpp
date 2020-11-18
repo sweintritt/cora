@@ -31,4 +31,6 @@ class StationsDao {
         virtual std::vector<std::string> getCountries() = 0;
 
         virtual std::vector<std::string> getLanguages() = 0;
+
+        virtual std::vector<long> getAllIds() = 0;
 };
