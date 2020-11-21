@@ -6,11 +6,11 @@ std::shared_ptr<MediaPlayer> MediaPlayer::PLAYER = nullptr;
 
 MediaPlayer::~MediaPlayer() { }
 
-std::shared_ptr<MediaPlayer> MediaPlayer::getPayer() {
+std::shared_ptr<MediaPlayer> MediaPlayer::getPlayer() {
     return MediaPlayer::PLAYER;
 }
 
-void MediaPlayer::setPayer(const std::shared_ptr<MediaPlayer> player) {
+void MediaPlayer::setPlayer(const std::shared_ptr<MediaPlayer> player) {
     if (PLAYER != nullptr) {
         throw std::runtime_error("MediaPlayer can only be set once");
     }

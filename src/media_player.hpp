@@ -20,9 +20,9 @@ class MediaPlayer {
 
         virtual void setVolume(const int level) = 0;
 
-        static std::shared_ptr<MediaPlayer> getPayer();
+        static std::shared_ptr<MediaPlayer> getPlayer();
 
-        static void setPayer(const std::shared_ptr<MediaPlayer>);
+        static void setPlayer(const std::shared_ptr<MediaPlayer>);
 
     private:
         static std::shared_ptr<MediaPlayer> PLAYER;

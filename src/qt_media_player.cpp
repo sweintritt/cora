@@ -5,7 +5,7 @@
 QtMediaPlayer::QtMediaPlayer() : player(new QMediaPlayer) { }
 
 QtMediaPlayer::~QtMediaPlayer() {
-    player->stop();
+    
 }
 
 void QtMediaPlayer::setUrl(const std::string& url) {
