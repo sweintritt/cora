@@ -16,9 +16,9 @@ class SqliteStationsDao : public StationsDao {
 
         virtual void save(Station& station) override;
 
-        virtual Station findById(const long id) override;
+        virtual std::shared_ptr<Station> findById(const long id) override;
 
-        virtual Station getRandom() override;
+        virtual std::shared_ptr<Station> getRandom() override;
 
         virtual int getVersion() override;
 

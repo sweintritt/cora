@@ -21,15 +21,32 @@ std::shared_ptr<MediaPlayer> mediaPlayer;
 
 void play(const long id) {
     const auto station = stationsDao->findById(id);
-    LOG(plog::info) << "playing " << station.getName();
-    LOG(plog::debug) << "url: " << station.getUrls()[0];
-    mediaPlayer->setUrl(station.getUrls()[0]);
-    mediaPlayer->setVolume(50);
-    mediaPlayer->play();
+    if (station != nullptr) {
+        LOG(plog::info) << "playing " << station->getName();
+        LOG(plog::debug) << "url: " << station->getUrls()[0];
+        mediaPlayer->setUrl(station->getUrls()[0]);
+        mediaPlayer->setVolume(50);
+        mediaPlayer->play();
+    } else {
+        LOG(plog::warning) << "no station found for id:" << id;
+    }
 }
 
 void stop() {
     mediaPlayer->stop();
+}
+
+void list() {
+    const auto ids = stationsDao->getAllIds();
+
+    for (const auto& id : ids) {
+        const auto station = stationsDao->findById(id);
+        if (station != nullptr) {
+            LOG(plog::info) << std::to_string(station->getId()) << " - " << station->getName() << " - " << station->getDescription();
+        } else {
+            LOG(plog::warning) << "no station found for id:" << id;
+        }
+    }
 }
 
 void addStations() {
@@ -62,6 +79,8 @@ int run () {
                 play(1);
             } else if (input.compare("stop") == 0) {
                 stop();
+            } else if (input.compare("list") == 0) {
+                list();
             }
         } catch (const std::exception& error) {
             LOG(plog::error) << error.what();

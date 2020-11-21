@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 #include "station.hpp"
 
@@ -14,9 +15,9 @@ class StationsDao {
 
         virtual void save(Station& station) = 0;
 
-        virtual Station findById(const long id) = 0;
+        virtual std::shared_ptr<Station> findById(const long id) = 0;
 
-        virtual Station getRandom() = 0;
+        virtual std::shared_ptr<Station> getRandom() = 0;
 
         virtual int getVersion() = 0;
 

@@ -24,17 +24,17 @@ TEST(SqliteStationsDaoTest, SaveAndGet) {
     CHECK_EQUAL(1, dao.getAllIds().size());
 
     const int64_t id = expected.getId();
-    const Station actual = dao.findById(id);
-    CHECK_EQUAL(expected.getIdHash(), actual.getIdHash());
-    CHECK_EQUAL(expected.getAuthor(), actual.getAuthor());
-    CHECK_EQUAL(expected.getName(), actual.getName());
-    CHECK_EQUAL(expected.getGenre(), actual.getGenre());
-    CHECK_EQUAL(expected.getLanguage(), actual.getLanguage());
-    CHECK_EQUAL(expected.getCountry(), actual.getCountry());
-    CHECK_EQUAL(expected.getDescription(), actual.getDescription());
-    CHECK_EQUAL(expected.getUrls().size(), actual.getUrls().size());
-    for (int i = 0; i < actual.getUrls().size(); ++i) {
-        CHECK_EQUAL(expected.getUrls()[i], actual.getUrls()[i]);
+    const std::shared_ptr<Station> actual = dao.findById(id);
+    CHECK_EQUAL(expected.getIdHash(), actual->getIdHash());
+    CHECK_EQUAL(expected.getAuthor(), actual->getAuthor());
+    CHECK_EQUAL(expected.getName(), actual->getName());
+    CHECK_EQUAL(expected.getGenre(), actual->getGenre());
+    CHECK_EQUAL(expected.getLanguage(), actual->getLanguage());
+    CHECK_EQUAL(expected.getCountry(), actual->getCountry());
+    CHECK_EQUAL(expected.getDescription(), actual->getDescription());
+    CHECK_EQUAL(expected.getUrls().size(), actual->getUrls().size());
+    for (int i = 0; i < actual->getUrls().size(); ++i) {
+        CHECK_EQUAL(expected.getUrls()[i], actual->getUrls()[i]);
     }
 
     dao.close();

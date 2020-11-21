@@ -110,10 +110,10 @@ void SqliteStationsDao::save(Station& station) {
     sqlite3_reset(insertStationStmnt);
 }
 
-Station SqliteStationsDao::findById(const long id) {
+std::shared_ptr<Station> SqliteStationsDao::findById(const long id) {
     sqlite3_bind_int(findStationByIdStmnt, 1, id);
     const int rc = sqlite3_step(findStationByIdStmnt);
-    Station station;
+    std::shared_ptr<Station> station = nullptr;
 
     if (rc == SQLITE_ROW) {
         const uint64_t rowid = sqlite3_column_int64(findStationByIdStmnt, 0);
@@ -125,16 +125,17 @@ Station SqliteStationsDao::findById(const long id) {
         const std::string language{(const char*) sqlite3_column_text(findStationByIdStmnt, 6)};
         const std::string description{(const char*) sqlite3_column_text(findStationByIdStmnt, 7)};
         const std::string urls{(const char*) sqlite3_column_text(findStationByIdStmnt, 8)};
-        station.setId(rowid);
-        station.setIdHash(idHash);
-        station.setName(name);
-        station.setAuthor(author);
-        station.setGenre(genre);
-        station.setCountry(country);
-        station.setLanguage(language);
-        station.setDescription(description);
+        station = std::make_shared<Station>();
+        station->setId(rowid);
+        station->setIdHash(idHash);
+        station->setName(name);
+        station->setAuthor(author);
+        station->setGenre(genre);
+        station->setCountry(country);
+        station->setLanguage(language);
+        station->setDescription(description);
         for (auto& url : deserializeUrls(urls)) {
-           station.addUrl(url);
+           station->addUrl(url);
         }
     } else if (rc == SQLITE_ERROR) {
         throw "unable to get station " + std::to_string(id) + ": " + getError();
@@ -144,7 +145,7 @@ Station SqliteStationsDao::findById(const long id) {
     return station;
 }
 
-Station SqliteStationsDao::getRandom() {
+std::shared_ptr<Station> SqliteStationsDao::getRandom() {
     throw std::runtime_error("getRandom not implemented");
 }
 
