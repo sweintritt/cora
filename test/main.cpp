@@ -3,6 +3,7 @@
 #include <plog/Appenders/ConsoleAppender.h>
 
 IMPORT_TEST_GROUP(SqliteStationsDaoTest);
+IMPORT_TEST_GROUP(UtilsTest);
 
 int main(int argc, char* argv[]) {
     try {

@@ -3,6 +3,7 @@ set(cora_sources
     ${cora_source_dir}/qt_media_player.cpp
     ${cora_source_dir}/station.cpp
     ${cora_source_dir}/sqlite_stations_dao.cpp
+    ${cora_source_dir}/utils.cpp
 )
 
 CoraUseQtMultimedia()
@@ -49,7 +50,8 @@ if(CORA_BUILD_TESTS)
       ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include)
 
     set(cora_test_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/sqlite_stations_dao_test.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/sqlite_stations_dao_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp)
 
    add_executable(cora_test ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp ${cora_sources} ${cora_test_sources})
    target_link_libraries(cora_test ${cora_link_libraries} ${CPPUTEST_LIBRARY})

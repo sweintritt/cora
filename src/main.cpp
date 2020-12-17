@@ -12,6 +12,7 @@
 
 #include "qt_media_player.hpp"
 #include "sqlite_stations_dao.hpp"
+#include "utils.hpp"
 
 // const std::string DB_FILE = "~/.cora.sqlite";
 const std::string DB_FILE = ":memory:";
@@ -19,7 +20,13 @@ const std::string DB_FILE = ":memory:";
 std::shared_ptr<StationsDao> stationsDao;
 std::shared_ptr<MediaPlayer> mediaPlayer;
 
-void play(const long id) {
+void play(const std::vector<std::string>& args) {
+    if (args.size() < 2) {
+        LOG(plog::error) << "no id given";
+        return;
+    }
+
+    const long id = std::stol(args[1]);
     const auto station = stationsDao->findById(id);
     if (station != nullptr) {
         LOG(plog::info) << "playing " << station->getName();
@@ -59,6 +66,26 @@ void addStations() {
     radioGong.setDescription("Der Rocksender");
     radioGong.addUrl("http://webstream.gong971.de/gong971");
     stationsDao->save(radioGong);
+
+    Station cinemix;
+    cinemix.setName("Cinemix");
+    cinemix.setAuthor(Author::USER);
+    cinemix.setGenre("Soundtracks");
+    cinemix.setLanguage("English");
+    cinemix.setCountry("");
+    cinemix.setDescription("The Spirit of Soundtracks");
+    cinemix.addUrl("https://streamingv2.shoutcast.com/CINEMIX");
+    stationsDao->save(cinemix);
+
+    Station bigRalternative;
+    bigRalternative.setName("Big R Radio - 90s Alternative Rock");
+    bigRalternative.setAuthor(Author::USER);
+    bigRalternative.setGenre("Alternative Rock");
+    bigRalternative.setLanguage("English");
+    bigRalternative.setCountry("United States of America");
+    bigRalternative.setDescription("The Spirit of Soundtracks");
+    bigRalternative.addUrl("http://bigrradio.cdnstream1.com/5187_128");
+    stationsDao->save(bigRalternative);
 }
 
 int run () {
@@ -72,24 +99,31 @@ int run () {
     std::string input{""};
     while (input.compare("quit")) {
         std::cout << "cora> ";
-        std::cin >> input;
+        std::getline(std::cin, input);
+        LOG(plog::debug) << "input: '" << input << "'";
 
-        try {
-            if (input.compare("play") == 0) {
-                play(1);
-            } else if (input.compare("stop") == 0) {
-                stop();
-            } else if (input.compare("list") == 0) {
-                list();
+        if (!input.empty()) {
+            const std::vector<std::string> args = split(input);
+            const std::string cmd = args[0];
+            LOG(plog::debug) << "args.size(): " << args.size();
+
+            try {
+                if (cmd.compare("play") == 0) {
+                    play(args);
+                } else if (cmd.compare("stop") == 0) {
+                    stop();
+                } else if (cmd.compare("list") == 0) {
+                    list();
+                }
+            } catch (const std::exception& error) {
+                LOG(plog::error) << error.what();
+            } catch (const std::string& error) {
+                LOG(plog::error) << error;
+            } catch (const char* error) {
+                LOG(plog::error) << error;
+            } catch (...) {
+                LOG(plog::error) << "error of unknown type";
             }
-        } catch (const std::exception& error) {
-            LOG(plog::error) << error.what();
-        } catch (const std::string& error) {
-            LOG(plog::error) << error;
-        } catch (const char* error) {
-            LOG(plog::error) << error;
-        } catch (...) {
-            LOG(plog::error) << "error of unknown type";
         }
     }
 
