@@ -1,89 +1,87 @@
 #include "station.hpp"
 
 Station::Station()
-    : id()
-    , idHash()
-    , author(IMPORT)
-    , name()
-    , genre()
-    , country()
-    , language()
-    , description()
-    , urls() { }
+    : m_id()
+    , m_idHash()
+    , m_author(IMPORT)
+    , m_name()
+    , m_genre()
+    , m_country()
+    , m_language()
+    , m_description()
+    , m_urls() { }
 
-Station::~Station() {
-
-}
+Station::~Station() { }
 
 void Station::setId(const int64_t id) {
-    this->id = id;
+    m_id = id;
 }
 
 int64_t Station::getId() const {
-    return id;
+    return m_id;
 }
 
 void Station::setIdHash(const int64_t idHash) {
-    this->idHash = idHash;
+    m_idHash = idHash;
 }
 
 int64_t Station::getIdHash() const {
-    return idHash;
+    return m_idHash;
 }
 
 void Station::setAuthor(const Author author) {
-    this->author = author;
+    m_author = author;
 }
 
 Author Station::getAuthor() const {
-    return author;
+    return m_author;
 }
 
 void Station::setName(const std::string& name) {
-    this->name = name;
+    m_name = name;
 }
 
 const std::string& Station::getName() const {
-    return name;
+    return m_name;
 }
 
 void Station::setGenre(const std::string& genre) {
-    this->genre = genre;
+    m_genre = genre;
 }
 
 const std::string& Station::getGenre() const {
-    return genre;
+    return m_genre;
 }
 
 void Station::setCountry(const std::string& country) {
-    this->country = country;
+    m_country = country;
 }
 
 const std::string& Station::getCountry() const {
-    return country;
+    return m_country;
 }
 
 void Station::setLanguage(const std::string& language) {
-    this->language = language;
+    m_language = language;
 }
 
 const std::string& Station::getLanguage() const {
-    return language;
+    return m_language;
 }
 
 void Station::setDescription(const std::string& description) {
-    this->description = description;
+    m_description = description;
 }
 
 const std::string& Station::getDescription() const {
-    return description;
+    return m_description;
 }
 
 
 void Station::addUrl(const std::string& url) {
-    this->urls.push_back(url);
+    m_urls.push_back(url);
 }
 
 const std::vector<std::string>& Station::getUrls() const {
-    return urls;
+    return m_urls;
 }

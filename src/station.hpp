@@ -38,13 +38,13 @@ class Station {
         const std::vector<std::string>& getUrls() const;
 
     private:
-        int64_t id;
-        int64_t idHash; // Build from name, genre, country and language
-        Author author;
-        std::string name;
-        std::string genre;
-        std::string country;
-        std::string language;
-        std::string description;
-        std::vector<std::string> urls;
+        int64_t m_id;
+        int64_t m_idHash; // Build from name, genre, country and language
+        Author m_author;
+        std::string m_name;
+        std::string m_genre;
+        std::string m_country;
+        std::string m_language;
+        std::string m_description;
+        std::vector<std::string> m_urls;
 };

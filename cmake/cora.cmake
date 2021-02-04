@@ -1,4 +1,7 @@
 set(cora_sources
+    ${cora_source_dir}/commands/command.cpp
+    ${cora_source_dir}/commands/command_interpreter.cpp
+    ${cora_source_dir}/commands/list_command.cpp
     ${cora_source_dir}/media_player.cpp
     ${cora_source_dir}/qt_media_player.cpp
     ${cora_source_dir}/station.cpp
@@ -23,10 +26,9 @@ set(cora_link_libraries
     ${CMAKE_THREAD_LIBS_INIT})
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic -Wextra -Wall -Wundef -Wunused")
-   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Wfatal-errors -Wfloat-equal")
-   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftrapv -Wunreachable-code -Weffc++ -std=c++11")
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic -Wshadow -Wextra -Wall -Weffc++ -std=c++11")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic -Wextra -Wall -Wundef -Wunused")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Wfatal-errors -Wfloat-equal")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftrapv -Wunreachable-code -Weffc++ -std=c++11")
    message(STATUS "compiler flags: ${CMAKE_CXX_FLAGS}")
 
    if (CMAKE_BUILD_TYPE MATCHES "Debug")

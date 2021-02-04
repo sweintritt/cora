@@ -10,6 +10,7 @@
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
+#include "commands/command_interpreter.hpp"
 #include "qt_media_player.hpp"
 #include "sqlite_stations_dao.hpp"
 #include "utils.hpp"
@@ -17,6 +18,7 @@
 // const std::string DB_FILE = "~/.cora.sqlite";
 const std::string DB_FILE = ":memory:";
 
+CommandInterpreter commaneInterpreter;
 std::shared_ptr<StationsDao> stationsDao;
 std::shared_ptr<MediaPlayer> mediaPlayer;
 
@@ -95,7 +97,8 @@ int run () {
     stationsDao = std::make_shared<SqliteStationsDao>();
     stationsDao->open(DB_FILE);
     addStations();
-    
+    LOG(plog::debug) << "Initializing command interpreter";
+
     std::string input{""};
     while (input.compare("quit")) {
         std::cout << "cora> ";
