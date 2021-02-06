@@ -9,12 +9,7 @@ set(cora_sources
     ${cora_source_dir}/commands/list_command.cpp
     ${cora_source_dir}/commands/play_command.cpp
     ${cora_source_dir}/commands/stop_command.cpp
-    ${cora_source_dir}/logging/console_appender.cpp
-    ${cora_source_dir}/logging/date.cpp
-    ${cora_source_dir}/logging/file_appender.cpp
-    ${cora_source_dir}/logging/log_entry.cpp
-    ${cora_source_dir}/logging/logger.cpp
-
+    ${cora_source_dir}/logging/message_only_formatter.cpp
 )
 
 CoraUseQtMultimedia()

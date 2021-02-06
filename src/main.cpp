@@ -10,13 +10,14 @@
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
+#include "qt_media_player.hpp"
+#include "sqlite_stations_dao.hpp"
+#include "utils.hpp"
 #include "commands/command_interpreter.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
 #include "commands/stop_command.hpp"
-#include "qt_media_player.hpp"
-#include "sqlite_stations_dao.hpp"
-#include "utils.hpp"
+#include "logging/message_only_formatter.hpp"
 
 // const std::string DB_FILE = "~/.cora.sqlite";
 const std::string DB_FILE = ":memory:";
@@ -103,8 +104,14 @@ int run () {
 }
 
 int main(int argc, char* argv[]) {
-    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-    plog::init(plog::debug, &consoleAppender);
+    if (argc > 1 && std::string{"-d"}.compare(argv[1]) == 0) {
+        static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+        plog::init(plog::debug, &consoleAppender);
+    } else {
+        static plog::ConsoleAppender<MessageOnlyFormatter> consoleAppender;
+        plog::init(plog::info, &consoleAppender);
+    }
+
     LOG(plog::info) << "Starting cora";
     try {
         return run();
