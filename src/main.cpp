@@ -31,42 +31,6 @@ void setupCli(const std::shared_ptr<StationsDao> stationsDao, const std::shared_
     commaneInterpreter.add(std::unique_ptr<Command>(new StopCommand(stationsDao, mediaPlayer)));
 }
 
-void play(const std::vector<std::string>& args) {
-    if (args.size() < 2) {
-        LOG(plog::error) << "no id given";
-        return;
-    }
-
-    const long id = std::stol(args[1]);
-    const auto station = stationsDao->findById(id);
-    if (station != nullptr) {
-        LOG(plog::info) << "playing " << station->getName();
-        LOG(plog::debug) << "url: " << station->getUrls()[0];
-        mediaPlayer->setUrl(station->getUrls()[0]);
-        mediaPlayer->setVolume(50);
-        mediaPlayer->play();
-    } else {
-        LOG(plog::warning) << "no station found for id:" << id;
-    }
-}
-
-void stop() {
-    mediaPlayer->stop();
-}
-
-void list() {
-    const auto ids = stationsDao->getAllIds();
-
-    for (const auto& id : ids) {
-        const auto station = stationsDao->findById(id);
-        if (station != nullptr) {
-            LOG(plog::info) << std::to_string(station->getId()) << " - " << station->getName() << " - " << station->getDescription();
-        } else {
-            LOG(plog::warning) << "no station found for id:" << id;
-        }
-    }
-}
-
 void addStations() {
     Station radioGong;
     radioGong.setName("Radio Gong");
@@ -122,14 +86,6 @@ int run () {
 
             try {
                 commaneInterpreter.execute(args);
-                /*
-                if (cmd.compare("play") == 0) {
-                    play(args);
-                } else if (cmd.compare("stop") == 0) {
-                    stop();
-                } else if (cmd.compare("list") == 0) {
-                    list();
-                }*/
             } catch (const std::exception& error) {
                 LOG(plog::error) << error.what();
             } catch (const std::string& error) {
