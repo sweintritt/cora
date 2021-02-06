@@ -11,6 +11,9 @@
 #include <plog/Appenders/ConsoleAppender.h>
 
 #include "commands/command_interpreter.hpp"
+#include "commands/list_command.hpp"
+#include "commands/play_command.hpp"
+#include "commands/stop_command.hpp"
 #include "qt_media_player.hpp"
 #include "sqlite_stations_dao.hpp"
 #include "utils.hpp"
@@ -21,6 +24,12 @@ const std::string DB_FILE = ":memory:";
 CommandInterpreter commaneInterpreter;
 std::shared_ptr<StationsDao> stationsDao;
 std::shared_ptr<MediaPlayer> mediaPlayer;
+
+void setupCli(const std::shared_ptr<StationsDao> stationsDao, const std::shared_ptr<MediaPlayer> mediaPlayer) {
+    commaneInterpreter.add(std::unique_ptr<Command>(new ListCommand(stationsDao, mediaPlayer)));
+    commaneInterpreter.add(std::unique_ptr<Command>(new PlayCommand(stationsDao, mediaPlayer)));
+    commaneInterpreter.add(std::unique_ptr<Command>(new StopCommand(stationsDao, mediaPlayer)));
+}
 
 void play(const std::vector<std::string>& args) {
     if (args.size() < 2) {
@@ -98,6 +107,7 @@ int run () {
     stationsDao->open(DB_FILE);
     addStations();
     LOG(plog::debug) << "Initializing command interpreter";
+    setupCli(stationsDao, mediaPlayer);
 
     std::string input{""};
     while (input.compare("quit")) {
@@ -111,13 +121,15 @@ int run () {
             LOG(plog::debug) << "args.size(): " << args.size();
 
             try {
+                commaneInterpreter.execute(args);
+                /*
                 if (cmd.compare("play") == 0) {
                     play(args);
                 } else if (cmd.compare("stop") == 0) {
                     stop();
                 } else if (cmd.compare("list") == 0) {
                     list();
-                }
+                }*/
             } catch (const std::exception& error) {
                 LOG(plog::error) << error.what();
             } catch (const std::string& error) {
