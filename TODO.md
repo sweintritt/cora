@@ -1,7 +1,7 @@
 ToDos
 ======
 
-* Add Commnand class and 
-* Configure plog for level an text only
+* Use my own cli parser
+* Use my own logger
 * Check which methods could be marked const
-* Use gstreamer instead of QMediaPlayer
+* Use gstreamer, vlc, sdl or ffmpeg instead of QMediaPlayer
