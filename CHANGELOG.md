@@ -9,6 +9,7 @@
 * In-Memory database.
 * Demo stations.
 * Simple Command-line
+* debug flag for logging configuration
 
 ### Fixed
 
