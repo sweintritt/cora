@@ -4,6 +4,7 @@ set(cora_sources
     ${cora_source_dir}/station.cpp
     ${cora_source_dir}/sqlite_stations_dao.cpp
     ${cora_source_dir}/utils.cpp
+    ${cora_source_dir}/cli/cli.cpp
     ${cora_source_dir}/commands/command.cpp
     ${cora_source_dir}/commands/command_interpreter.cpp
     ${cora_source_dir}/commands/list_command.cpp
@@ -59,6 +60,7 @@ if(CORA_BUILD_TESTS)
       ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include)
 
     set(cora_test_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/cli_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/sqlite_stations_dao_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp)
 

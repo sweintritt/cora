@@ -1,7 +1,9 @@
 #include <CppUTest/CommandLineTestRunner.h>
+
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
+IMPORT_TEST_GROUP(CliTest);
 IMPORT_TEST_GROUP(SqliteStationsDaoTest);
 IMPORT_TEST_GROUP(UtilsTest);
 
