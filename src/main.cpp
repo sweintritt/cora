@@ -13,6 +13,7 @@
 #include "qt_media_player.hpp"
 #include "sqlite_stations_dao.hpp"
 #include "utils.hpp"
+#include "cli/cli.hpp"
 #include "commands/command_interpreter.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
@@ -103,13 +104,28 @@ int run () {
     return EXIT_SUCCESS;
 }
 
-int main(int argc, char* argv[]) {
-    if (argc > 1 && std::string{"-d"}.compare(argv[1]) == 0) {
+void configureLogger(const bool debug) {
+    if (debug) {
         static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
         plog::init(plog::debug, &consoleAppender);
     } else {
         static plog::ConsoleAppender<MessageOnlyFormatter> consoleAppender;
         plog::init(plog::info, &consoleAppender);
+    }
+
+}
+
+int main(int argc, char* argv[]) {
+    Cli cli;
+    cli.addOption('d', "debug", false, "Setup debug mode.");
+    cli.addOption('h', "help", false, "Show help page.");
+    cli.parse(argc, argv);
+
+    configureLogger(cli.hasOption('d'));
+
+    if (cli.hasOption('h')) {
+        std::cout << cli.usage("cora");
+        return EXIT_SUCCESS;
     }
 
     LOG(plog::info) << "Starting cora";

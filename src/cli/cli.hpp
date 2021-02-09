@@ -44,6 +44,10 @@ struct Option { // TODO move to separate class
 class Cli {
    public:
       /**
+       * Constructor
+       */
+      Cli();
+      /**
        * @brief Adds the given parameters as new option.
        * @param[in] opt short name of the option
        * @param[in] hasValue true if the option as an additional value

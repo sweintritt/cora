@@ -4,6 +4,10 @@
 
 #include <sstream>
 
+Cli::Cli() : m_options() {
+
+}
+
 void Cli::addOption(const char opt, const bool hasValue, const std::string& description) {
    addOption(opt, "", hasValue, description);
 }

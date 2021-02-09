@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+
+* debug flag for logging configuration
+* Added Cli parser
+
 ## [v0.3.0] - 2020-12-17
 
 ### Added
@@ -9,7 +14,6 @@
 * In-Memory database.
 * Demo stations.
 * Simple Command-line
-* debug flag for logging configuration
 
 ### Fixed
 
