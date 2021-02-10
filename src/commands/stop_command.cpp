@@ -2,7 +2,7 @@
 
 StopCommand::StopCommand(const std::shared_ptr<StationsDao> stationsDao,
     const std::shared_ptr<MediaPlayer> mediaPlayer)
-    : Command("stop", stationsDao, mediaPlayer) {
+    : Command("stop", "stop playing", stationsDao, mediaPlayer) {
 }
 
 StopCommand::~StopCommand() { }

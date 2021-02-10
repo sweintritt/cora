@@ -45,8 +45,10 @@ class Cli {
    public:
       /**
        * Constructor
+       * @param[in] commmand name of the command.
+       * @param[in] description description of the command.
        */
-      Cli();
+      Cli(const std::string& command, const std::string& description);
       /**
        * @brief Adds the given parameters as new option.
        * @param[in] opt short name of the option
@@ -135,12 +137,22 @@ class Cli {
       std::string getValue(const std::string& longOpt);
 
       /**
-       * @brief
-       * @param[in] application name of the application that will be used in the usage page
+       * @brief Return  a string containing a short help for all options.
        * @return a string containing a short help for all options.
        */
-      std::string usage(const std::string& application);
+      const std::string usage() const;
 
    private:
+      /**
+       * Name of the command.
+       */
+      const std::string m_command;
+      /**
+       * Description of the command.
+       */
+      const std::string m_description;
+      /**
+       * Options.
+       */
       std::list<Option> m_options;
 };

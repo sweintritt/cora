@@ -1,13 +1,13 @@
-#include "commands/list_command.hpp"
+#include "commands/search_command.hpp"
 
-ListCommand::ListCommand(const std::shared_ptr<StationsDao> stationsDao,
+SearchCommand::SearchCommand(const std::shared_ptr<StationsDao> stationsDao,
     const std::shared_ptr<MediaPlayer> mediaPlayer)
-    : Command("list", "list available stations", stationsDao, mediaPlayer) {
+    : Command("search", "search for radio staions", stationsDao, mediaPlayer) {
 }
 
-ListCommand::~ListCommand() { }
+SearchCommand::~SearchCommand() { }
 
-void ListCommand::execute(const std::vector<std::string>& args) {
+void SearchCommand::execute(const std::vector<std::string>& args) {
     const auto ids = m_stationsDao->getAllIds();
 
     for (const auto& id : ids) {

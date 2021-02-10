@@ -2,7 +2,7 @@
 
 PlayCommand::PlayCommand(const std::shared_ptr<StationsDao> stationsDao,
     const std::shared_ptr<MediaPlayer> mediaPlayer)
-    : Command("play", stationsDao, mediaPlayer) {
+    : Command("play", "play a station given by id", stationsDao, mediaPlayer) {
 }
 
 PlayCommand::~PlayCommand() { }

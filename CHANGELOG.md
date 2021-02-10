@@ -4,8 +4,10 @@
 
 ### Added
 
-* debug flag for logging configuration
-* Added Cli parser
+* debug flag for logging configuration.
+* Added Cli parser and help option.
+* Search command.
+* Show usage of commands.
 
 ## [v0.3.0] - 2020-12-17
 

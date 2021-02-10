@@ -23,14 +23,14 @@
 // const std::string DB_FILE = "~/.cora.sqlite";
 const std::string DB_FILE = ":memory:";
 
-CommandInterpreter commaneInterpreter;
+CommandInterpreter commandInterpreter;
 std::shared_ptr<StationsDao> stationsDao;
 std::shared_ptr<MediaPlayer> mediaPlayer;
 
 void setupCli(const std::shared_ptr<StationsDao> stationsDao, const std::shared_ptr<MediaPlayer> mediaPlayer) {
-    commaneInterpreter.add(std::unique_ptr<Command>(new ListCommand(stationsDao, mediaPlayer)));
-    commaneInterpreter.add(std::unique_ptr<Command>(new PlayCommand(stationsDao, mediaPlayer)));
-    commaneInterpreter.add(std::unique_ptr<Command>(new StopCommand(stationsDao, mediaPlayer)));
+    commandInterpreter.add(std::unique_ptr<Command>(new ListCommand(stationsDao, mediaPlayer)));
+    commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand(stationsDao, mediaPlayer)));
+    commandInterpreter.add(std::unique_ptr<Command>(new StopCommand(stationsDao, mediaPlayer)));
 }
 
 void addStations() {
@@ -87,7 +87,7 @@ int run () {
             LOG(plog::debug) << "args.size(): " << args.size();
 
             try {
-                commaneInterpreter.execute(args);
+                commandInterpreter.execute(args);
             } catch (const std::exception& error) {
                 LOG(plog::error) << error.what();
             } catch (const std::string& error) {
@@ -116,7 +116,7 @@ void configureLogger(const bool debug) {
 }
 
 int main(int argc, char* argv[]) {
-    Cli cli;
+    Cli cli(argv[0], "listen to internet radio stations");
     cli.addOption('d', "debug", false, "Setup debug mode.");
     cli.addOption('h', "help", false, "Show help page.");
     cli.parse(argc, argv);
@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
     configureLogger(cli.hasOption('d'));
 
     if (cli.hasOption('h')) {
-        std::cout << cli.usage("cora");
+        std::cout << cli.usage();
         return EXIT_SUCCESS;
     }
 

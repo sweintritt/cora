@@ -6,12 +6,14 @@
 
 #include "stations_dao.hpp"
 #include "media_player.hpp"
+#include "cli/cli.hpp"
 
 #include <plog/Log.h>
 
 class Command {
     public:
         Command(const std::string& name,
+                const std::string& description,
                 const std::shared_ptr<StationsDao> stationsDao,
                 const std::shared_ptr<MediaPlayer> mediaPlayer);
 
@@ -21,8 +23,12 @@ class Command {
 
         virtual const std::string& getName() const;
 
+        virtual std::string getUsage() const;
+
     protected:
         const std::string m_name;
+
+        Cli m_cli;
 
         std::shared_ptr<StationsDao> m_stationsDao;
 

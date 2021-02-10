@@ -4,9 +4,10 @@
 
 #include <sstream>
 
-Cli::Cli() : m_options() {
-
-}
+Cli::Cli(const std::string& command, const std::string& description)
+   : m_command(command)
+   , m_description(description)
+   , m_options() { }
 
 void Cli::addOption(const char opt, const bool hasValue, const std::string& description) {
    addOption(opt, "", hasValue, description);
@@ -112,10 +113,13 @@ std::string Cli::getValue(const std::string& longOpt) {
    return "";
 }
 
-std::string Cli::usage(const std::string& application) {
+const std::string Cli::usage() const {
    std::stringstream stream;
-   stream << "Usage: " << application << " [OPTIONS]" << std::endl << std::endl;
-   stream << "Options:" << std::endl;
+   stream << "NAME" << std::endl;
+   stream << "  " << m_command << " - " << m_description << std::endl << std::endl;
+   stream << "SYNOPSIS" << std::endl;
+   stream << "  " << m_command << " [OPTIONS]" << std::endl << std::endl;
+   stream << "DESCRIPTION" << std::endl;
    for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
       stream << "  ";
 
