@@ -1,42 +1,10 @@
 #pragma once
 
+#include "cli/option.hpp"
+
 #include <string>
+#include <vector>
 #include <list>
-
-/**
- * @Brief Internal data structure to store options.
- */
-struct Option { // TODO move to separate class
-   /**
-    * @brief Short option
-    */
-   char opt;
-
-   /**
-    * @brief Long option
-    */
-   std::string longOpt;
-
-   /**
-    * @brief True if the option has an argument
-    */
-   bool hasValue;
-
-   /**
-    * @brief True if the option was found when parsing commandline arguments
-    */
-   bool found;
-
-   /**
-    * @brief Contains any value passed to an argument
-    */
-   std::string value;
-
-   /**
-    * @brief Description of the option. Will be printed when using Cli::usage()
-    */
-   std::string description;
-};
 
 /**
  * @brief Command line parser
@@ -80,7 +48,13 @@ class Cli {
        * @param[in] argc length of the argument array
        * @param[in] argv command line arguments
        */
-      void parse(int argc, char* argv[]); // TODO argv should be const
+      void parse(const int argc, char* argv[]); // TODO argv should be const
+
+      /**
+       * @brief Parses the command line arguments for all specified options.
+       * @param[in] args command line arguments
+       */
+      void parse(const std::vector<std::string>& args);
 
       /**
        * @brief Returns true if the given option is possible and has been passed
@@ -89,7 +63,7 @@ class Cli {
        * @return true if the given option is possible and has been passed
        *         as command line argument.
        */
-      bool hasOption(const char opt);
+      bool hasOption(const char opt) const;
 
       /**
        * @brief Returns true if the given option is possible and has been passed
@@ -98,7 +72,7 @@ class Cli {
        * @return true if the given option is possible and has been passed
        *         as command line argument.
        */
-      bool hasOption(const std::string& longOpt);
+      bool hasOption(const std::string& longOpt) const;
 
       /**
        * @brief Returns true if the given option has a value and a value was passed
@@ -107,7 +81,7 @@ class Cli {
        * @return true if the given option has a value and a value was passed
        *         as command line argument.
        */
-      bool hasValue(const char opt);
+      bool hasValue(const char opt) const;
 
       /**
        * @brief Returns true if the given option has a value and a value was passed
@@ -116,7 +90,7 @@ class Cli {
        * @return true if the given option has a value and a value was passed
        *         as command line argument.
        */
-      bool hasValue(const std::string& longOpt);
+      bool hasValue(const std::string& longOpt) const;
 
       /**
        * @brief Returns the value for the specified option or an empty string if the option has no

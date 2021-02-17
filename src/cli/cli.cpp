@@ -27,11 +27,20 @@ void Cli::addOption(const char opt, const std::string& longOpt, const bool hasVa
    option.found = false;
    m_options.push_back(option);
 }
-
 void Cli::parse(int argc, char* argv[]) {
+   std::vector<std::string> args;
+
+   for (int i = 0; i < argc; ++i)    {
+      args.push_back(std::string{argv[0]});
+   }
+
+   parse(args);
+}
+
+void Cli::parse(const std::vector<std::string>& args) {
    LOG(plog::debug) << "parsing arguments";
-   for (int i = 1; i < argc; ++i)    {
-      std::string current = argv[i];
+   for (unsigned int i = 1; i < args.size(); ++i)    {
+      std::string current = args[i];
       LOG(plog::debug) << "checking: " << current;
       if (current[0] == '-')       {
          current.erase(0, 1);
@@ -46,10 +55,10 @@ void Cli::parse(int argc, char* argv[]) {
             sopt.push_back(it->opt);
             if (current.compare(sopt) == 0 || current.compare(it->longOpt) == 0) {
                it->found = true;
-               if (it->hasValue && (i + 1) < argc) {
-                  if (argv[i + 1][0] != '-') {
-                     LOG(plog::debug) << "found value: " << argv[i + 1] << " for option: " << current;
-                     it->value = argv[i + 1];
+               if (it->hasValue && (i + 1) < args.size()) {
+                  if (args[i + 1][0] != '-') {
+                     LOG(plog::debug) << "found value: " << args[i + 1] << " for option: " << current;
+                     it->value = args[i + 1];
                      ++i;
                   }
                }
@@ -59,16 +68,17 @@ void Cli::parse(int argc, char* argv[]) {
    }
 }
 
-bool Cli::hasOption(const char opt) {
+bool Cli::hasOption(const char opt) const {
    for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
       if (it->opt == opt && it->found) {
+         LOG(plog::debug) << "searched for '" << opt << "', found '" << it->opt << "' isSet:" << it->found;
          return true;
       }
    }
    return false;
 }
 
-bool Cli::hasOption(const std::string& longOpt) {
+bool Cli::hasOption(const std::string& longOpt) const {
    for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
       if (it->longOpt.compare(longOpt) == 0 && it->found) {
          return true;
@@ -77,7 +87,7 @@ bool Cli::hasOption(const std::string& longOpt) {
    return false;
 }
 
-bool Cli::hasValue(const char opt) {
+bool Cli::hasValue(const char opt) const {
    for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
       if (it->opt == opt && it->found && it->hasValue) {
          return !it->value.empty();
@@ -86,7 +96,7 @@ bool Cli::hasValue(const char opt) {
    return false;
 }
 
-bool Cli::hasValue(const std::string& longOpt) {
+bool Cli::hasValue(const std::string& longOpt) const {
    for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
       if (it->longOpt.compare(longOpt) == 0 && it->found && it->hasValue) {
          return !it->value.empty();

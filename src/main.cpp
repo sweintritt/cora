@@ -17,11 +17,12 @@
 #include "commands/command_interpreter.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
+#include "commands/search_command.hpp"
 #include "commands/stop_command.hpp"
 #include "logging/message_only_formatter.hpp"
 
-// const std::string DB_FILE = "~/.cora.sqlite";
-const std::string DB_FILE = ":memory:";
+// const std::string DEFAULT_DB_FILE = "./.cora.sqlite";
+const std::string DEFAULT_DB_FILE = ":memory:";
 
 CommandInterpreter commandInterpreter;
 std::shared_ptr<StationsDao> stationsDao;
@@ -30,6 +31,7 @@ std::shared_ptr<MediaPlayer> mediaPlayer;
 void setupCli(const std::shared_ptr<StationsDao> stationsDao, const std::shared_ptr<MediaPlayer> mediaPlayer) {
     commandInterpreter.add(std::unique_ptr<Command>(new ListCommand(stationsDao, mediaPlayer)));
     commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand(stationsDao, mediaPlayer)));
+    commandInterpreter.add(std::unique_ptr<Command>(new SearchCommand(stationsDao, mediaPlayer)));
     commandInterpreter.add(std::unique_ptr<Command>(new StopCommand(stationsDao, mediaPlayer)));
 }
 
@@ -65,12 +67,12 @@ void addStations() {
     stationsDao->save(bigRalternative);
 }
 
-int run () {
+int run (const std::string& file) {
     LOG(plog::debug) << "Initializing player";
     mediaPlayer = std::make_shared<QtMediaPlayer>();
-    LOG(plog::debug) << "Opening database file " << DB_FILE;
+    LOG(plog::debug) << "Opening database file " << file;
     stationsDao = std::make_shared<SqliteStationsDao>();
-    stationsDao->open(DB_FILE);
+    stationsDao->open(file);
     addStations();
     LOG(plog::debug) << "Initializing command interpreter";
     setupCli(stationsDao, mediaPlayer);
@@ -118,6 +120,7 @@ void configureLogger(const bool debug) {
 int main(int argc, char* argv[]) {
     Cli cli(argv[0], "listen to internet radio stations");
     cli.addOption('d', "debug", false, "Setup debug mode.");
+    cli.addOption('f', "file", false, "Database file.");
     cli.addOption('h', "help", false, "Show help page.");
     cli.parse(argc, argv);
 
@@ -130,7 +133,11 @@ int main(int argc, char* argv[]) {
 
     LOG(plog::info) << "Starting cora";
     try {
-        return run();
+        if (cli.hasOption('f')) {
+            return run(cli.getValue('f'));
+        } else {
+            return run(DEFAULT_DB_FILE);
+        }
     } catch (const std::exception& error) {
         LOG(plog::error) << error.what();
     } catch (const std::string& error) {

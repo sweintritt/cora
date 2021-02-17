@@ -6,7 +6,7 @@ TEST_GROUP(CliTest) {
 };
 
 TEST(CliTest, simpleTest) {
-    Cli cli;
+    Cli cli("cmd", "test");
     cli.addOption('d', false, "debug");
     char *args[2] = {"cmd", "-d"};
     cli.parse(2, args);
@@ -16,7 +16,7 @@ TEST(CliTest, simpleTest) {
 }
 
 TEST(CliTest, complexTest) {
-    Cli cli;
+    Cli cli("cmd", "test");
     cli.addOption('d', "debug", false, "debug");
     cli.addOption('f', "file", true, "filename");
     cli.addOption('b', "blub", false, "blub");

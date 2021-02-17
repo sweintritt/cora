@@ -26,7 +26,7 @@ class SqliteStationsDao : public StationsDao {
 
         virtual void upgrade(const int oldVersion, const int newVersion) override;
 
-        virtual std::vector<Station> find(const std::string& name, const std::string& genre, const std::string& language, const std::string& country) override;
+        virtual std::vector<Station> find(const std::string& name, const std::string& genre, const std::string& language, const std::string& country, const int limit) override;
 
         virtual std::vector<std::string> getGenres() override;
 

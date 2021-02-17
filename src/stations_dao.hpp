@@ -25,7 +25,7 @@ class StationsDao {
 
         virtual void upgrade(const int oldVersion, const int newVersion) = 0;
 
-        virtual std::vector<Station> find(const std::string& name, const std::string& genre, const std::string& language, const std::string& country) = 0;
+        virtual std::vector<Station> find(const std::string& name, const std::string& genre, const std::string& language, const std::string& country, const int limit) = 0;
 
         virtual std::vector<std::string> getGenres() = 0;
 

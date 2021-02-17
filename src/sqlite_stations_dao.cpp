@@ -16,6 +16,9 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
         "description TEXT, "
         "urls TEXT NOT NULL);";
 const std::string FIND_STATION_BY_ID_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
+const std::string FIND_STATIONS_SQL = "SELECT * FROM stations "
+        "WHERE name LIKE '%?%' AND genre LIKE '%?%' AND country LIKE '%?%' AND language LIKE '%?%') "
+        "LIMIT ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations "
         "(id_hash, author, name, genre, country, language, description, urls) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
@@ -161,7 +164,7 @@ void SqliteStationsDao::upgrade(const int oldVersion, const int newVersion) {
     throw std::runtime_error("upgrade not implemented");
 }
 
-std::vector<Station> SqliteStationsDao::find(const std::string& name, const std::string& genre, const std::string& language, const std::string& country) {
+std::vector<Station> SqliteStationsDao::find(const std::string& name, const std::string& genre, const std::string& language, const std::string& country, const int limit) {
     throw std::runtime_error("find not implemented");
 }
 
