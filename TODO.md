@@ -1,10 +1,8 @@
 ToDos
 ======
 
-* Search finds nothing
-* search to find because it is shorter
-* Implement search command to search for stations
 * Setup sqlite database manually
+* Aliases for commands? quit, exit, end, search, find,
 * Store favorites
 * Fix as much compiler warnings as possible
 * Update Cli to C++11 (e.g. loops)

@@ -1,8 +1,8 @@
-#include "commands/search_command.hpp"
+#include "commands/find_command.hpp"
 
-SearchCommand::SearchCommand(const std::shared_ptr<StationsDao> stationsDao,
+FindCommand::FindCommand(const std::shared_ptr<StationsDao> stationsDao,
     const std::shared_ptr<MediaPlayer> mediaPlayer)
-    : Command("search", "search for radio staions", stationsDao, mediaPlayer) {
+    : Command("find", "search for radio staions", stationsDao, mediaPlayer) {
         m_cli.addOption('h', "help", false, "Show help page");
         m_cli.addOption('n', "name", true, "Name of the radio stations");
         m_cli.addOption('g', "genre", true, "Gerne of the radio stations");
@@ -11,9 +11,9 @@ SearchCommand::SearchCommand(const std::shared_ptr<StationsDao> stationsDao,
         m_cli.addOption('x', "limit", true, "Limit the number of the returned results. Default is 100.");
 }
 
-SearchCommand::~SearchCommand() { }
+FindCommand::~FindCommand() { }
 
-void SearchCommand::execute(const std::vector<std::string>& args) {
+void FindCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
 
     if (m_cli.hasOption('h')) {

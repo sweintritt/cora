@@ -17,7 +17,7 @@
 #include "commands/command_interpreter.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
-#include "commands/search_command.hpp"
+#include "commands/find_command.hpp"
 #include "commands/stop_command.hpp"
 #include "logging/message_only_formatter.hpp"
 
@@ -31,7 +31,7 @@ std::shared_ptr<MediaPlayer> mediaPlayer;
 void setupCli(const std::shared_ptr<StationsDao> stationsDao, const std::shared_ptr<MediaPlayer> mediaPlayer) {
     commandInterpreter.add(std::unique_ptr<Command>(new ListCommand(stationsDao, mediaPlayer)));
     commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand(stationsDao, mediaPlayer)));
-    commandInterpreter.add(std::unique_ptr<Command>(new SearchCommand(stationsDao, mediaPlayer)));
+    commandInterpreter.add(std::unique_ptr<Command>(new FindCommand(stationsDao, mediaPlayer)));
     commandInterpreter.add(std::unique_ptr<Command>(new StopCommand(stationsDao, mediaPlayer)));
 }
 
