@@ -16,8 +16,8 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
         "description TEXT, "
         "urls TEXT NOT NULL);";
 const std::string FIND_STATION_BY_ID_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
-const std::string FIND_STATIONS_SQL = "SELECT * FROM stations "
-        "WHERE name LIKE '%?%' AND genre LIKE '%?%' AND country LIKE '%?%' AND language LIKE '%?%') "
+const std::string FIND_STATIONS_SQL = "SELECT rowid, * FROM stations "
+        "WHERE name LIKE '%?%' AND genre LIKE '%?%' AND country LIKE '%?%' AND language LIKE '%?%' "
         "LIMIT ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations "
         "(id_hash, author, name, genre, country, language, description, urls) "
@@ -26,9 +26,13 @@ const std::string GET_ALL_IDS_SQL = "SELECT rowid FROM stations;";
 
 int logStatement(unsigned int t, void* c, void* p, void* x);
 
-SqliteStationsDao::SqliteStationsDao() : version(1), db(nullptr),
-    insertStationStmnt(nullptr), findStationByIdStmnt(nullptr),
-    getAllIdsStmnt(nullptr) {
+SqliteStationsDao::SqliteStationsDao()
+    : version(1)
+    , db(nullptr)
+    , insertStationStmnt(nullptr)
+    , findStationByIdStmnt(nullptr)
+    , findStationsStmnt(nullptr)
+    , getAllIdsStmnt(nullptr) {
 }
 
 SqliteStationsDao::~SqliteStationsDao() {
@@ -56,6 +60,7 @@ void SqliteStationsDao::open(const std::string& url) {
 
     LOG(plog::debug) << "preparing statements";
     prepare(&findStationByIdStmnt, FIND_STATION_BY_ID_SQL);
+    prepare(&findStationsStmnt, FIND_STATIONS_SQL);
     prepare(&insertStationStmnt, INSERT_STATION_SQL);
     prepare(&getAllIdsStmnt, GET_ALL_IDS_SQL);
 }
@@ -119,27 +124,7 @@ std::shared_ptr<Station> SqliteStationsDao::findById(const long id) {
     std::shared_ptr<Station> station = nullptr;
 
     if (rc == SQLITE_ROW) {
-        const uint64_t rowid = sqlite3_column_int64(findStationByIdStmnt, 0);
-        const uint64_t idHash = sqlite3_column_int64(findStationByIdStmnt, 1);
-        const std::string name{(const char*) sqlite3_column_text(findStationByIdStmnt, 2)};
-        const Author author = (Author) sqlite3_column_int(findStationByIdStmnt, 3);
-        const std::string genre{(const char*) sqlite3_column_text(findStationByIdStmnt, 4)};
-        const std::string country{(const char*) sqlite3_column_text(findStationByIdStmnt, 5)};
-        const std::string language{(const char*) sqlite3_column_text(findStationByIdStmnt, 6)};
-        const std::string description{(const char*) sqlite3_column_text(findStationByIdStmnt, 7)};
-        const std::string urls{(const char*) sqlite3_column_text(findStationByIdStmnt, 8)};
-        station = std::make_shared<Station>();
-        station->setId(rowid);
-        station->setIdHash(idHash);
-        station->setName(name);
-        station->setAuthor(author);
-        station->setGenre(genre);
-        station->setCountry(country);
-        station->setLanguage(language);
-        station->setDescription(description);
-        for (auto& url : deserializeUrls(urls)) {
-           station->addUrl(url);
-        }
+        station = std::make_shared<Station>(getStation(findStationByIdStmnt));
     } else if (rc == SQLITE_ERROR) {
         throw "unable to get station " + std::to_string(id) + ": " + getError();
     }
@@ -164,8 +149,28 @@ void SqliteStationsDao::upgrade(const int oldVersion, const int newVersion) {
     throw std::runtime_error("upgrade not implemented");
 }
 
-std::vector<Station> SqliteStationsDao::find(const std::string& name, const std::string& genre, const std::string& language, const std::string& country, const int limit) {
-    throw std::runtime_error("find not implemented");
+std::vector<Station> SqliteStationsDao::find(const std::string& name, const std::string& genre,
+                                             const std::string& language, const std::string& country,
+                                             const int limit) {
+
+    sqlite3_bind_text(findStationsStmnt, 1, name.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationsStmnt, 2, genre.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationsStmnt, 3, language.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationsStmnt, 4, country.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(findStationsStmnt, 5, limit);
+    const int rc = sqlite3_step(findStationsStmnt);
+    std::vector<Station> stations;
+
+    while (rc == SQLITE_ROW) {
+        getStation(findStationsStmnt);
+    }
+
+    if (rc == SQLITE_ERROR) {
+        throw "unable to get stations: " + getError();
+    }
+
+    sqlite3_reset(findStationsStmnt);
+    return stations;
 }
 
 std::vector<std::string> SqliteStationsDao::getGenres() {
@@ -242,6 +247,34 @@ std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& v
 long SqliteStationsDao::calculateHash(const Station& station) {
     static std::hash<std::string> hash;
     return hash(station.getName()) + hash(station.getGenre()) + hash(station.getLanguage()) + hash(station.getCountry());
+}
+
+Station SqliteStationsDao::getStation(sqlite3_stmt* stmnt) {
+    const uint64_t rowid = sqlite3_column_int64(stmnt, 0);
+    const uint64_t idHash = sqlite3_column_int64(stmnt, 1);
+    const std::string name{(const char*) sqlite3_column_text(stmnt, 2)};
+    const Author author = (Author) sqlite3_column_int(stmnt, 3);
+    const std::string genre{(const char*) sqlite3_column_text(stmnt, 4)};
+    const std::string country{(const char*) sqlite3_column_text(stmnt, 5)};
+    const std::string language{(const char*) sqlite3_column_text(stmnt, 6)};
+    const std::string description{(const char*) sqlite3_column_text(stmnt, 7)};
+    const std::string urls{(const char*) sqlite3_column_text(stmnt, 8)};
+
+    Station station;
+    station.setId(rowid);
+    station.setIdHash(idHash);
+    station.setName(name);
+    station.setAuthor(author);
+    station.setGenre(genre);
+    station.setCountry(country);
+    station.setLanguage(language);
+    station.setDescription(description);
+
+    for (auto& url : deserializeUrls(urls)) {
+        station.addUrl(url);
+    }
+
+    return station;
 }
 
 int logStatement(unsigned int t, void* c, void* p, void* x) {

@@ -31,4 +31,8 @@ void SearchCommand::execute(const std::vector<std::string>& args) {
     for (const auto& station : stations) {
         LOG(plog::info) << std::to_string(station.getId()) << " - " << station.getName() << " - " << station.getDescription();
     }
+
+    if (stations.empty()) {
+        LOG(plog::info) << "No stations found";
+    }
 }

@@ -27,11 +27,12 @@ void Cli::addOption(const char opt, const std::string& longOpt, const bool hasVa
    option.found = false;
    m_options.push_back(option);
 }
+
 void Cli::parse(int argc, char* argv[]) {
    std::vector<std::string> args;
 
    for (int i = 0; i < argc; ++i)    {
-      args.push_back(std::string{argv[0]});
+      args.push_back(std::string{argv[i]});
    }
 
    parse(args);

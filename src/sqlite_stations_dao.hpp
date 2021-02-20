@@ -49,6 +49,8 @@ class SqliteStationsDao : public StationsDao {
 
         sqlite3_stmt* findStationByIdStmnt;
 
+        sqlite3_stmt* findStationsStmnt;
+
         sqlite3_stmt* getAllIdsStmnt;
 
         std::string getError();
@@ -58,4 +60,6 @@ class SqliteStationsDao : public StationsDao {
         std::string serializeUrls(const std::vector<std::string>& urls);
 
         std::vector<std::string> deserializeUrls(const std::string& urls);
+
+        Station getStation(sqlite3_stmt* stmnt);
 };

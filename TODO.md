@@ -1,7 +1,7 @@
 ToDos
 ======
 
-* Use my own cli parser
+* Search finds nothing
 * Implement search command to search for stations
 * Setup sqlite database manually
 * Store favorites
@@ -10,3 +10,5 @@ ToDos
 * Implement import command for radiosure import
 * Check which methods could be marked const
 * Use gstreamer, vlc, sdl or ffmpeg instead of QMediaPlayer
+* command history
+* completion

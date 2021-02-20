@@ -21,7 +21,7 @@
 #include "commands/stop_command.hpp"
 #include "logging/message_only_formatter.hpp"
 
-// const std::string DEFAULT_DB_FILE = "./.cora.sqlite";
+//const std::string DEFAULT_DB_FILE = "./.cora.sqlite";
 const std::string DEFAULT_DB_FILE = ":memory:";
 
 CommandInterpreter commandInterpreter;
@@ -110,17 +110,17 @@ void configureLogger(const bool debug) {
     if (debug) {
         static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
         plog::init(plog::debug, &consoleAppender);
+        LOG(plog::debug) << "Debug logging configured";
     } else {
         static plog::ConsoleAppender<MessageOnlyFormatter> consoleAppender;
         plog::init(plog::info, &consoleAppender);
     }
-
 }
 
 int main(int argc, char* argv[]) {
     Cli cli(argv[0], "listen to internet radio stations");
     cli.addOption('d', "debug", false, "Setup debug mode.");
-    cli.addOption('f', "file", false, "Database file.");
+    cli.addOption('f', "file", true, "Database file.");
     cli.addOption('h', "help", false, "Show help page.");
     cli.parse(argc, argv);
 
