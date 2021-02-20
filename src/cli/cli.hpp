@@ -111,6 +111,11 @@ class Cli {
       std::string getValue(const std::string& longOpt);
 
       /**
+       * Reset the values of all options for another parse. parse will call this itself.
+       */
+      void reset();
+
+      /**
        * @brief Return  a string containing a short help for all options.
        * @return a string containing a short help for all options.
        */

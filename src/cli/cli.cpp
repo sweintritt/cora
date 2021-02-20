@@ -39,6 +39,7 @@ void Cli::parse(int argc, char* argv[]) {
 }
 
 void Cli::parse(const std::vector<std::string>& args) {
+   reset();
    LOG(plog::debug) << "parsing arguments";
    for (unsigned int i = 1; i < args.size(); ++i)    {
       std::string current = args[i];
@@ -55,8 +56,10 @@ void Cli::parse(const std::vector<std::string>& args) {
             std::string sopt;
             sopt.push_back(it->opt);
             if (current.compare(sopt) == 0 || current.compare(it->longOpt) == 0) {
+               LOG(plog::debug) << "setting option: " << current;
                it->found = true;
                if (it->hasValue && (i + 1) < args.size()) {
+                  LOG(plog::debug) << "setting value for  option: " << current;
                   if (args[i + 1][0] != '-') {
                      LOG(plog::debug) << "found value: " << args[i + 1] << " for option: " << current;
                      it->value = args[i + 1];
@@ -122,6 +125,13 @@ std::string Cli::getValue(const std::string& longOpt) {
       }
    }
    return "";
+}
+
+void Cli::reset() {
+   for (auto& option : m_options) {
+      option.value = "";
+      option.found = false;
+   }
 }
 
 const std::string Cli::usage() const {

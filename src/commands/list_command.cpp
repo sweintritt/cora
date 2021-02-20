@@ -13,7 +13,11 @@ void ListCommand::execute(const std::vector<std::string>& args) {
     for (const auto& id : ids) {
         const auto station = m_stationsDao->findById(id);
         if (station != nullptr) {
-            LOG(plog::info) << std::to_string(station->getId()) << " - " << station->getName() << " - " << station->getDescription();
+            LOG(plog::info) << "id:" << std::to_string(station->getId())
+                << ", name:" << station->getName()
+                << ", genre:" << station->getGenre()
+                << ", country:" << station->getCountry()
+                << ", language:" << station->getLanguage();
         } else {
             LOG(plog::warning) << "no station found for id:" << id;
         }

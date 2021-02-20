@@ -62,7 +62,7 @@ void addStations() {
     bigRalternative.setGenre("Alternative Rock");
     bigRalternative.setLanguage("English");
     bigRalternative.setCountry("United States of America");
-    bigRalternative.setDescription("The Spirit of Soundtracks");
+    bigRalternative.setDescription("90s Alternative Rock");
     bigRalternative.addUrl("http://bigrradio.cdnstream1.com/5187_128");
     stationsDao->save(bigRalternative);
 }

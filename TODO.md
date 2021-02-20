@@ -2,6 +2,7 @@ ToDos
 ======
 
 * Search finds nothing
+* search to find because it is shorter
 * Implement search command to search for stations
 * Setup sqlite database manually
 * Store favorites

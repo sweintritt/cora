@@ -17,7 +17,7 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
         "urls TEXT NOT NULL);";
 const std::string FIND_STATION_BY_ID_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
 const std::string FIND_STATIONS_SQL = "SELECT rowid, * FROM stations "
-        "WHERE name LIKE '%?%' AND genre LIKE '%?%' AND country LIKE '%?%' AND language LIKE '%?%' "
+        "WHERE name LIKE ? AND genre LIKE ? AND country LIKE ? AND language LIKE ? "
         "LIMIT ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations "
         "(id_hash, author, name, genre, country, language, description, urls) "
@@ -152,18 +152,27 @@ void SqliteStationsDao::upgrade(const int oldVersion, const int newVersion) {
 std::vector<Station> SqliteStationsDao::find(const std::string& name, const std::string& genre,
                                              const std::string& language, const std::string& country,
                                              const int limit) {
+    // SQLite does not allow parameters inside a string, so the like has to be build like that
+    const std::string nameLike{"%" + name + "%"};
+    const std::string genreLike{"%" + genre + "%"};
+    const std::string languageLike{"%" + language + "%"};
+    const std::string countryLike{"%" + country + "%"};
 
-    sqlite3_bind_text(findStationsStmnt, 1, name.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(findStationsStmnt, 2, genre.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(findStationsStmnt, 3, language.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(findStationsStmnt, 4, country.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationsStmnt, 1, nameLike.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationsStmnt, 2, genreLike.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationsStmnt, 3, languageLike.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationsStmnt, 4, countryLike.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_int(findStationsStmnt, 5, limit);
-    const int rc = sqlite3_step(findStationsStmnt);
+    int rc = sqlite3_step(findStationsStmnt);
     std::vector<Station> stations;
 
     while (rc == SQLITE_ROW) {
-        getStation(findStationsStmnt);
+        LOG(plog::debug) << "sqlite3_step returned (" << rc << ") " << sqlite3_errstr(rc);
+        stations.push_back(getStation(findStationsStmnt));
+        LOG(plog::debug) << "Found station";
+        rc = sqlite3_step(findStationsStmnt);
     }
+    LOG(plog::debug) << "sqlite3_step returned (" << rc << ") " << sqlite3_errstr(rc);
 
     if (rc == SQLITE_ERROR) {
         throw "unable to get stations: " + getError();

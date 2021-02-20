@@ -21,6 +21,11 @@ void SearchCommand::execute(const std::vector<std::string>& args) {
         return;
     }
 
+    if (!m_cli.hasValue('n') && !m_cli.hasValue('g') && !m_cli.hasValue('c') && !m_cli.hasValue('l')) {
+        LOG(plog::warning) << "No arguments given. Try " << m_name << " --help for more information.";
+        return;
+    }
+
     const std::string name = (m_cli.hasValue('n')) ? m_cli.getValue('n') : "";
     const std::string genre = (m_cli.hasValue('g')) ? m_cli.getValue('g') : "";
     const std::string country = (m_cli.hasValue('c')) ? m_cli.getValue('c') : "";
@@ -29,7 +34,11 @@ void SearchCommand::execute(const std::vector<std::string>& args) {
 
     const auto stations = m_stationsDao->find(name, genre, country, language, limit);
     for (const auto& station : stations) {
-        LOG(plog::info) << std::to_string(station.getId()) << " - " << station.getName() << " - " << station.getDescription();
+                    LOG(plog::info) << "id:" << std::to_string(station.getId())
+                << ", name:" << station.getName()
+                << ", genre:" << station.getGenre()
+                << ", country:" << station.getCountry()
+                << ", language:" << station.getLanguage();
     }
 
     if (stations.empty()) {
