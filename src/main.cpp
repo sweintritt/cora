@@ -15,23 +15,25 @@
 #include "utils.hpp"
 #include "cli/cli.hpp"
 #include "commands/command_interpreter.hpp"
+#include "commands/find_command.hpp"
+#include "commands/import_command.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
-#include "commands/find_command.hpp"
 #include "commands/stop_command.hpp"
 #include "logging/message_only_formatter.hpp"
 
-//const std::string DEFAULT_DB_FILE = "./.cora.sqlite";
-const std::string DEFAULT_DB_FILE = ":memory:";
+const std::string DEFAULT_DB_FILE = "./cora.sqlite";
+//const std::string DEFAULT_DB_FILE = ":memory:";
 
 CommandInterpreter commandInterpreter;
 std::shared_ptr<StationsDao> stationsDao;
 std::shared_ptr<MediaPlayer> mediaPlayer;
 
 void setupCli(const std::shared_ptr<StationsDao> stationsDao, const std::shared_ptr<MediaPlayer> mediaPlayer) {
+    commandInterpreter.add(std::unique_ptr<Command>(new FindCommand(stationsDao, mediaPlayer)));
+    commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand(stationsDao, mediaPlayer)));
     commandInterpreter.add(std::unique_ptr<Command>(new ListCommand(stationsDao, mediaPlayer)));
     commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand(stationsDao, mediaPlayer)));
-    commandInterpreter.add(std::unique_ptr<Command>(new FindCommand(stationsDao, mediaPlayer)));
     commandInterpreter.add(std::unique_ptr<Command>(new StopCommand(stationsDao, mediaPlayer)));
 }
 
@@ -73,7 +75,7 @@ int run (const std::string& file) {
     LOG(plog::debug) << "Opening database file " << file;
     stationsDao = std::make_shared<SqliteStationsDao>();
     stationsDao->open(file);
-    addStations();
+    // addStations();
     LOG(plog::debug) << "Initializing command interpreter";
     setupCli(stationsDao, mediaPlayer);
 
@@ -89,6 +91,7 @@ int run (const std::string& file) {
             LOG(plog::debug) << "args.size(): " << args.size();
 
             try {
+                // TODO Implement QuitCommand? How?
                 commandInterpreter.execute(args);
             } catch (const std::exception& error) {
                 LOG(plog::error) << error.what();

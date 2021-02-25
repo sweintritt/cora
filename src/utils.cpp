@@ -12,3 +12,15 @@ std::vector<std::string> split(const std::string& value) {
          std::back_inserter(tokens));
     return tokens;
 }
+
+std::vector<std::string> split(const std::string& value, const char delimiter) {
+   std::vector<std::string> tokens;
+   std::string token;
+   std::istringstream stream(value);
+
+   while (std::getline(stream, token, delimiter)) {
+      tokens.push_back(token);
+   }
+
+   return tokens;
+}

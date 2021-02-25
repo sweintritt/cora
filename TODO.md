@@ -2,7 +2,7 @@ ToDos
 ======
 
 * Setup sqlite database manually
-* Aliases for commands? quit, exit, end, search, find,
+* Aliases for commands? quit, q, exit, end, search, se, find, fd, play, pl, stop, st
 * Store favorites
 * Fix as much compiler warnings as possible
 * Update Cli to C++11 (e.g. loops)

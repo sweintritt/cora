@@ -9,6 +9,7 @@ CommandInterpreter::CommandInterpreter()
 CommandInterpreter::~CommandInterpreter() { }
 
 void CommandInterpreter::add(std::unique_ptr<Command> command) {
+    // TODO Verify command is not already there
     m_commands.insert(std::make_pair(command->getName(), std::move(command)));
 }
 
