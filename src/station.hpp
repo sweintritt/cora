@@ -13,9 +13,6 @@ class Station {
         void setId(const int64_t id);
         int64_t getId() const;
 
-        void setIdHash(const int64_t idHash);
-        int64_t getIdHash() const;
-
         void setAuthor(const Author author);
         Author getAuthor() const;
 
@@ -39,7 +36,6 @@ class Station {
 
     private:
         int64_t m_id;
-        int64_t m_idHash; // Build from name, genre, country and language
         Author m_author;
         std::string m_name;
         std::string m_genre;

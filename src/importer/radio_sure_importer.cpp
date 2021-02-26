@@ -17,6 +17,9 @@ void RadioSureImporter::import(const std::string& url) {
     std::ifstream file(url);
 
     if (file.is_open()) {
+        long count = 0;
+        std::time_t start = std::time(nullptr);
+        // TODO transaction
         while (getline(file, line)) {
             const std::vector<std::string> values = split(line, '\t');
 
@@ -27,7 +30,7 @@ void RadioSureImporter::import(const std::string& url) {
             station.setCountry(values[3]);
             station.setLanguage(values[4]);
             station.setAuthor(Author::IMPORT);
-            // TODO urls are not stored. compare might be wrong
+
             for (unsigned int i = 5; i < values.size(); ++i) {
               if (values[i].compare("-")) {
                 station.addUrl(values[i]);
@@ -35,7 +38,10 @@ void RadioSureImporter::import(const std::string& url) {
             }
 
             m_stationsDao->save(station);
+            ++count;
         }
+
+        LOG(plog::info) << count << " stations imported in " << std::difftime(std::time(nullptr), start) << " s";
         file.close();
     } else {
         throw std::runtime_error("Unable to open file " + url);

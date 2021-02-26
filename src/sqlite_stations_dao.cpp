@@ -7,7 +7,6 @@
 #include <plog/Log.h>
 
 const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS stations ( "
-        "id_hash INTEGER NOT NULL UNIQUE, "
         "name TEXT NOT NULL, "
         "author INTEGER NOT NULL, "
         "genre TEXT NOT NULL, "
@@ -20,8 +19,8 @@ const std::string FIND_STATIONS_SQL = "SELECT rowid, * FROM stations "
         "WHERE name LIKE ? AND genre LIKE ? AND country LIKE ? AND language LIKE ? "
         "LIMIT ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations "
-        "(id_hash, author, name, genre, country, language, description, urls) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        "(author, name, genre, country, language, description, urls) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?);";
 const std::string GET_ALL_IDS_SQL = "SELECT rowid FROM stations;";
 
 int logStatement(unsigned int t, void* c, void* p, void* x);
@@ -89,23 +88,18 @@ void SqliteStationsDao::save(Station& station) {
     // TODO check if the station has an id an just needs to be updated
     // INSERT OR UPDATE
     LOG(plog::debug) << "saving station '" << station.getName() << "'";
-    if (station.getIdHash() == 0) {
-        station.setIdHash(calculateHash(station));
-        LOG(plog::debug) << "generated id hash for '" << station.getName() << "': " << station.getIdHash();
-    } else {
-        throw "station must be updated: id:" + station.getId();
-    }
 
     // TODO check if an existing hash has changed
-    sqlite3_bind_int64(insertStationStmnt, 1, station.getIdHash());
-    sqlite3_bind_int(insertStationStmnt, 2, station.getAuthor());
-    sqlite3_bind_text(insertStationStmnt, 3, station.getName().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(insertStationStmnt, 4, station.getGenre().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(insertStationStmnt, 5, station.getCountry().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(insertStationStmnt, 6, station.getLanguage().c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(insertStationStmnt, 7, station.getDescription().c_str(), -1, SQLITE_STATIC);
+    // TODO check if an entry with this hash already exists
+    sqlite3_bind_int(insertStationStmnt, 1, station.getAuthor());
+    sqlite3_bind_text(insertStationStmnt, 2, station.getName().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 3, station.getGenre().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 4, station.getCountry().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 5, station.getLanguage().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 6, station.getDescription().c_str(), -1, SQLITE_STATIC);
     const std::string serializedUrls = serializeUrls(station.getUrls());
-    sqlite3_bind_text(insertStationStmnt, 8, serializedUrls.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStationStmnt, 7, serializedUrls.c_str(), -1, SQLITE_STATIC);
+    // TODO Add timestamp of update
 
     if (sqlite3_step(insertStationStmnt) != SQLITE_DONE) {
         const std::string error = getError();
@@ -253,25 +247,18 @@ std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& v
     return urls;
 }
 
-long SqliteStationsDao::calculateHash(const Station& station) {
-    static std::hash<std::string> hash;
-    return hash(station.getName()) + hash(station.getGenre()) + hash(station.getLanguage()) + hash(station.getCountry());
-}
-
 Station SqliteStationsDao::getStation(sqlite3_stmt* stmnt) {
     const uint64_t rowid = sqlite3_column_int64(stmnt, 0);
-    const uint64_t idHash = sqlite3_column_int64(stmnt, 1);
-    const std::string name{(const char*) sqlite3_column_text(stmnt, 2)};
-    const Author author = (Author) sqlite3_column_int(stmnt, 3);
-    const std::string genre{(const char*) sqlite3_column_text(stmnt, 4)};
-    const std::string country{(const char*) sqlite3_column_text(stmnt, 5)};
-    const std::string language{(const char*) sqlite3_column_text(stmnt, 6)};
-    const std::string description{(const char*) sqlite3_column_text(stmnt, 7)};
-    const std::string urls{(const char*) sqlite3_column_text(stmnt, 8)};
+    const std::string name{(const char*) sqlite3_column_text(stmnt, 1)};
+    const Author author = (Author) sqlite3_column_int(stmnt, 2);
+    const std::string genre{(const char*) sqlite3_column_text(stmnt, 3)};
+    const std::string country{(const char*) sqlite3_column_text(stmnt, 4)};
+    const std::string language{(const char*) sqlite3_column_text(stmnt, 5)};
+    const std::string description{(const char*) sqlite3_column_text(stmnt, 6)};
+    const std::string urls{(const char*) sqlite3_column_text(stmnt, 7)};
 
     Station station;
     station.setId(rowid);
-    station.setIdHash(idHash);
     station.setName(name);
     station.setAuthor(author);
     station.setGenre(genre);

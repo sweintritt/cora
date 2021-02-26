@@ -2,7 +2,6 @@
 
 Station::Station()
     : m_id()
-    , m_idHash()
     , m_author(IMPORT)
     , m_name()
     , m_genre()
@@ -19,14 +18,6 @@ void Station::setId(const int64_t id) {
 
 int64_t Station::getId() const {
     return m_id;
-}
-
-void Station::setIdHash(const int64_t idHash) {
-    m_idHash = idHash;
-}
-
-int64_t Station::getIdHash() const {
-    return m_idHash;
 }
 
 void Station::setAuthor(const Author author) {

@@ -1,7 +1,7 @@
 ToDos
 ======
 
-* Setup sqlite database manually
+* add timestamp of import for station
 * Aliases for commands? quit, q, exit, end, search, se, find, fd, play, pl, stop, st
 * Store favorites
 * Fix as much compiler warnings as possible

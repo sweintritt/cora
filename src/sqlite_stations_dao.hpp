@@ -36,8 +36,6 @@ class SqliteStationsDao : public StationsDao {
 
         virtual std::vector<long> getAllIds() override;
 
-        virtual long calculateHash(const Station& station);
-
     private:
         int version;
 

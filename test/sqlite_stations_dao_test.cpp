@@ -12,7 +12,6 @@ TEST(SqliteStationsDaoTest, SaveAndGet) {
     CHECK_EQUAL(0, dao.getAllIds().size());
 
     Station expected;
-    expected.setIdHash(0);
     expected.setAuthor(USER);
     expected.setName("Sound of Movies");
     expected.setGenre("Soundtracks");
@@ -25,7 +24,6 @@ TEST(SqliteStationsDaoTest, SaveAndGet) {
 
     const int64_t id = expected.getId();
     const std::shared_ptr<Station> actual = dao.findById(id);
-    CHECK_EQUAL(expected.getIdHash(), actual->getIdHash());
     CHECK_EQUAL(expected.getAuthor(), actual->getAuthor());
     CHECK_EQUAL(expected.getName(), actual->getName());
     CHECK_EQUAL(expected.getGenre(), actual->getGenre());
