@@ -67,7 +67,8 @@ void Cora::init(int argc, char* argv[]) {
 std::string Cora::getDefaultFile() {
     // TODO Get user name and build default path
     // return ":memory:";
-    return "./cora.sqlite";
+    std::string username{getenv("USER")};
+    return "/home/" + username + "/.cora.sqlite";
 }
 
 void Cora::addStations() {
