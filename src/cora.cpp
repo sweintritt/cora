@@ -104,26 +104,32 @@ void Cora::addStations() {
 
 void Cora::run () {
     std::string input{""};
-    while (input.compare("quit")) {
+    bool running = true;
+    while (running) {
         std::cout << "cora> ";
         std::getline(std::cin, input);
         LOG(plog::debug) << "input: '" << input << "'";
 
         if (!input.empty()) {
             const std::vector<std::string> args = split(input);
-            const std::string cmd = args[0];
             LOG(plog::debug) << "args.size(): " << args.size();
+            const std::string cmd = args[0];
+            LOG(plog::debug) << "cmd: " << cmd;
 
-            try {
-                m_commandInterpreter.execute(args);
-            } catch (const std::exception& error) {
-                LOG(plog::error) << error.what();
-            } catch (const std::string& error) {
-                LOG(plog::error) << error;
-            } catch (const char* error) {
-                LOG(plog::error) << error;
-            } catch (...) {
-                LOG(plog::error) << "error of unknown type";
+            if (!cmd.compare("quit")) {
+                running = false;
+            } else {
+                try {
+                    m_commandInterpreter.execute(args);
+                } catch (const std::exception& error) {
+                    LOG(plog::error) << error.what();
+                } catch (const std::string& error) {
+                    LOG(plog::error) << error;
+                } catch (const char* error) {
+                    LOG(plog::error) << error;
+                } catch (...) {
+                    LOG(plog::error) << "error of unknown type";
+                }
             }
         }
     }
