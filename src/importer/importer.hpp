@@ -15,7 +15,6 @@ class Importer {
         const std::string& getName();
 
     protected:
-        std::shared_ptr<StationsDao> m_stationsDao;
-
         std::string m_name;
+        std::shared_ptr<StationsDao> m_stationsDao;
 };

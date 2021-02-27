@@ -8,5 +8,6 @@ StopCommand::StopCommand(const std::shared_ptr<StationsDao> stationsDao,
 StopCommand::~StopCommand() { }
 
 void StopCommand::execute(const std::vector<std::string>& args) {
+    m_cli.parse(args);
     m_mediaPlayer->stop();
 }

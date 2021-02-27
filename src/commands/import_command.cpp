@@ -5,12 +5,10 @@
 #include <memory>
 
 ImportCommand::ImportCommand(const std::shared_ptr<StationsDao> stationsDao,
-    const std::shared_ptr<MediaPlayer> mediaPlayer)
+                             const std::shared_ptr<MediaPlayer> mediaPlayer)
     : Command("import", "search for radio staions", stationsDao, mediaPlayer) {
         auto radioSureImporter = std::unique_ptr<RadioSureImporter>(new RadioSureImporter(stationsDao));
-
         m_importerByName.insert(std::make_pair(radioSureImporter->getName(), std::move(radioSureImporter)));
-
         m_cli.addOption('h', "help", false, "Show help page");
         m_cli.addOption('i', "input", true, "Input to import stations from. Depends on the type an could be a file or URL.");
         m_cli.addOption('t', "type", true, "Type of imported data. Supported types are: radiosure (requires a file as input).");

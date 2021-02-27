@@ -8,6 +8,7 @@ ListCommand::ListCommand(const std::shared_ptr<StationsDao> stationsDao,
 ListCommand::~ListCommand() { }
 
 void ListCommand::execute(const std::vector<std::string>& args) {
+    m_cli.parse(args);
     const auto ids = m_stationsDao->getAllIds();
 
     for (const auto& id : ids) {
