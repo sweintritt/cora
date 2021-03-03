@@ -33,41 +33,59 @@ Cora::Cora()
 
 Cora::~Cora() {}
 
-void Cora::init(int argc, char* argv[]) {
-    m_cli.parse(argc, argv);
-
-    configureLogger(m_cli.hasOption('d'));
-
-    if (m_cli.hasOption('h')) {
-        std::cout << m_cli.usage();
-        return;
-    }
-
-    std::string file;
-    if (m_cli.hasOption('f')) {
-        file = m_cli.getValue('f');
-    } else {
-        file = getDefaultFile();
-    }
-
+void Cora::run(int argc, char* argv[]) {
     LOG(plog::debug) << "Initializing player";
     m_mediaPlayer = std::make_shared<QtMediaPlayer>();
-    LOG(plog::debug) << "Opening database file " << file;
+    LOG(plog::debug) << "Initializing database access";
     m_stationsDao = std::make_shared<SqliteStationsDao>();
-    m_stationsDao->open(file);
-    // addStations();
     LOG(plog::debug) << "Initializing command interpreter";
     m_commandInterpreter.add(std::unique_ptr<Command>(new FindCommand(m_stationsDao, m_mediaPlayer)));
     m_commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand(m_stationsDao, m_mediaPlayer)));
     m_commandInterpreter.add(std::unique_ptr<Command>(new ListCommand(m_stationsDao, m_mediaPlayer)));
     m_commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand(m_stationsDao, m_mediaPlayer)));
     m_commandInterpreter.add(std::unique_ptr<Command>(new StopCommand(m_stationsDao, m_mediaPlayer)));
+
+    std::vector<std::string> argsMain;
+    std::vector<std::string> argsCmd;
+    bool foundCommand = false;
+
+// TODO Not working for all commands?
+    for (int i = 0; i < argc; ++i) {
+        if (foundCommand || m_commandInterpreter.hasCommand(argv[i])) {
+            argsCmd.push_back(argv[i]);
+            foundCommand = true;
+        } else {
+            argsMain.push_back(argv[i]);
+        }
+    }
+
+    m_cli.parse(argsMain);
+    configureLogger(m_cli.hasOption('d'));
+    LOG(plog::debug) << "args main: " << toString(argsMain);
+    LOG(plog::debug) << "args command: " << toString(argsCmd);
+
+    if (m_cli.hasOption('h')) {
+        // TODO Show commands
+        std::cout << m_cli.usage();
+        return;
+    }
+
+    const std::string file = (m_cli.hasOption('f')) ? m_cli.getValue('f') :  getDefaultFile();
+    LOG(plog::debug) << "Opening database file " << file;
+    m_stationsDao->open(file);
+    // addStations();
+
+    if(argsCmd.empty()) {
+        LOG(plog::debug) << "No command given running interactive mode";
+        runInteractive();
+    } else {
+        runCommand(argsCmd);
+    }
 }
 
 std::string Cora::getDefaultFile() {
-    // TODO Get user name and build default path
     // return ":memory:";
-    std::string username{getenv("USER")};
+    const std::string username{getenv("USER")};
     return "/home/" + username + "/.cora.sqlite";
 }
 
@@ -103,7 +121,25 @@ void Cora::addStations() {
     m_stationsDao->save(bigRalternative);
 }
 
-void Cora::run () {
+void Cora::runCommand(const std::vector<std::string>& args) {
+    LOG(plog::debug) << "args.size(): " << args.size();
+    const std::string cmd = args[0];
+    LOG(plog::debug) << "cmd: " << cmd;
+
+    try {
+        m_commandInterpreter.execute(args);
+    } catch (const std::exception& error) {
+        LOG(plog::error) << error.what();
+    } catch (const std::string& error) {
+        LOG(plog::error) << error;
+    } catch (const char* error) {
+        LOG(plog::error) << error;
+    } catch (...) {
+        LOG(plog::error) << "error of unknown type";
+    }
+}
+
+void Cora::runInteractive () {
     std::string input{""};
     bool running = true;
     while (running) {
@@ -113,29 +149,13 @@ void Cora::run () {
 
         if (!input.empty()) {
             const std::vector<std::string> args = split(input);
-            LOG(plog::debug) << "args.size(): " << args.size();
-            const std::string cmd = args[0];
-            LOG(plog::debug) << "cmd: " << cmd;
-
-            if (!cmd.compare("quit")) {
+            if (!args[0].compare("quit")) {
                 running = false;
             } else {
-                try {
-                    m_commandInterpreter.execute(args);
-                } catch (const std::exception& error) {
-                    LOG(plog::error) << error.what();
-                } catch (const std::string& error) {
-                    LOG(plog::error) << error;
-                } catch (const char* error) {
-                    LOG(plog::error) << error;
-                } catch (...) {
-                    LOG(plog::error) << "error of unknown type";
-                }
+                runCommand(args);
             }
         }
     }
-
-    m_stationsDao->close();
 }
 
 void Cora::configureLogger(const bool debug) {

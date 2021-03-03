@@ -8,8 +8,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Starting cora" << std::endl;
     try {
         Cora cora;
-        cora.init(argc, argv);
-        cora.run();
+        cora.run(argc, argv);
         return EXIT_SUCCESS;
     } catch (const std::exception& error) {
         std::cerr << error.what() << std::endl;

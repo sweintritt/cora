@@ -24,3 +24,16 @@ std::vector<std::string> split(const std::string& value, const char delimiter) {
 
    return tokens;
 }
+
+std::string toString(const std::vector<std::string>& values) {
+  std::ostringstream stream;
+
+  if (!values.empty()) {
+    std::copy(values.begin(), values.end() - 1,
+        std::ostream_iterator<std::string>(stream, ","));
+
+    stream << values.back();
+  }
+
+  return stream.str();
+}

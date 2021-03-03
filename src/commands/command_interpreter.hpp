@@ -13,10 +13,11 @@ class CommandInterpreter {
 
         virtual ~CommandInterpreter();
 
-        void add(std::unique_ptr<Command> command);
+        void add(std::unique_ptr<Command> cmd);
 
         void execute(const std::vector<std::string>& args);
 
+        bool hasCommand(const std::string& cmd);
     private:
         std::map<std::string, std::unique_ptr<Command>> m_commands;
 };

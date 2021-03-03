@@ -8,9 +8,11 @@ CommandInterpreter::CommandInterpreter()
 
 CommandInterpreter::~CommandInterpreter() { }
 
-void CommandInterpreter::add(std::unique_ptr<Command> command) {
-    // TODO Verify command is not already there
-    m_commands.insert(std::make_pair(command->getName(), std::move(command)));
+void CommandInterpreter::add(std::unique_ptr<Command> cmd) {
+    if (hasCommand(cmd->getName())) {
+        throw std::runtime_error("duplicate command " + cmd->getName());
+    }
+    m_commands.insert(std::make_pair(cmd->getName(), std::move(cmd)));
 }
 
 void CommandInterpreter::execute(const std::vector<std::string>& args) {
@@ -21,4 +23,8 @@ void CommandInterpreter::execute(const std::vector<std::string>& args) {
     } else {
         throw std::invalid_argument("unknown command: " + args[0]);
     }
+}
+
+bool CommandInterpreter::hasCommand(const std::string& cmd) {
+    return m_commands.find(cmd) != m_commands.end();
 }

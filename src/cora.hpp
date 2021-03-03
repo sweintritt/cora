@@ -12,9 +12,7 @@ class Cora {
     public:
         Cora();
         ~Cora();
-        void init(int argc, char* argv[]);
-        void run();
-
+        void run(int argc, char* argv[]);
     private:
         Cli m_cli;
         CommandInterpreter m_commandInterpreter;
@@ -24,4 +22,7 @@ class Cora {
         std::string getDefaultFile();
         void configureLogger(const bool debug);
         void addStations();
+        void runInteractive();
+        void runCommand(const std::vector<std::string>& args);
+
 };

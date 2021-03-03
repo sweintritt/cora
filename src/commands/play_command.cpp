@@ -1,5 +1,7 @@
 #include "commands/play_command.hpp"
 
+#include <iostream>
+
 PlayCommand::PlayCommand(const std::shared_ptr<StationsDao> stationsDao,
     const std::shared_ptr<MediaPlayer> mediaPlayer)
     : Command("play", "play a station given by id", stationsDao, mediaPlayer) {
@@ -21,6 +23,10 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
         m_mediaPlayer->setUrl(station->getUrls()[0]);
         m_mediaPlayer->setVolume(50);
         m_mediaPlayer->play();
+
+        // TODO Add a boolean flag to switch between command and interactive mode
+        LOG(plog::info) << "Press enter to stop playing";
+        std::cin.get();
     } else {
         LOG(plog::warning) << "no station found for id:" << id;
     }
