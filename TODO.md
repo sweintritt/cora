@@ -1,6 +1,11 @@
 ToDos
 ======
 
+* remove the shell and call commands directly from the commandline
+* simplify functionality. e.g. `$ cora list | grep Soundtracks`
+* use gstreamer or something else instead
+* show command to see everything about a station
+* improve play command to select url: e.g. `$ cora play 2636:1` for url 1 of station with id 2636
 * add timestamp of import for station
 * Aliases for commands? quit, q, exit, end, search, se, find, fd, play, pl, stop, st
 * Store favorites
