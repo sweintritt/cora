@@ -4,9 +4,9 @@
 
 class RadioSureImporter : public Importer {
     public:
-        RadioSureImporter(const std::shared_ptr<StationsDao> stationsDao);
+        RadioSureImporter();
 
         virtual ~RadioSureImporter();
 
-        virtual void import(const std::string& url) override;
+        virtual void import(const std::string& url, const std::shared_ptr<StationsDao> stationsDao) override;
 };

@@ -4,10 +4,12 @@
 
 class PlayCommand : public Command {
     public:
-        PlayCommand(const std::shared_ptr<StationsDao> stationsDao,
-                    const std::shared_ptr<MediaPlayer> mediaPlayer);
+        PlayCommand();
 
         virtual ~PlayCommand();
 
         virtual void execute(const std::vector<std::string>& args) override;
+
+    private:
+        std::string findIdAndUrl(const std::vector<std::string>& args) const;
 };

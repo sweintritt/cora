@@ -2,32 +2,77 @@
 
 #include <iostream>
 
-PlayCommand::PlayCommand(const std::shared_ptr<StationsDao> stationsDao,
-    const std::shared_ptr<MediaPlayer> mediaPlayer)
-    : Command("play", "play a station given by id", stationsDao, mediaPlayer) {
+#include "utils.hpp"
+
+PlayCommand::PlayCommand() : Command("play", "play a station given by id") {
 }
 
 PlayCommand::~PlayCommand() { }
 
 void PlayCommand::execute(const std::vector<std::string>& args) {
-    if (args.size() < 2) {
-        LOG(plog::error) << "no id given";
+    m_cli.parse(args);
+    configureLogger(m_cli.hasValue('d'));
+    if (m_cli.hasOption('h')) {
+        LOG(plog::info) << m_cli.usage();
         return;
     }
 
-    const long id = std::stol(args[1]);
-    const auto station = m_stationsDao->findById(id);
+    const std::string idAndUrl = findIdAndUrl(args);
+
+    if (idAndUrl.empty()) {
+        LOG(plog::error) << "No id given. See 'cora play --help' for more information.";
+        return;
+    }
+
+    m_cli.parse(args);
+    auto mediaPlayer = createPlayer();
+    auto stationsDao = createStationsDao();
+    if (m_cli.hasValue('f')) {
+        stationsDao->open(m_cli.getValue('f'));
+    } else {
+        stationsDao->open(getDefaultFile());
+    }
+
+    const std::vector<std::string> values = split(idAndUrl, ':');
+    const long id = std::stol(values[0]);
+    const auto station = stationsDao->findById(id);
     if (station != nullptr) {
         LOG(plog::info) << "playing " << station->getName();
-        LOG(plog::debug) << "url: " << station->getUrls()[0];
-        m_mediaPlayer->setUrl(station->getUrls()[0]);
-        m_mediaPlayer->setVolume(50);
-        m_mediaPlayer->play();
+        std::string url;
+        if (values.size() > 1) {
+            const long index = std::stol(values[1]);
 
-        // TODO Add a boolean flag to switch between command and interactive mode
+            if (station->getUrls().size() < index) {
+                LOG(plog::warning) << "Only " << station->getUrls().size() << " found. Index " << index << " is invalid";
+                LOG(plog::info) << "Using default index 0";
+                url = station->getUrls()[0];
+            } else {
+                url = station->getUrls()[index];
+            }
+        } else {
+            url = station->getUrls()[0];
+        }
+
+        LOG(plog::debug) << "url: " << url;
+        mediaPlayer->setUrl(url);
+        mediaPlayer->setVolume(80);
+        mediaPlayer->play();
+
         LOG(plog::info) << "Press enter to stop playing";
         std::cin.get();
     } else {
-        LOG(plog::warning) << "no station found for id:" << id;
+        LOG(plog::warning) << "No station found for id:" << id;
     }
+}
+
+std::string PlayCommand::findIdAndUrl(const std::vector<std::string>& args) const {
+    const std::string idAndUrl;
+
+    for (unsigned int i = 2; i < args.size(); ++i) {
+        if (args[i][0] != '-') {
+            return args[i];
+        }
+    }
+
+    return "";
 }

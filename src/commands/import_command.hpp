@@ -8,8 +8,7 @@
 
 class ImportCommand : public Command {
     public:
-        ImportCommand(const std::shared_ptr<StationsDao> stationsDao,
-                      const std::shared_ptr<MediaPlayer> mediaPlayer);
+        ImportCommand();
 
         virtual ~ImportCommand();
 

@@ -6,87 +6,46 @@
 #include <iostream>
 
 #include <plog/Log.h>
-#include <plog/Appenders/ConsoleAppender.h>
 
 #include "cora.hpp"
-#include "qt_media_player.hpp"
-#include "sqlite_stations_dao.hpp"
 #include "utils.hpp"
 #include "commands/command_interpreter.hpp"
-#include "commands/find_command.hpp"
 #include "commands/import_command.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
-#include "commands/stop_command.hpp"
-#include "logging/message_only_formatter.hpp"
 
-Cora::Cora()
-    : m_cli("cora", "listen to internet radio stations")
-    , m_commandInterpreter()
-    , m_stationsDao()
-    , m_mediaPlayer() {
-
-    m_cli.addOption('d', "debug", false, "Setup debug mode.");
-    m_cli.addOption('f', "file", true, "Database file.");
-    m_cli.addOption('h', "help", false, "Show help page.");
+Cora::Cora() : m_commandInterpreter() {
+    m_commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand()));
+    m_commandInterpreter.add(std::unique_ptr<Command>(new ListCommand()));
+    m_commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand()));
 }
 
 Cora::~Cora() {}
 
 void Cora::run(int argc, char* argv[]) {
-    LOG(plog::debug) << "Initializing player";
-    m_mediaPlayer = std::make_shared<QtMediaPlayer>();
-    LOG(plog::debug) << "Initializing database access";
-    m_stationsDao = std::make_shared<SqliteStationsDao>();
-    LOG(plog::debug) << "Initializing command interpreter";
-    m_commandInterpreter.add(std::unique_ptr<Command>(new FindCommand(m_stationsDao, m_mediaPlayer)));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand(m_stationsDao, m_mediaPlayer)));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new ListCommand(m_stationsDao, m_mediaPlayer)));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand(m_stationsDao, m_mediaPlayer)));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new StopCommand(m_stationsDao, m_mediaPlayer)));
-
-    std::vector<std::string> argsMain;
-    std::vector<std::string> argsCmd;
-    bool foundCommand = false;
-
-// TODO Not working for all commands?
-    for (int i = 0; i < argc; ++i) {
-        if (foundCommand || m_commandInterpreter.hasCommand(argv[i])) {
-            argsCmd.push_back(argv[i]);
-            foundCommand = true;
-        } else {
-            argsMain.push_back(argv[i]);
-        }
-    }
-
-    m_cli.parse(argsMain);
-    configureLogger(m_cli.hasOption('d'));
-    LOG(plog::debug) << "args main: " << toString(argsMain);
-    LOG(plog::debug) << "args command: " << toString(argsCmd);
-
-    if (m_cli.hasOption('h')) {
-        // TODO Show commands
-        std::cout << m_cli.usage();
+    // TODO No logger configured at this point
+    if (argc < 2 || m_commandInterpreter.hasCommand(argv[1])) {
+        LOG(plog::warning) << "No command given. Try 'cora help' for more information.";
         return;
     }
 
-    const std::string file = (m_cli.hasOption('f')) ? m_cli.getValue('f') :  getDefaultFile();
-    LOG(plog::debug) << "Opening database file " << file;
-    m_stationsDao->open(file);
-    // addStations();
-
-    if(argsCmd.empty()) {
-        LOG(plog::debug) << "No command given running interactive mode";
-        runInteractive();
-    } else {
-        runCommand(argsCmd);
+    if (std::string{argv[1]}.compare("help") == 0) {
+        // TODO Show commands
+        std::cout << "TODO Show help" << std::endl;
+        return;
     }
+
+    std::vector<std::string> args;
+    for (unsigned int i = 0; i < argc; ++i) {
+        args.push_back(argv[i]);
+    }
+
+    runCommand(args);
 }
 
-std::string Cora::getDefaultFile() {
-    // return ":memory:";
-    const std::string username{getenv("USER")};
-    return "/home/" + username + "/.cora.sqlite";
+void Cora::showUsage() {
+    LOG(plog::info) << "cora - listen to internet radio stations";
+    // TODO get commands and usages
 }
 
 void Cora::addStations() {
@@ -98,7 +57,7 @@ void Cora::addStations() {
     radioGong.setCountry("Germany");
     radioGong.setDescription("Der Rocksender");
     radioGong.addUrl("http://webstream.gong971.de/gong971");
-    m_stationsDao->save(radioGong);
+    //m_stationsDao->save(radioGong);
 
     Station cinemix;
     cinemix.setName("Cinemix");
@@ -108,7 +67,7 @@ void Cora::addStations() {
     cinemix.setCountry("");
     cinemix.setDescription("The Spirit of Soundtracks");
     cinemix.addUrl("https://streamingv2.shoutcast.com/CINEMIX");
-    m_stationsDao->save(cinemix);
+    //m_stationsDao->save(cinemix);
 
     Station bigRalternative;
     bigRalternative.setName("Big R Radio - 90s Alternative Rock");
@@ -118,13 +77,11 @@ void Cora::addStations() {
     bigRalternative.setCountry("United States of America");
     bigRalternative.setDescription("90s Alternative Rock");
     bigRalternative.addUrl("http://bigrradio.cdnstream1.com/5187_128");
-    m_stationsDao->save(bigRalternative);
+    //m_stationsDao->save(bigRalternative);
 }
 
 void Cora::runCommand(const std::vector<std::string>& args) {
-    LOG(plog::debug) << "args.size(): " << args.size();
     const std::string cmd = args[0];
-    LOG(plog::debug) << "cmd: " << cmd;
 
     try {
         m_commandInterpreter.execute(args);
@@ -136,35 +93,5 @@ void Cora::runCommand(const std::vector<std::string>& args) {
         LOG(plog::error) << error;
     } catch (...) {
         LOG(plog::error) << "error of unknown type";
-    }
-}
-
-void Cora::runInteractive () {
-    std::string input{""};
-    bool running = true;
-    while (running) {
-        std::cout << "cora> ";
-        std::getline(std::cin, input);
-        LOG(plog::debug) << "input: '" << input << "'";
-
-        if (!input.empty()) {
-            const std::vector<std::string> args = split(input);
-            if (!args[0].compare("quit")) {
-                running = false;
-            } else {
-                runCommand(args);
-            }
-        }
-    }
-}
-
-void Cora::configureLogger(const bool debug) {
-    if (debug) {
-        static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-        plog::init(plog::debug, &consoleAppender);
-        LOG(plog::debug) << "Debug logging configured";
-    } else {
-        static plog::ConsoleAppender<MessageOnlyFormatter> consoleAppender;
-        plog::init(plog::info, &consoleAppender);
     }
 }

@@ -7,12 +7,12 @@
 #include <fstream>
 #include <vector>
 
-RadioSureImporter::RadioSureImporter(const std::shared_ptr<StationsDao> stationsDao)
-    : Importer("radio-sure", stationsDao) {}
+RadioSureImporter::RadioSureImporter()
+    : Importer("radio-sure") {}
 
 RadioSureImporter::~RadioSureImporter() {}
 
-void RadioSureImporter::import(const std::string& url) {
+void RadioSureImporter::import(const std::string& url, const std::shared_ptr<StationsDao> stationsDao) {
     std::string line;
     std::ifstream file(url);
 
@@ -37,7 +37,7 @@ void RadioSureImporter::import(const std::string& url) {
               }
             }
 
-            m_stationsDao->save(station);
+            stationsDao->save(station);
             ++count;
         }
 

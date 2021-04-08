@@ -100,7 +100,7 @@ class Cli {
        *         value was passed on command line
        */
       std::string getValue(const char opt);
-
+      // TODO getValue(opt, default);
       /**
        * @brief Returns the value for the specified option or an empty string if the option has no
        *        value or no value was passed on command line

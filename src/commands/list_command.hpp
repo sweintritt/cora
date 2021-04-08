@@ -4,8 +4,7 @@
 
 class ListCommand : public Command {
     public:
-        ListCommand(const std::shared_ptr<StationsDao> stationsDao,
-                    const std::shared_ptr<MediaPlayer> mediaPlayer);
+        ListCommand();
 
         virtual ~ListCommand();
 

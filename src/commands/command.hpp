@@ -12,10 +12,7 @@
 
 class Command {
     public:
-        Command(const std::string& name,
-                const std::string& description,
-                const std::shared_ptr<StationsDao> stationsDao,
-                const std::shared_ptr<MediaPlayer> mediaPlayer);
+        Command(const std::string& name, const std::string& description);
 
         virtual ~Command();
 
@@ -30,8 +27,12 @@ class Command {
 
         Cli m_cli;
 
-        std::shared_ptr<StationsDao> m_stationsDao;
+        virtual const std::string getDefaultFile() const;
 
-        std::shared_ptr<MediaPlayer> m_mediaPlayer;
+        virtual void configureLogger(const bool debug) const;
+
+        virtual std::shared_ptr<MediaPlayer> createPlayer() const;
+
+        virtual std::shared_ptr<StationsDao> createStationsDao() const;
 };
 
