@@ -6,7 +6,7 @@
 
 #include <memory>
 
-ImportCommand::ImportCommand() : Command("import", "search for radio staions"), m_importerByName() {
+ImportCommand::ImportCommand() : Command("import", "Import radio stations from different sources"), m_importerByName() {
         auto radioSureImporter = std::unique_ptr<RadioSureImporter>(new RadioSureImporter());
         m_importerByName.insert(std::make_pair(radioSureImporter->getName(), std::move(radioSureImporter)));
         m_cli.addOption('i', "input", true, "Input to import stations from. Depends on the type an could be a file or URL.");

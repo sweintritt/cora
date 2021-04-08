@@ -11,12 +11,14 @@
 #include "cora.hpp"
 #include "utils.hpp"
 #include "commands/command_interpreter.hpp"
+#include "commands/info_command.hpp"
 #include "commands/import_command.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
 #include "logging/message_only_formatter.hpp"
 
 Cora::Cora() : m_commandInterpreter() {
+    m_commandInterpreter.add(std::unique_ptr<Command>(new InfoCommand()));
     m_commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand()));
     m_commandInterpreter.add(std::unique_ptr<Command>(new ListCommand()));
     m_commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand()));

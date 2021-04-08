@@ -6,7 +6,7 @@
 
 #include "utils.hpp"
 
-PlayCommand::PlayCommand() : Command("play", "play a station given by id") {
+PlayCommand::PlayCommand() : Command("play", "Play a station, given by id") {
 }
 
 PlayCommand::~PlayCommand() { }
@@ -68,8 +68,6 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
 }
 
 std::string PlayCommand::findIdAndUrl(const std::vector<std::string>& args) const {
-    const std::string idAndUrl;
-
     for (unsigned int i = 2; i < args.size(); ++i) {
         if (args[i][0] != '-') {
             return args[i];

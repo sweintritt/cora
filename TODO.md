@@ -1,7 +1,7 @@
 ToDos
 ======
 
-* info command to see everything about a station
+* Parsing urls from database not working correctly?
 * use gstreamer or something else instead
 * add timestamp of import for station
 * Fix as much compiler warnings as possible

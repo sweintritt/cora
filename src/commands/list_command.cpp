@@ -2,7 +2,7 @@
 
 #include <plog/Log.h>
 
-ListCommand::ListCommand() : Command("list", "list available stations") {
+ListCommand::ListCommand() : Command("list", "List all available stations") {
 }
 
 ListCommand::~ListCommand() { }

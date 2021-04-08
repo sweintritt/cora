@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## Added
+
+* Info command.
+
 ## Removed
 
 * Debug option for commands.
