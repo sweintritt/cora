@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <plog/Log.h>
+#include <plog/Appenders/ConsoleAppender.h>
 
 #include "cora.hpp"
 #include "utils.hpp"
@@ -13,6 +14,7 @@
 #include "commands/import_command.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
+#include "logging/message_only_formatter.hpp"
 
 Cora::Cora() : m_commandInterpreter() {
     m_commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand()));
@@ -23,8 +25,10 @@ Cora::Cora() : m_commandInterpreter() {
 Cora::~Cora() {}
 
 void Cora::run(int argc, char* argv[]) {
-    // TODO No logger configured at this point
-    if (argc < 2 || m_commandInterpreter.hasCommand(argv[1])) {
+    configureLogger();
+
+    if (argc < 2) {
+        LOG(plog::debug) << "argc = " << argc;
         LOG(plog::warning) << "No command given. Try 'cora help' for more information.";
         return;
     }
@@ -35,8 +39,13 @@ void Cora::run(int argc, char* argv[]) {
         return;
     }
 
+    if (!m_commandInterpreter.hasCommand(argv[1])) {
+        LOG(plog::warning) << "Unknown command '" << argv[1] << "'. Try 'cora help' for more information.";
+        return;
+    }
+
     std::vector<std::string> args;
-    for (unsigned int i = 0; i < argc; ++i) {
+    for (int i = 0; i < argc; ++i) {
         args.push_back(argv[i]);
     }
 
@@ -78,6 +87,17 @@ void Cora::addStations() {
     bigRalternative.setDescription("90s Alternative Rock");
     bigRalternative.addUrl("http://bigrradio.cdnstream1.com/5187_128");
     //m_stationsDao->save(bigRalternative);
+}
+
+void Cora::configureLogger() const {
+    #ifndef NDEBUG
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+    plog::init(plog::debug, &consoleAppender);
+    LOG(plog::debug) << "Debug logging configured";
+    #else
+    static plog::ConsoleAppender<MessageOnlyFormatter> consoleAppender;
+    plog::init(plog::info, &consoleAppender);
+    #endif
 }
 
 void Cora::runCommand(const std::vector<std::string>& args) {

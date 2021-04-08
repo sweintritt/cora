@@ -8,8 +8,6 @@
 #include "media_player.hpp"
 #include "cli/cli.hpp"
 
-#include <plog/Log.h>
-
 class Command {
     public:
         Command(const std::string& name, const std::string& description);
@@ -28,8 +26,6 @@ class Command {
         Cli m_cli;
 
         virtual const std::string getDefaultFile() const;
-
-        virtual void configureLogger(const bool debug) const;
 
         virtual std::shared_ptr<MediaPlayer> createPlayer() const;
 

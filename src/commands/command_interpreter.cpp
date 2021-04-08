@@ -16,12 +16,12 @@ void CommandInterpreter::add(std::unique_ptr<Command> cmd) {
 }
 
 void CommandInterpreter::execute(const std::vector<std::string>& args) {
-    auto it = m_commands.find(args[0]);
+    auto it = m_commands.find(args[1]);
 
     if (it != m_commands.end()) {
         it->second->execute(args);
     } else {
-        throw std::invalid_argument("unknown command: " + args[0]);
+        throw std::invalid_argument("Unknown command: " + args[1]);
     }
 }
 

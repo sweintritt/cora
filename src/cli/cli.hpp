@@ -48,7 +48,7 @@ class Cli {
        * @param[in] argc length of the argument array
        * @param[in] argv command line arguments
        */
-      void parse(const int argc, char* argv[]); // TODO argv should be const
+      void parse(const int argc, char* argv[]);
 
       /**
        * @brief Parses the command line arguments for all specified options.

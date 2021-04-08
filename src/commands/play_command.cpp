@@ -1,5 +1,7 @@
 #include "commands/play_command.hpp"
 
+#include <plog/Log.h>
+
 #include <iostream>
 
 #include "utils.hpp"
@@ -11,7 +13,7 @@ PlayCommand::~PlayCommand() { }
 
 void PlayCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
-    configureLogger(m_cli.hasValue('d'));
+
     if (m_cli.hasOption('h')) {
         LOG(plog::info) << m_cli.usage();
         return;

@@ -1,5 +1,7 @@
 #include "commands/list_command.hpp"
 
+#include <plog/Log.h>
+
 ListCommand::ListCommand() : Command("list", "list available stations") {
 }
 
@@ -8,7 +10,7 @@ ListCommand::~ListCommand() { }
 void ListCommand::execute(const std::vector<std::string>& args) {
     // TODO Move into command class
     m_cli.parse(args);
-    configureLogger(m_cli.hasValue('d'));
+
     if (m_cli.hasOption('h')) {
         LOG(plog::info) << m_cli.usage();
         return;

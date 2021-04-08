@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## Removed
+
+* Debug option for commands.
+* find command.
+* stop command.
+* interactive mode.
+
+## [v0.5.0] - 2021-02-26
+
 ### Added
 
 * debug flag for logging configuration.
