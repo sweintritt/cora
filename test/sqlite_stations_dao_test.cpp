@@ -19,6 +19,8 @@ TEST(SqliteStationsDaoTest, SaveAndGet) {
     expected.setCountry("England");
     expected.setDescription("cool station");
     expected.addUrl("http://somehost.co.uk");
+    expected.addUrl("http://anotherhost.co.uk");
+    expected.addUrl("http://andonemorehost.co.uk");
     dao.save(expected);
     CHECK_EQUAL(1, dao.getAllIds().size());
 

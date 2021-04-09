@@ -237,7 +237,8 @@ std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& v
         pos = value.find("}", start);
 
         if (pos != std::string::npos && pos < value.size()) {
-            const std::string url = value.substr(start, pos - 1);
+            const size_t length = pos - start;
+            const std::string url = value.substr(start, length);
             urls.push_back(url);
         }
 

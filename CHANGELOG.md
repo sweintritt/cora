@@ -13,6 +13,10 @@
 * stop command.
 * interactive mode.
 
+## Fixed
+
+* Deserialization of urls.
+
 ## [v0.5.0] - 2021-02-26
 
 ### Added
