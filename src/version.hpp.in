@@ -1,0 +1,3 @@
+#pragma once
+
+#define CORA_VERSION "@PROJECT_VERSION@";

@@ -120,7 +120,7 @@ class Cli {
        * @return a string containing a short help for all options.
        */
       const std::string usage() const;
-
+      // TODO Add remove option
    private:
       /**
        * Name of the command.
@@ -133,5 +133,6 @@ class Cli {
       /**
        * Options.
        */
+      // TODO Use a map instead
       std::list<Option> m_options;
 };

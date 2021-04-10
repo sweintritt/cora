@@ -12,6 +12,7 @@ set(cora_sources
     ${cora_source_dir}/commands/info_command.cpp
     ${cora_source_dir}/commands/list_command.cpp
     ${cora_source_dir}/commands/play_command.cpp
+    ${cora_source_dir}/commands/version_command.cpp
     ${cora_source_dir}/importer/importer.cpp
     ${cora_source_dir}/importer/radio_sure_importer.cpp
     ${cora_source_dir}/logging/message_only_formatter.cpp
@@ -21,8 +22,11 @@ CoraUseQtMultimedia()
 CoraUseSQLite3()
 find_package(Threads REQUIRED)
 
+configure_file(${cora_source_dir}/version.hpp.in ${CMAKE_BINARY_DIR}/generated/version.hpp)
+
 include_directories(
     ${cora_source_dir}
+    ${CMAKE_BINARY_DIR}/generated/
     ${SQLITE3_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include
 )

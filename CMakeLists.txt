@@ -16,6 +16,8 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 set(cora_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(cora_binary_dir ${CMAKE_CURRENT_BINARY_DIR})
 
+ADD_DEFINITIONS(-DPROJECT_VERSION=${CMAKE_PROJECT_VERSION})
+
 include(cmake/dependencies.cmake)
 include(cmake/cora.cmake)
 

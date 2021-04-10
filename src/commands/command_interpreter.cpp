@@ -1,5 +1,6 @@
 #include "commands/command_interpreter.hpp"
 
+#include <plog/Log.h>
 #include <stdexcept>
 
 CommandInterpreter::CommandInterpreter()
@@ -27,4 +28,10 @@ void CommandInterpreter::execute(const std::vector<std::string>& args) {
 
 bool CommandInterpreter::hasCommand(const std::string& cmd) {
     return m_commands.find(cmd) != m_commands.end();
+}
+
+void CommandInterpreter::showCommandUsages() const {
+    for (const auto& command : m_commands) {
+        LOG(plog::info) << command.second->getUsage();
+    }
 }

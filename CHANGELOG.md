@@ -5,6 +5,7 @@
 ## Added
 
 * Info command.
+* Version command.
 
 ## Removed
 

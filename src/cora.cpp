@@ -10,11 +10,13 @@
 
 #include "cora.hpp"
 #include "utils.hpp"
+#include "version.hpp"
 #include "commands/command_interpreter.hpp"
 #include "commands/info_command.hpp"
 #include "commands/import_command.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
+#include "commands/version_command.hpp"
 #include "logging/message_only_formatter.hpp"
 
 Cora::Cora() : m_commandInterpreter() {
@@ -22,12 +24,14 @@ Cora::Cora() : m_commandInterpreter() {
     m_commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand()));
     m_commandInterpreter.add(std::unique_ptr<Command>(new ListCommand()));
     m_commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand()));
+    m_commandInterpreter.add(std::unique_ptr<Command>(new VersionCommand()));
 }
 
 Cora::~Cora() {}
 
 void Cora::run(int argc, char* argv[]) {
     configureLogger();
+    LOG(plog::debug) << "Starting cora v" << CORA_VERSION;
 
     if (argc < 2) {
         LOG(plog::debug) << "argc = " << argc;
@@ -36,8 +40,7 @@ void Cora::run(int argc, char* argv[]) {
     }
 
     if (std::string{argv[1]}.compare("help") == 0) {
-        // TODO Show commands
-        std::cout << "TODO Show help" << std::endl;
+        m_commandInterpreter.showCommandUsages();
         return;
     }
 
