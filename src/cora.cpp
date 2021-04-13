@@ -14,17 +14,20 @@
 #include "commands/command_interpreter.hpp"
 #include "commands/info_command.hpp"
 #include "commands/import_command.hpp"
+#include "commands/help_command.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
 #include "commands/version_command.hpp"
 #include "logging/message_only_formatter.hpp"
 
 Cora::Cora() : m_commandInterpreter() {
-    m_commandInterpreter.add(std::unique_ptr<Command>(new InfoCommand()));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new ImportCommand()));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new ListCommand()));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new PlayCommand()));
-    m_commandInterpreter.add(std::unique_ptr<Command>(new VersionCommand()));
+    m_commandInterpreter = std::make_shared<CommandInterpreter>();
+    m_commandInterpreter->add(std::unique_ptr<Command>(new InfoCommand()));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new ImportCommand()));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new HelpCommand(m_commandInterpreter)));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new ListCommand()));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new PlayCommand()));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new VersionCommand()));
 }
 
 Cora::~Cora() {}
@@ -39,14 +42,7 @@ void Cora::run(int argc, char* argv[]) {
         return;
     }
 
-    if (std::string{argv[1]}.compare("help") == 0) {
-        // TODO Extract to help_command.cpp
-        LOG(plog::info) << "cora - listen to internet radio stations";
-        m_commandInterpreter.showCommands();
-        return;
-    }
-
-    if (!m_commandInterpreter.hasCommand(argv[1])) {
+    if (!m_commandInterpreter->hasCommand(argv[1])) {
         // TODO This warning should be comming from the
         LOG(plog::warning) << "Unknown command '" << argv[1] << "'. Try 'cora help' for more information.";
         return;
@@ -107,7 +103,7 @@ void Cora::runCommand(const std::vector<std::string>& args) {
     const std::string cmd = args[0];
 
     try {
-        m_commandInterpreter.execute(args);
+        m_commandInterpreter->execute(args);
     } catch (const std::exception& error) {
         LOG(plog::error) << error.what();
     } catch (const std::string& error) {

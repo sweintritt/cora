@@ -10,6 +10,7 @@ set(cora_sources
     ${cora_source_dir}/commands/command_interpreter.cpp
     ${cora_source_dir}/commands/import_command.cpp
     ${cora_source_dir}/commands/info_command.cpp
+    ${cora_source_dir}/commands/help_command.cpp
     ${cora_source_dir}/commands/list_command.cpp
     ${cora_source_dir}/commands/play_command.cpp
     ${cora_source_dir}/commands/version_command.cpp

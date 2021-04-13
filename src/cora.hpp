@@ -14,7 +14,7 @@ class Cora {
         void run(int argc, char* argv[]);
 
     private:
-        CommandInterpreter m_commandInterpreter;
+        std::shared_ptr<CommandInterpreter> m_commandInterpreter;
 
         void addStations();
 

@@ -34,7 +34,7 @@ void CommandInterpreter::showCommands() const {
     for (auto const& command : m_commands) {
         std::string name{command.second->getName()};
         // TODO Find max name length
-        name.resize(15, ' ');
+        name.resize(10, ' ');
         LOG(plog::info) << "   " << name << command.second->getDescription();
     }
 }

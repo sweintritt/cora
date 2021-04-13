@@ -6,6 +6,7 @@
 
 * Info command.
 * Version command.
+* Help command.
 
 ## Removed
 
