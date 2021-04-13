@@ -21,6 +21,10 @@ const std::string& Command::getName() const {
     return m_name;
 }
 
+std::string Command::getDescription() const {
+    return m_cli.description();
+}
+
 std::string Command::getUsage() const {
     return m_cli.usage();
 }

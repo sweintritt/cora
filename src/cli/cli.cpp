@@ -134,6 +134,14 @@ void Cli::reset() {
    }
 }
 
+const std::string Cli::command() const {
+   return m_command;
+}
+
+const std::string Cli::description() const {
+   return m_description;
+}
+
 const std::string Cli::usage() const {
    std::stringstream stream;
    stream << "NAME" << std::endl;

@@ -21,6 +21,4 @@ class Cora {
         void runCommand(const std::vector<std::string>& args);
 
         void configureLogger() const;
-
-        void showUsage();
 };

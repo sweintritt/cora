@@ -120,7 +120,10 @@ class Cli {
        * @return a string containing a short help for all options.
        */
       const std::string usage() const;
-      // TODO Add remove option
+
+      const std::string command() const;
+
+      const std::string description() const;
    private:
       /**
        * Name of the command.

@@ -19,7 +19,7 @@ class CommandInterpreter {
 
         bool hasCommand(const std::string& cmd);
 
-        void showCommandUsages() const;
+        void showCommands() const;
     private:
         std::map<std::string, std::unique_ptr<Command>> m_commands;
 };

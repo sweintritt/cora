@@ -40,7 +40,7 @@ SqliteStationsDao::~SqliteStationsDao() {
 
 void SqliteStationsDao::open(const std::string& url) {
     file = url;
-    LOG(plog::info) << "creating file";
+    LOG(plog::debug) << "opening file " << url;
     if (sqlite3_open_v2(file.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr) != SQLITE_OK) {
         throw "unable to open " + file + "': " + getError();
     }

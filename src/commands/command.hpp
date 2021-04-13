@@ -18,6 +18,8 @@ class Command {
 
         virtual const std::string& getName() const;
 
+        virtual std::string getDescription() const;
+
         virtual std::string getUsage() const;
 
     protected:

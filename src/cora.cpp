@@ -40,11 +40,14 @@ void Cora::run(int argc, char* argv[]) {
     }
 
     if (std::string{argv[1]}.compare("help") == 0) {
-        m_commandInterpreter.showCommandUsages();
+        // TODO Extract to help_command.cpp
+        LOG(plog::info) << "cora - listen to internet radio stations";
+        m_commandInterpreter.showCommands();
         return;
     }
 
     if (!m_commandInterpreter.hasCommand(argv[1])) {
+        // TODO This warning should be comming from the
         LOG(plog::warning) << "Unknown command '" << argv[1] << "'. Try 'cora help' for more information.";
         return;
     }
@@ -55,11 +58,6 @@ void Cora::run(int argc, char* argv[]) {
     }
 
     runCommand(args);
-}
-
-void Cora::showUsage() {
-    LOG(plog::info) << "cora - listen to internet radio stations";
-    // TODO get commands and usages
 }
 
 void Cora::addStations() {

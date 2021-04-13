@@ -30,8 +30,11 @@ bool CommandInterpreter::hasCommand(const std::string& cmd) {
     return m_commands.find(cmd) != m_commands.end();
 }
 
-void CommandInterpreter::showCommandUsages() const {
-    for (const auto& command : m_commands) {
-        LOG(plog::info) << command.second->getUsage();
+void CommandInterpreter::showCommands() const {
+    for (auto const& command : m_commands) {
+        std::string name{command.second->getName()};
+        // TODO Find max name length
+        name.resize(15, ' ');
+        LOG(plog::info) << "   " << name << command.second->getDescription();
     }
 }

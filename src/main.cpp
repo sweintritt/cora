@@ -5,7 +5,6 @@
 #include "cora.hpp"
 
 int main(int argc, char* argv[]) {
-    std::cout << "Starting cora" << std::endl;
     try {
         Cora cora;
         cora.run(argc, argv);
