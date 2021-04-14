@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 CommandInterpreter::CommandInterpreter()
-    : m_commands() {
+    : m_commands(), m_maxLengthCommand(0) {
 }
 
 CommandInterpreter::~CommandInterpreter() { }
@@ -13,6 +13,11 @@ void CommandInterpreter::add(std::unique_ptr<Command> cmd) {
     if (hasCommand(cmd->getName())) {
         throw std::runtime_error("duplicate command " + cmd->getName());
     }
+
+    if (cmd->getName().size() > m_maxLengthCommand) {
+        m_maxLengthCommand = cmd->getName().size();
+    }
+
     m_commands.insert(std::make_pair(cmd->getName(), std::move(cmd)));
 }
 
@@ -26,11 +31,14 @@ void CommandInterpreter::execute(const std::vector<std::string>& args) {
     }
 }
 
+bool CommandInterpreter::hasCommand(const std::string& cmd) {
+    return m_commands.find(cmd) != m_commands.end();
+}
+
 void CommandInterpreter::showCommands() const {
     for (auto const& command : m_commands) {
         std::string name{command.second->getName()};
-        // TODO Find max name length
-        name.resize(10, ' ');
+        name.resize(m_maxLengthCommand + 2, ' ');
         LOG(plog::info) << "   " << name << command.second->getDescription();
     }
 }
