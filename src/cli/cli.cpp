@@ -52,17 +52,17 @@ void Cli::parse(const std::vector<std::string>& args) {
          }
 
          LOG(plog::debug) << "found option: " << current;
-         for (std::list<Option>::iterator it = m_options.begin(); it != m_options.end(); ++it) {
+         for (auto& it : m_options) {
             std::string sopt;
-            sopt.push_back(it->opt);
-            if (current.compare(sopt) == 0 || current.compare(it->longOpt) == 0) {
+            sopt.push_back(it.opt);
+            if (current.compare(sopt) == 0 || current.compare(it.longOpt) == 0) {
                LOG(plog::debug) << "setting option: " << current;
-               it->found = true;
-               if (it->hasValue && (i + 1) < args.size()) {
+               it.found = true;
+               if (it.hasValue && (i + 1) < args.size()) {
                   LOG(plog::debug) << "setting value for  option: " << current;
                   if (args[i + 1][0] != '-') {
                      LOG(plog::debug) << "found value: " << args[i + 1] << " for option: " << current;
-                     it->value = args[i + 1];
+                     it.value = args[i + 1];
                      ++i;
                   }
                }
@@ -73,9 +73,9 @@ void Cli::parse(const std::vector<std::string>& args) {
 }
 
 bool Cli::hasOption(const char opt) const {
-   for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
-      if (it->opt == opt && it->found) {
-         LOG(plog::debug) << "searched for '" << opt << "', found '" << it->opt << "' isSet:" << it->found;
+   for (auto const& it : m_options) {
+      if (it.opt == opt && it.found) {
+         LOG(plog::debug) << "searched for '" << opt << "', found '" << it.opt << "' isSet:" << it.found;
          return true;
       }
    }
@@ -83,8 +83,8 @@ bool Cli::hasOption(const char opt) const {
 }
 
 bool Cli::hasOption(const std::string& longOpt) const {
-   for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
-      if (it->longOpt.compare(longOpt) == 0 && it->found) {
+   for (auto const& it : m_options) {
+      if (it.longOpt.compare(longOpt) == 0 && it.found) {
          return true;
       }
    }
@@ -92,36 +92,36 @@ bool Cli::hasOption(const std::string& longOpt) const {
 }
 
 bool Cli::hasValue(const char opt) const {
-   for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
-      if (it->opt == opt && it->found && it->hasValue) {
-         return !it->value.empty();
+   for (auto const& it : m_options) {
+      if (it.opt == opt && it.found && it.hasValue) {
+         return !it.value.empty();
       }
    }
    return false;
 }
 
 bool Cli::hasValue(const std::string& longOpt) const {
-   for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
-      if (it->longOpt.compare(longOpt) == 0 && it->found && it->hasValue) {
-         return !it->value.empty();
+   for (auto const& it : m_options) {
+      if (it.longOpt.compare(longOpt) == 0 && it.found && it.hasValue) {
+         return !it.value.empty();
       }
    }
    return false;
 }
 
 std::string Cli::getValue(const char opt) {
-   for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
-      if (it->opt == opt && it->found && it->hasValue) {
-         return it->value;
+   for (auto const& it : m_options) {
+      if (it.opt == opt && it.found && it.hasValue) {
+         return it.value;
       }
    }
    return "";
 }
 
 std::string Cli::getValue(const std::string& longOpt) {
-   for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
-      if (it->longOpt.compare(longOpt) == 0 && it->found && it->hasValue) {
-         return it->value;
+   for (auto const& it :m_options) {
+      if (it.longOpt.compare(longOpt) == 0 && it.found && it.hasValue) {
+         return it.value;
       }
    }
    return "";
@@ -149,29 +149,29 @@ const std::string Cli::usage() const {
    stream << "SYNOPSIS" << std::endl;
    stream << "  " << m_command << " [OPTIONS]" << std::endl << std::endl;
    stream << "DESCRIPTION" << std::endl;
-   for (std::list<Option>::const_iterator it = m_options.begin(); it != m_options.end(); ++it) {
+   for (auto const& it : m_options) {
       stream << "  ";
 
-      if (it->opt != ' ') {
-         stream << "-" << it->opt;
+      if (it.opt != ' ') {
+         stream << "-" << it.opt;
       }
 
-      if (it->opt != ' ' && !it->longOpt.empty()) {
+      if (it.opt != ' ' && !it.longOpt.empty()) {
          stream << ", ";
       }
 
-      if (!it->longOpt.empty()) {
-         stream << "--" << it->longOpt;
+      if (!it.longOpt.empty()) {
+         stream << "--" << it.longOpt;
       }
 
-      if (it->hasValue) {
+      if (it.hasValue) {
          stream << " <VALUE> ";
       }
 
       // Wrap long descriptions
       const std::string indent = "              ";
       const std::string newLineIndent = "\n              ";
-      std::string wrappedDescription = it->description;
+      std::string wrappedDescription = it.description;
       unsigned int line = 0;
 
       for (unsigned int i = 0; i < wrappedDescription.size(); ++i) {
