@@ -17,8 +17,6 @@ class CommandInterpreter {
 
         void execute(const std::vector<std::string>& args);
 
-        bool hasCommand(const std::string& cmd);
-
         void showCommands() const;
     private:
         std::map<std::string, std::unique_ptr<Command>> m_commands;

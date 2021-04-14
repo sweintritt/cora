@@ -42,12 +42,6 @@ void Cora::run(int argc, char* argv[]) {
         return;
     }
 
-    if (!m_commandInterpreter->hasCommand(argv[1])) {
-        // TODO This warning should be comming from the
-        LOG(plog::warning) << "Unknown command '" << argv[1] << "'. Try 'cora help' for more information.";
-        return;
-    }
-
     std::vector<std::string> args;
     for (int i = 0; i < argc; ++i) {
         args.push_back(argv[i]);

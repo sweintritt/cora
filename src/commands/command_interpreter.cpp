@@ -22,12 +22,8 @@ void CommandInterpreter::execute(const std::vector<std::string>& args) {
     if (it != m_commands.end()) {
         it->second->execute(args);
     } else {
-        throw std::invalid_argument("Unknown command: " + args[1]);
+        throw std::invalid_argument("Unknown command: '" + args[1] + "'. Try 'cora help' for more information.");
     }
-}
-
-bool CommandInterpreter::hasCommand(const std::string& cmd) {
-    return m_commands.find(cmd) != m_commands.end();
 }
 
 void CommandInterpreter::showCommands() const {
