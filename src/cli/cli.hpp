@@ -99,8 +99,18 @@ class Cli {
        * @return the value for the specified option or an empty string if the option has no value or no
        *         value was passed on command line
        */
-      std::string getValue(const char opt);
-      // TODO getValue(opt, default);
+      std::string getValue(const char opt) const;
+
+      /**
+       * @brief Returns the value for the specified option or the given default value if the option has no
+       *        value or no value was passed on command line
+       * @param[in] opt short option name
+       * @param[in] default default value to be returned
+       * @return the value for the specified option or an empty string if the option has no value or no
+       *         value was passed on command line
+       */
+      std::string getValue(const char opt, const std::string& defaultValue) const;
+
       /**
        * @brief Returns the value for the specified option or an empty string if the option has no
        *        value or no value was passed on command line
@@ -108,7 +118,18 @@ class Cli {
        * @return the value for the specified option or an empty string if the option has no value or no
        *         value was passed on command line
        */
-      std::string getValue(const std::string& longOpt);
+      std::string getValue(const std::string& longOpt) const;
+
+
+      /**
+       * @brief Returns the value for the specified option or the given default value if the option has no
+       *        value or no value was passed on command line
+       * @param[in] defaultValue long option name
+       * @param[in] default default value to be returned
+       * @return the value for the specified option or an empty string if the option has no value or no
+       *         value was passed on command line
+       */
+      std::string getValue(const std::string& longOpt, const std::string& defaultValue) const;
 
       /**
        * Reset the values of all options for another parse. parse will call this itself.
@@ -121,8 +142,16 @@ class Cli {
        */
       const std::string usage() const;
 
+      /**
+       * @brief Returns name of the command.
+       * @return name of the command.
+       */
       const std::string command() const;
 
+      /**
+       * @brief Returns description of the command.
+       * @return description of the command.
+       */
       const std::string description() const;
    private:
       /**
@@ -136,6 +165,5 @@ class Cli {
       /**
        * Options.
        */
-      // TODO Use a map instead
       std::list<Option> m_options;
 };

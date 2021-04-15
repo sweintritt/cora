@@ -109,7 +109,7 @@ bool Cli::hasValue(const std::string& longOpt) const {
    return false;
 }
 
-std::string Cli::getValue(const char opt) {
+std::string Cli::getValue(const char opt) const {
    for (auto const& it : m_options) {
       if (it.opt == opt && it.found && it.hasValue) {
          return it.value;
@@ -118,13 +118,32 @@ std::string Cli::getValue(const char opt) {
    return "";
 }
 
-std::string Cli::getValue(const std::string& longOpt) {
+std::string Cli::getValue(const char opt, const std::string& defaultValue) const {
+   for (auto const& it : m_options) {
+      if (it.opt == opt && it.found && it.hasValue) {
+         return it.value;
+      }
+   }
+   return defaultValue;
+}
+
+
+std::string Cli::getValue(const std::string& longOpt) const {
    for (auto const& it :m_options) {
       if (it.longOpt.compare(longOpt) == 0 && it.found && it.hasValue) {
          return it.value;
       }
    }
    return "";
+}
+
+std::string Cli::getValue(const std::string& longOpt, const std::string& defaultValue) const {
+   for (auto const& it :m_options) {
+      if (it.longOpt.compare(longOpt) == 0 && it.found && it.hasValue) {
+         return it.value;
+      }
+   }
+   return defaultValue;
 }
 
 void Cli::reset() {
