@@ -34,12 +34,7 @@ void ImportCommand::execute(const std::vector<std::string>& args) {
         LOG(plog::error) << "Unknown importer type " << m_cli.getValue('t') << ". Try " << m_name << " --help for more information.";
     } else {
         auto stationsDao = createStationsDao();
-        if (m_cli.hasValue('f')) {
-            stationsDao->open(m_cli.getValue('f'));
-        } else {
-            stationsDao->open(getDefaultFile());
-        }
-
+        stationsDao->open(m_cli.getValue('f', getDefaultFile()));
         LOG(plog::info) << "importing from " << m_cli.getValue('i') << " using " << importer->second->getName() << " importer";
         importer->second->import(m_cli.getValue('i'), stationsDao);
     }

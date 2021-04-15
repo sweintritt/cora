@@ -17,11 +17,7 @@ void ListCommand::execute(const std::vector<std::string>& args) {
     }
 
     auto stationsDao = createStationsDao();
-    if (m_cli.hasValue('f')) {
-        stationsDao->open(m_cli.getValue('f'));
-    } else {
-        stationsDao->open(getDefaultFile());
-    }
+    stationsDao->open(m_cli.getValue('f', getDefaultFile()));
 
     const auto ids = stationsDao->getAllIds();
 

@@ -28,11 +28,7 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
 
     m_cli.parse(args);
     auto stationsDao = createStationsDao();
-    if (m_cli.hasValue('f')) {
-        stationsDao->open(m_cli.getValue('f'));
-    } else {
-        stationsDao->open(getDefaultFile());
-    }
+    stationsDao->open(m_cli.getValue('f', getDefaultFile()));
 
     const long id = std::stol(idStr);
     const auto station = stationsDao->findById(id);

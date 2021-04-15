@@ -29,11 +29,7 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
     auto mediaPlayer = createPlayer();
     auto stationsDao = createStationsDao();
-    if (m_cli.hasValue('f')) {
-        stationsDao->open(m_cli.getValue('f'));
-    } else {
-        stationsDao->open(getDefaultFile());
-    }
+    stationsDao->open(m_cli.getValue('f', getDefaultFile()));
 
     const std::vector<std::string> values = split(idAndUrl, ':');
     const long id = std::stol(values[0]);
