@@ -4,6 +4,12 @@
 
 ## Added
 
+* Help command.
+
+## [v0.6.0] - 2021-04-10
+
+## Added
+
 * Info command.
 * Version command.
 * Help command.

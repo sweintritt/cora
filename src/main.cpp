@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     } catch (const char* error) {
         std::cerr << error << std::endl;
     } catch (...) {
-        std::cerr << "error of unknown type << std::endl";
+        std::cerr << "error of unknown type" << std::endl;
     }
 
     return EXIT_FAILURE;
