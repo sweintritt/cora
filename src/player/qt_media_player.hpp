@@ -1,6 +1,6 @@
 #pragma once
 
-#include "media_player.hpp"
+#include "player/media_player.hpp"
 
 #include <QMediaPlayer>
 #include <QMediaContent>

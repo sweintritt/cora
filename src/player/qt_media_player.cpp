@@ -1,4 +1,4 @@
-#include "qt_media_player.hpp"
+#include "player/qt_media_player.hpp"
 
 #include <plog/Log.h>
 
