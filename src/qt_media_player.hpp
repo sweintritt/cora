@@ -3,8 +3,10 @@
 #include "media_player.hpp"
 
 #include <QMediaPlayer>
+#include <QMediaContent>
 
-class QtMediaPlayer : public MediaPlayer {
+class QtMediaPlayer : public MediaPlayer, QObject {
+    Q_OBJECT
 
     public:
         QtMediaPlayer();
@@ -25,4 +27,7 @@ class QtMediaPlayer : public MediaPlayer {
 
     private:
         QMediaPlayer* player;
+
+    public slots:
+        void onMediaChanged(const QMediaContent &media);
 };
