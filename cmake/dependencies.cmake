@@ -1,8 +1,17 @@
 include(ExternalProject)
 
-macro(CoraUseQtMultimedia)
-    find_package(Qt5Core)
-    find_package(Qt5Multimedia)
+macro(CoraUseGstreamer)
+    if (NOT GSTREAMER_FOUND)
+        find_package(gstreamer-1.0)
+
+        if (NOT GSTREAMER_FOUND)
+            find_package(PkgConfig REQUIRED)
+            pkg_check_modules(GSTREAMER REQUIRED gstreamer-1.0)
+        endif ()
+    endif()
+
+    message(STATUS "GSTREAMER_INCLUDE_DIRS: ${GSTREAMER_INCLUDE_DIRS}")
+    message(STATUS "GSTREAMER_LIBRARIES:    ${GSTREAMER_LIBRARIES}")
 endmacro()
 
 set(CORA_SQLITE3_PROVIDER "module" CACHE STRING "Provider of sqlite3 library")

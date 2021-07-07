@@ -5,8 +5,8 @@
 #include <memory>
 
 #include "stations_dao.hpp"
-#include "media_player.hpp"
 #include "cli/cli.hpp"
+#include "player/media_player.hpp"
 
 class Command {
     public:

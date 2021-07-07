@@ -10,7 +10,8 @@ ImportCommand::ImportCommand() : Command("import", "Import radio stations from d
         auto radioSureImporter = std::unique_ptr<RadioSureImporter>(new RadioSureImporter());
         m_importerByName.insert(std::make_pair(radioSureImporter->getName(), std::move(radioSureImporter)));
         m_cli.addOption('i', "input", true, "Input to import stations from. Depends on the type an could be a file or URL.");
-        m_cli.addOption('t', "type", true, "Type of imported data. Supported types are: radiosure (requires a file as input).");
+        // TODO add real names of the importer
+        m_cli.addOption('t', "type", true, "Type of imported data. Supported types are: radio-sure (requires a file as input).");
 }
 
 ImportCommand::~ImportCommand() { }

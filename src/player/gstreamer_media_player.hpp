@@ -31,8 +31,11 @@ class GstreamerMediaPlayer : public MediaPlayer {
             GMainLoop *loop;
         };
 
-        QMediaPlayer* player;
+        State state;
+        GstBus* bus;
 
-    public slots:
-        void onMediaChanged(const QMediaContent &media);
+        void cleanup();
+        static void handleMessage(GstBus *bus, GstMessage *msg, State *state);
+        static void printError(GstMessage *msg);
+        static void printTitle(const GstTagList *list, const gchar *tag, gpointer data);
 };

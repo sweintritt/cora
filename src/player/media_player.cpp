@@ -1,4 +1,4 @@
-#include "media_player.hpp"
+#include "player/media_player.hpp"
 
 #include <stdexcept>
 

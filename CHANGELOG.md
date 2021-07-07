@@ -2,26 +2,30 @@
 
 ## [Unreleased]
 
-## Added
+### Added
 
 * Help command.
 
+### Changed
+
+* Switch to gstreamer.
+
 ## [v0.6.0] - 2021-04-10
 
-## Added
+### Added
 
 * Info command.
 * Version command.
 * Help command.
 
-## Removed
+### Removed
 
 * Debug option for commands.
 * find command.
 * stop command.
 * interactive mode.
 
-## Fixed
+### Fixed
 
 * Deserialization of urls.
 

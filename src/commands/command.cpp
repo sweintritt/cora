@@ -3,9 +3,9 @@
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
-#include "qt_media_player.hpp"
 #include "sqlite_stations_dao.hpp"
 #include "logging/message_only_formatter.hpp"
+#include "player/gstreamer_media_player.hpp"
 
 Command::Command(const std::string& name,
                  const std::string& description)
@@ -35,7 +35,7 @@ const std::string Command::getDefaultFile() const {
 }
 
 std::shared_ptr<MediaPlayer> Command::createPlayer() const {
-    return std::make_shared<QtMediaPlayer>();
+    return std::make_shared<GstreamerMediaPlayer>();
 }
 
 std::shared_ptr<StationsDao> Command::createStationsDao() const {

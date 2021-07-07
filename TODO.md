@@ -1,7 +1,7 @@
 ToDos
 ======
 
-* use gstreamer or something else instead
+* use gstreamer
+* simple update: delete and import
 * add timestamp of import for station
 * Check which methods could be marked const
-* Use gstreamer, vlc, sdl or ffmpeg instead of QMediaPlayer

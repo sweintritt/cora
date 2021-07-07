@@ -53,7 +53,7 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
 
         LOG(plog::debug) << "url: " << url;
         mediaPlayer->setUrl(url);
-        mediaPlayer->setVolume(80);
+        //mediaPlayer->setVolume(80);
         mediaPlayer->play();
 
         LOG(plog::info) << "Press enter to stop playing";

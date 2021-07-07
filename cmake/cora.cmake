@@ -1,7 +1,6 @@
 set(cora_sources
     ${cora_source_dir}/cora.cpp
-    ${cora_source_dir}/media_player.cpp
-    ${cora_source_dir}/qt_media_player.cpp
+    
     ${cora_source_dir}/station.cpp
     ${cora_source_dir}/sqlite_stations_dao.cpp
     ${cora_source_dir}/utils.cpp
@@ -17,9 +16,11 @@ set(cora_sources
     ${cora_source_dir}/importer/importer.cpp
     ${cora_source_dir}/importer/radio_sure_importer.cpp
     ${cora_source_dir}/logging/message_only_formatter.cpp
+    ${cora_source_dir}/player/media_player.cpp
+    ${cora_source_dir}/player/gstreamer_media_player.cpp
 )
 
-CoraUseQtMultimedia()
+CoraUseGstreamer()
 CoraUseSQLite3()
 find_package(Threads REQUIRED)
 
@@ -28,13 +29,13 @@ configure_file(${cora_source_dir}/version.hpp.in ${CMAKE_BINARY_DIR}/generated/v
 include_directories(
     ${cora_source_dir}
     ${CMAKE_BINARY_DIR}/generated/
+    ${GSTREAMER_INCLUDE_DIRS}
     ${SQLITE3_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include
 )
 
 set(cora_link_libraries
-    Qt5::Core
-    Qt5::Multimedia
+    ${GSTREAMER_LIBRARIES}
     ${SQLITE3_LIBRARY}
     ${CMAKE_DL_LIBS}
     ${CMAKE_THREAD_LIBS_INIT})
