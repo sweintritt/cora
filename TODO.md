@@ -1,7 +1,7 @@
 ToDos
 ======
 
-* use gstreamer
 * simple update: delete and import
-* add timestamp of import for station
+* add random option to play command or random command
+* exit on any key not working cause play on gstreamer blocks
 * Check which methods could be marked const
