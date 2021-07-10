@@ -15,6 +15,7 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
         "description TEXT, "
         "urls TEXT NOT NULL);";
 const std::string FIND_STATION_BY_ID_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
+const std::string DELETE_BY_AUTHOR_SQL = "DELETE FROM stations WHERE author = ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations "
         "(author, name, genre, country, language, description, urls) "
         "VALUES (?, ?, ?, ?, ?, ?, ?);";
@@ -27,6 +28,7 @@ SqliteStationsDao::SqliteStationsDao()
     , db(nullptr)
     , insertStationStmnt(nullptr)
     , findStationByIdStmnt(nullptr)
+    , deleteByAuthorStmnt(nullptr)
     , getAllIdsStmnt(nullptr) {
 }
 
@@ -55,6 +57,7 @@ void SqliteStationsDao::open(const std::string& url) {
 
     LOG(plog::debug) << "preparing statements";
     prepare(&findStationByIdStmnt, FIND_STATION_BY_ID_SQL);
+    prepare(&deleteByAuthorStmnt, DELETE_BY_AUTHOR_SQL);
     prepare(&insertStationStmnt, INSERT_STATION_SQL);
     prepare(&getAllIdsStmnt, GET_ALL_IDS_SQL);
 }
@@ -66,6 +69,7 @@ void SqliteStationsDao::close() {
         bool result = true;
         result &= sqlite3_finalize(insertStationStmnt) == SQLITE_OK;
         result &= sqlite3_finalize(findStationByIdStmnt) == SQLITE_OK;
+        result &= sqlite3_finalize(deleteByAuthorStmnt) == SQLITE_OK; 
         result &= sqlite3_finalize(getAllIdsStmnt) == SQLITE_OK;
         result &= sqlite3_close_v2(db) == SQLITE_OK;
 
@@ -115,11 +119,24 @@ std::shared_ptr<Station> SqliteStationsDao::findById(const long id) {
     if (rc == SQLITE_ROW) {
         station = std::make_shared<Station>(getStation(findStationByIdStmnt));
     } else if (rc == SQLITE_ERROR) {
+        sqlite3_reset(findStationByIdStmnt);
         throw "unable to get station " + std::to_string(id) + ": " + getError();
     }
 
     sqlite3_reset(findStationByIdStmnt);
     return station;
+}
+
+void SqliteStationsDao::deleteAllImportedBy(const Author author) {
+    sqlite3_bind_int(deleteByAuthorStmnt, 1, author);
+
+    if (sqlite3_step(deleteByAuthorStmnt) != SQLITE_DONE) {
+        const std::string error = getError();
+        sqlite3_reset(deleteByAuthorStmnt);
+        throw "unable to delete stations added by author:" + std::to_string((int) author) + ": " + error;
+    }
+
+    sqlite3_reset(deleteByAuthorStmnt);
 }
 
 std::shared_ptr<Station> SqliteStationsDao::getRandom() {

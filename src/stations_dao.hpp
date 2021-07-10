@@ -17,6 +17,8 @@ class StationsDao {
 
         virtual std::shared_ptr<Station> findById(const long id) = 0;
 
+        virtual void deleteAllImportedBy(const Author author) = 0;
+
         virtual std::shared_ptr<Station> getRandom() = 0;
 
         virtual int getVersion() = 0;
