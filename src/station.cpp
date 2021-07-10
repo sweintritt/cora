@@ -2,7 +2,7 @@
 
 Station::Station()
     : m_id()
-    , m_author(IMPORT)
+    , m_addedBy()
     , m_name()
     , m_genre()
     , m_country()
@@ -20,12 +20,12 @@ int64_t Station::getId() const {
     return m_id;
 }
 
-void Station::setAuthor(const Author author) {
-    m_author = author;
+void Station::setAddedBy(const std::string& addedBy) {
+    m_addedBy = addedBy;
 }
 
-Author Station::getAuthor() const {
-    return m_author;
+std::string Station::getAddedBy() const {
+    return m_addedBy;
 }
 
 void Station::setName(const std::string& name) {

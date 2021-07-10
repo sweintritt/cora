@@ -53,7 +53,7 @@ void Cora::run(int argc, char* argv[]) {
 void Cora::addStations() {
     Station radioGong;
     radioGong.setName("Radio Gong");
-    radioGong.setAuthor(Author::USER);
+    radioGong.setAddedBy("user");
     radioGong.setGenre("Rock");
     radioGong.setLanguage("German");
     radioGong.setCountry("Germany");
@@ -63,7 +63,7 @@ void Cora::addStations() {
 
     Station cinemix;
     cinemix.setName("Cinemix");
-    cinemix.setAuthor(Author::USER);
+    cinemix.setAddedBy("user");
     cinemix.setGenre("Soundtracks");
     cinemix.setLanguage("English");
     cinemix.setCountry("");
@@ -73,7 +73,7 @@ void Cora::addStations() {
 
     Station bigRalternative;
     bigRalternative.setName("Big R Radio - 90s Alternative Rock");
-    bigRalternative.setAuthor(Author::USER);
+    bigRalternative.setAddedBy("user");
     bigRalternative.setGenre("Alternative Rock");
     bigRalternative.setLanguage("English");
     bigRalternative.setCountry("United States of America");

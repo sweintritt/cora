@@ -29,7 +29,7 @@ void RadioSureImporter::import(const std::string& url, const std::shared_ptr<Sta
             station.setGenre(values[2]);
             station.setCountry(values[3]);
             station.setLanguage(values[4]);
-            station.setAuthor(Author::IMPORT);
+            station.setAddedBy(getName());
 
             for (unsigned int i = 5; i < values.size(); ++i) {
               if (values[i].compare("-")) {

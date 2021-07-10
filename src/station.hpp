@@ -1,6 +1,5 @@
 #pragma once
 
-#include "author.hpp"
 #include <string>
 #include <vector>
 #include <cstdint>
@@ -13,8 +12,8 @@ class Station {
         void setId(const int64_t id);
         int64_t getId() const;
 
-        void setAuthor(const Author author);
-        Author getAuthor() const;
+        void setAddedBy(const std::string& addedBy);
+        std::string getAddedBy() const;
 
         void setName(const std::string& name);
         const std::string& getName() const;
@@ -36,7 +35,7 @@ class Station {
 
     private:
         int64_t m_id;
-        Author m_author;
+        std::string m_addedBy;
         std::string m_name;
         std::string m_genre;
         std::string m_country;

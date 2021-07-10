@@ -18,7 +18,7 @@ class SqliteStationsDao : public StationsDao {
 
         virtual std::shared_ptr<Station> findById(const long id) override;
 
-        virtual void deleteAllImportedBy(const Author author) override;
+        virtual void deleteAllAddedBy(const std::string& addedBy) override;
 
         virtual std::shared_ptr<Station> getRandom() override;
 
@@ -41,7 +41,7 @@ class SqliteStationsDao : public StationsDao {
 
         sqlite3_stmt* findStationByIdStmnt;
 
-        sqlite3_stmt* deleteByAuthorStmnt;
+        sqlite3_stmt* deleteByAddedByStmnt;
 
         sqlite3_stmt* getAllIdsStmnt;
 
