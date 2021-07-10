@@ -5,6 +5,7 @@
 ### Added
 
 * Help command.
+* Showing the currently playing song.
 
 ### Changed
 
