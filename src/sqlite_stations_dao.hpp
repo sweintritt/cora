@@ -30,6 +30,12 @@ class SqliteStationsDao : public StationsDao {
 
         virtual std::vector<long> getAllIds() override;
 
+        virtual void beginTransaction() override;
+
+        virtual void commit() override;
+
+        virtual void rollback() override;
+
     private:
         int version;
 

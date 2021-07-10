@@ -46,7 +46,7 @@ void SqliteStationsDao::open(const std::string& url) {
     LOG(plog::debug) << "creating table stations";
     char* errorMessage;
     if (sqlite3_exec(db, CREATE_TABLE_STATIONS_SQL.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
-        throw "unable to create table stations: " + getError();
+        throw "unable to create table stations: " + std::string{errorMessage};
     }
 
     IF_PLOG(plog::debug) {
@@ -170,6 +170,30 @@ std::vector<long> SqliteStationsDao::getAllIds() {
 
     sqlite3_reset(getAllIdsStmnt);
     return ids;
+}
+
+void SqliteStationsDao::beginTransaction() {
+    char* errorMessage;
+    const std::string sql = "BEGIN TRANSACTION;";
+    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
+        throw "unable to begin transaction: " + std::string{errorMessage};
+    }
+}
+
+void SqliteStationsDao::commit() {
+    char* errorMessage;
+    const std::string sql = "COMMIT;";
+    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
+        throw "unable to begin transaction: " + std::string{errorMessage};
+    }
+}
+
+void SqliteStationsDao::rollback() {
+    char* errorMessage;
+    const std::string sql = "ROLLBACK;";
+    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
+        throw "unable to begin transaction: " + std::string{errorMessage};
+    }
 }
 
 std::string SqliteStationsDao::getError() {

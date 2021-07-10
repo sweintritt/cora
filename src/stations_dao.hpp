@@ -28,4 +28,10 @@ class StationsDao {
         virtual void upgrade(const int oldVersion, const int newVersion) = 0;
 
         virtual std::vector<long> getAllIds() = 0;
+
+        virtual void beginTransaction() = 0;
+
+        virtual void commit() = 0;
+
+        virtual void rollback() = 0;
 };
