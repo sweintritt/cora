@@ -4,7 +4,7 @@
 #include <plog/Log.h>
 #include <gst/gst.h>
 
-GstreamerMediaPlayer::GstreamerMediaPlayer() : state(), bus(nullptr) {
+GstreamerMediaPlayer::GstreamerMediaPlayer() : state(), bus(nullptr), playThread() {
     gst_init(0, NULL);
 }
 
@@ -14,6 +14,8 @@ GstreamerMediaPlayer::~GstreamerMediaPlayer() {
 
 void GstreamerMediaPlayer::cleanup () {
     if (state.loop != nullptr) {
+        g_main_loop_quit(state.loop);
+        playThread->join();
         g_main_loop_unref (state.loop);
     }
 
@@ -35,6 +37,10 @@ void GstreamerMediaPlayer::setUrl(const std::string &url) {
 }
 
 void GstreamerMediaPlayer::play() {
+    playThread = std::make_shared<std::thread>(&GstreamerMediaPlayer::run, this);
+}
+
+void GstreamerMediaPlayer::run() {
     const GstStateChangeReturn ret = gst_element_set_state(state.pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE) {
         LOG(plog::error) << "Unable to set the pipeline to the playing state";
@@ -49,6 +55,7 @@ void GstreamerMediaPlayer::play() {
     g_signal_connect(bus, "message", G_CALLBACK(GstreamerMediaPlayer::handleMessage), &state);
     g_main_loop_run(state.loop);
 }
+
 
 void GstreamerMediaPlayer::pause() {
     if (state.pipeline != nullptr) {

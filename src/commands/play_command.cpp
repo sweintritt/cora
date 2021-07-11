@@ -53,11 +53,11 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
 
         LOG(plog::debug) << "url: " << url;
         mediaPlayer->setUrl(url);
-        //mediaPlayer->setVolume(80);
         mediaPlayer->play();
 
         LOG(plog::info) << "Press enter to stop playing";
         std::cin.get();
+        mediaPlayer->stop();
     } else {
         LOG(plog::warning) << "No station found for id:" << id;
     }

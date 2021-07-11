@@ -14,6 +14,7 @@
 ### Fixed
 
 * The radio-sure import now removes all entries added by itself before import new data.
+* Exit playing with any key did not work because play in the gstreamer implementation blocks.
 
 ## [v0.6.0] - 2021-04-10
 

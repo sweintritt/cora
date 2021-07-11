@@ -2,6 +2,8 @@
 
 #include "player/media_player.hpp"
 
+#include <memory>
+#include <thread>
 #include <gst/gst.h>
 
 class GstreamerMediaPlayer : public MediaPlayer {
@@ -33,7 +35,9 @@ class GstreamerMediaPlayer : public MediaPlayer {
 
         State state;
         GstBus* bus;
+        std::shared_ptr<std::thread> playThread;
 
+        void run();
         void cleanup();
         static void handleMessage(GstBus *bus, GstMessage *msg, State *state);
         static void printError(GstMessage *msg);
