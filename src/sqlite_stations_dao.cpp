@@ -8,7 +8,7 @@
 
 const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS stations ( "
         "name TEXT NOT NULL, "
-        "author INTEGER NOT NULL, "
+        "addedBy TEXT NOT NULL, "
         "genre TEXT NOT NULL, "
         "country TEXT NOT NULL, "
         "language TEXT NOT NULL, "
@@ -17,7 +17,7 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
 const std::string FIND_STATION_BY_ID_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
 const std::string DELETE_BY_ADDED_BY_SQL = "DELETE FROM stations WHERE addedBy = ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations "
-        "(author, name, genre, country, language, description, urls) "
+        "(addedBy, name, genre, country, language, description, urls) "
         "VALUES (?, ?, ?, ?, ?, ?, ?);";
 const std::string GET_ALL_IDS_SQL = "SELECT rowid FROM stations;";
 

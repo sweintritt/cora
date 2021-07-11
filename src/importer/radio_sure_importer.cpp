@@ -20,6 +20,8 @@ void RadioSureImporter::import(const std::string& url, const std::shared_ptr<Sta
         long count = 0;
         const std::time_t start = std::time(nullptr);
         stationsDao->beginTransaction();
+        // All entries added by the last radiosure import will be removed
+        stationsDao->deleteAllAddedBy(getName());
 
         try {
             while (getline(file, line)) {
