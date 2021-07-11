@@ -11,6 +11,10 @@
 
 * Switch to gstreamer.
 
+### Fixed
+
+* The radio-sure import now removes all entries added by itself before import new data.
+
 ## [v0.6.0] - 2021-04-10
 
 ### Added
