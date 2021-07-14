@@ -50,38 +50,6 @@ void Cora::run(int argc, char* argv[]) {
     runCommand(args);
 }
 
-void Cora::addStations() {
-    Station radioGong;
-    radioGong.setName("Radio Gong");
-    radioGong.setAddedBy("user");
-    radioGong.setGenre("Rock");
-    radioGong.setLanguage("German");
-    radioGong.setCountry("Germany");
-    radioGong.setDescription("Der Rocksender");
-    radioGong.addUrl("http://webstream.gong971.de/gong971");
-    //m_stationsDao->save(radioGong);
-
-    Station cinemix;
-    cinemix.setName("Cinemix");
-    cinemix.setAddedBy("user");
-    cinemix.setGenre("Soundtracks");
-    cinemix.setLanguage("English");
-    cinemix.setCountry("");
-    cinemix.setDescription("The Spirit of Soundtracks");
-    cinemix.addUrl("https://streamingv2.shoutcast.com/CINEMIX");
-    //m_stationsDao->save(cinemix);
-
-    Station bigRalternative;
-    bigRalternative.setName("Big R Radio - 90s Alternative Rock");
-    bigRalternative.setAddedBy("user");
-    bigRalternative.setGenre("Alternative Rock");
-    bigRalternative.setLanguage("English");
-    bigRalternative.setCountry("United States of America");
-    bigRalternative.setDescription("90s Alternative Rock");
-    bigRalternative.addUrl("http://bigrradio.cdnstream1.com/5187_128");
-    //m_stationsDao->save(bigRalternative);
-}
-
 void Cora::configureLogger() const {
     #ifndef NDEBUG
     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
