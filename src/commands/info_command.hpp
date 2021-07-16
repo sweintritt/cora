@@ -12,4 +12,5 @@ class InfoCommand : public Command {
 
     private:
         std::string findId(const std::vector<std::string>& args) const;
+        std::string formatDescription(const std::string& description) const;
 };

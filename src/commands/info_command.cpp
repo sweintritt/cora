@@ -38,6 +38,7 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
         LOG(plog::info) << "      country: " << station->getCountry();
         LOG(plog::info) << "     language: " << station->getLanguage();
         LOG(plog::info) << "  description: " << station->getDescription();
+        LOG(plog::info) << "  description: " << formatDescription(station->getDescription());
         LOG(plog::info) << "     added by: " << station->getAddedBy();
         for (unsigned int i = 0; i < station->getUrls().size(); ++i) {
             LOG(plog::info) << "       url[" << i << "]: " << station->getUrls()[i];
@@ -55,4 +56,25 @@ std::string InfoCommand::findId(const std::vector<std::string>& args) const {
     }
 
     return "";
+}
+
+std::string InfoCommand::formatDescription(const std::string& description) const {
+    if (description.size() < 60) {
+        return description;
+    }
+
+    std::string result{""};
+    const std::string breakAndInline = "\n               ";
+    int lineLength = 0;
+    for (unsigned int i = 0; i < description.size(); ++i) {
+        if (description[i] == ' ' && lineLength > 80) {
+            result += breakAndInline;
+            lineLength = 0;
+        } else {
+            result += description[i];
+            ++lineLength;
+        }
+    }
+
+    return result;
 }
