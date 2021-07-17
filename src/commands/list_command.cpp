@@ -24,10 +24,11 @@ void ListCommand::execute(const std::vector<std::string>& args) {
         const auto station = stationsDao->findById(id);
         if (station != nullptr) {
             LOG(plog::info) << "id:" << std::to_string(station->getId())
-                << ", name:" << station->getName()
-                << ", genre:" << station->getGenre()
-                << ", country:" << station->getCountry()
-                << ", language:" << station->getLanguage();
+                << "\", name:\"" << station->getName()
+                << "\", addedBy:\"" << station->getAddedBy()
+                << "\", genre:\"" << station->getGenre()
+                << "\", country:\"" << station->getCountry()
+                << "\", language:\"" << station->getLanguage() << "\"";
         } else {
             LOG(plog::warning) << "no station found for id:" << id;
         }
