@@ -7,7 +7,8 @@
 Cli::Cli(const std::string& command, const std::string& description)
    : m_command(command)
    , m_description(description)
-   , m_options() { }
+   , m_options() 
+   , m_residualValues() { }
 
 void Cli::addOption(const char opt, const bool hasValue, const std::string& description) {
    addOption(opt, "", hasValue, description);
@@ -59,7 +60,7 @@ void Cli::parse(const std::vector<std::string>& args) {
                LOG(plog::debug) << "setting option: " << current;
                it.found = true;
                if (it.hasValue && (i + 1) < args.size()) {
-                  LOG(plog::debug) << "setting value for  option: " << current;
+                  LOG(plog::debug) << "setting value for option: " << current;
                   if (args[i + 1][0] != '-') {
                      LOG(plog::debug) << "found value: " << args[i + 1] << " for option: " << current;
                      it.value = args[i + 1];
@@ -68,6 +69,10 @@ void Cli::parse(const std::vector<std::string>& args) {
                }
             }
          }
+      } else {
+         // FIXME Unknown options will not be stored in the residual vector
+         m_residualValues.push_back(current);
+         LOG(plog::debug) << "residual value: " << current;
       }
    }
 }
@@ -159,6 +164,10 @@ const std::string Cli::command() const {
 
 const std::string Cli::description() const {
    return m_description;
+}
+
+const std::vector<std::string>& Cli::getResidualValues() const {
+   return m_residualValues;
 }
 
 const std::string Cli::usage() const {

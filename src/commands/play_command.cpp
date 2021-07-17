@@ -19,14 +19,14 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
         return;
     }
 
-    const std::string idAndUrl = findIdAndUrl(args);
-
-    if (idAndUrl.empty()) {
+    m_cli.parse(args);
+    if (m_cli.getResidualValues().empty()) {
         LOG(plog::error) << "No id given. See 'cora play --help' for more information.";
         return;
     }
 
-    m_cli.parse(args);
+    // First entry is the command
+    const std::string idAndUrl = m_cli.getResidualValues()[1];
     auto mediaPlayer = createPlayer();
     auto stationsDao = createStationsDao();
     stationsDao->open(m_cli.getValue('f', getDefaultFile()));
@@ -61,14 +61,4 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
     } else {
         LOG(plog::warning) << "No station found for id:" << id;
     }
-}
-
-std::string PlayCommand::findIdAndUrl(const std::vector<std::string>& args) const {
-    for (unsigned int i = 2; i < args.size(); ++i) {
-        if (args[i][0] != '-') {
-            return args[i];
-        }
-    }
-
-    return "";
 }

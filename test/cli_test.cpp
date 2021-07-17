@@ -20,8 +20,8 @@ TEST(CliTest, complexTest) {
     cli.addOption('d', "debug", false, "debug");
     cli.addOption('f', "file", true, "filename");
     cli.addOption('b', "blub", false, "blub");
-    char *args[5] = {"cmd", "-d", "--file", "foo", "--blub"};
-    cli.parse(5, args);
+    char *args[8] = {"cmd", "value-1", "-d", "value-2", "--file", "foo", "--blub", "value-3"};
+    cli.parse(8, args);
     CHECK_FALSE(cli.hasOption('c'));
     CHECK_FALSE(cli.hasValue('c'));
 
@@ -41,5 +41,9 @@ TEST(CliTest, complexTest) {
     CHECK_TRUE(cli.hasOption("blub"));
     CHECK_FALSE(cli.hasValue('b'));
     CHECK_FALSE(cli.hasValue("blub"));
+
+    CHECK_EQUAL("value-1", cli.getResidualValues()[0]);
+    CHECK_EQUAL("value-2", cli.getResidualValues()[1]);
+    CHECK_EQUAL("value-3", cli.getResidualValues()[2]);
 
 }

@@ -19,17 +19,18 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
         return;
     }
 
-    const std::string idStr = findId(args);
-
-    if (idStr.empty()) {
+    m_cli.parse(args);
+    if (m_cli.getResidualValues().empty()) {
         LOG(plog::error) << "No id given. See 'cora info --help' for more information.";
         return;
     }
 
-    m_cli.parse(args);
+    // First entry is the command
+    const std::string idStr = m_cli.getResidualValues()[1];
     auto stationsDao = createStationsDao();
     stationsDao->open(m_cli.getValue('f', getDefaultFile()));
 
+    LOG(plog::debug) << "parsing id: " << idStr;
     const long id = std::stol(idStr);
     const auto station = stationsDao->findById(id);
     if (station != nullptr) {
@@ -46,16 +47,6 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
     } else {
         LOG(plog::warning) << "No station found for id:" << id;
     }
-}
-
-std::string InfoCommand::findId(const std::vector<std::string>& args) const {
-    for (unsigned int i = 2; i < args.size(); ++i) {
-        if (args[i][0] != '-') {
-            return args[i];
-        }
-    }
-
-    return "";
 }
 
 std::string InfoCommand::formatDescription(const std::string& description) const {

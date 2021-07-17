@@ -11,6 +11,5 @@ class InfoCommand : public Command {
         virtual void execute(const std::vector<std::string>& args) override;
 
     private:
-        std::string findId(const std::vector<std::string>& args) const;
         std::string formatDescription(const std::string& description) const;
 };

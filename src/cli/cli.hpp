@@ -153,6 +153,12 @@ class Cli {
        * @return description of the command.
        */
       const std::string description() const;
+
+      /**
+       * Returns all values from the parsed args array or vector,
+       * that where no options or values to options.
+       */
+      const std::vector<std::string>& getResidualValues() const;
    private:
       /**
        * Name of the command.
@@ -166,4 +172,8 @@ class Cli {
        * Options.
        */
       std::list<Option> m_options;
+      /**
+       * All values that where not options
+       */
+      std::vector<std::string> m_residualValues;
 };
