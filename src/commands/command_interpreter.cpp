@@ -31,7 +31,7 @@ void CommandInterpreter::execute(const std::vector<std::string>& args) {
     }
 }
 
-bool CommandInterpreter::hasCommand(const std::string& cmd) {
+bool CommandInterpreter::hasCommand(const std::string& cmd) const {
     return m_commands.find(cmd) != m_commands.end();
 }
 

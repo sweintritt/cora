@@ -78,76 +78,72 @@ void Cli::parse(const std::vector<std::string>& args) {
 }
 
 bool Cli::hasOption(const char opt) const {
-   for (auto const& it : m_options) {
-      if (it.opt == opt && it.found) {
-         LOG(plog::debug) << "searched for '" << opt << "', found '" << it.opt << "' isSet:" << it.found;
-         return true;
-      }
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](Option o){ return o.opt == opt && o.found; });
+
+   if (result != m_options.end()) {
+      LOG(plog::debug) << "searched for '" << opt << "', found '" << result->opt << "' isSet:" << result->found;
+      return true;
    }
+
    return false;
 }
 
 bool Cli::hasOption(const std::string& longOpt) const {
-   for (auto const& it : m_options) {
-      if (it.longOpt.compare(longOpt) == 0 && it.found) {
-         return true;
-      }
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](Option o){ return o.longOpt.compare(longOpt) == 0 && o.found; });
+
+   if (result != m_options.end()) {
+      LOG(plog::debug) << "searched for '" << longOpt << "', found '" << result->longOpt << "' isSet:" << result->found;
+      return true;
    }
+
    return false;
 }
 
 bool Cli::hasValue(const char opt) const {
-   for (auto const& it : m_options) {
-      if (it.opt == opt && it.found && it.hasValue) {
-         return !it.value.empty();
-      }
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](Option o){ return o.opt == opt && o.found && o.hasValue; });
+
+   if (result != m_options.end()) {
+      return !result->value.empty();
    }
+
    return false;
 }
 
 bool Cli::hasValue(const std::string& longOpt) const {
-   for (auto const& it : m_options) {
-      if (it.longOpt.compare(longOpt) == 0 && it.found && it.hasValue) {
-         return !it.value.empty();
-      }
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](Option o){ return o.longOpt.compare(longOpt) == 0 && o.found && o.hasValue; });
+
+   if (result != m_options.end()) {
+      return !result->value.empty();
    }
+
    return false;
 }
 
 std::string Cli::getValue(const char opt) const {
-   for (auto const& it : m_options) {
-      if (it.opt == opt && it.found && it.hasValue) {
-         return it.value;
-      }
-   }
-   return "";
+   return getValue(opt, "");
 }
 
 std::string Cli::getValue(const char opt, const std::string& defaultValue) const {
-   for (auto const& it : m_options) {
-      if (it.opt == opt && it.found && it.hasValue) {
-         return it.value;
-      }
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](Option o){ return o.opt == opt && o.found && o.hasValue; });
+
+   if (result != m_options.end()) {
+      return result->value;
    }
+
    return defaultValue;
 }
 
-
 std::string Cli::getValue(const std::string& longOpt) const {
-   for (auto const& it :m_options) {
-      if (it.longOpt.compare(longOpt) == 0 && it.found && it.hasValue) {
-         return it.value;
-      }
-   }
-   return "";
+   return getValue(longOpt, "");
 }
 
 std::string Cli::getValue(const std::string& longOpt, const std::string& defaultValue) const {
-   for (auto const& it :m_options) {
-      if (it.longOpt.compare(longOpt) == 0 && it.found && it.hasValue) {
-         return it.value;
-      }
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](Option o){ return o.longOpt.compare(longOpt) == 0 && o.found && o.hasValue; });
+
+   if (result != m_options.end()) {
+      return result->value;
    }
+
    return defaultValue;
 }
 

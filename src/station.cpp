@@ -24,7 +24,7 @@ void Station::setAddedBy(const std::string& addedBy) {
     m_addedBy = addedBy;
 }
 
-std::string Station::getAddedBy() const {
+const std::string& Station::getAddedBy() const {
     return m_addedBy;
 }
 

@@ -13,7 +13,7 @@ class Station {
         int64_t getId() const;
 
         void setAddedBy(const std::string& addedBy);
-        std::string getAddedBy() const;
+        const std::string& getAddedBy() const;
 
         void setName(const std::string& name);
         const std::string& getName() const;

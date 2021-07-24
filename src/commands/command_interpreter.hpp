@@ -17,7 +17,7 @@ class CommandInterpreter {
 
         void execute(const std::vector<std::string>& args);
 
-        bool hasCommand(const std::string& cmd);
+        bool hasCommand(const std::string& cmd) const;
 
         void showCommands() const;
     private:

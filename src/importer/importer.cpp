@@ -7,6 +7,6 @@ Importer::~Importer() {
 
 }
 
-const std::string& Importer::getName() {
+const std::string& Importer::getName() const {
     return m_name;
 }

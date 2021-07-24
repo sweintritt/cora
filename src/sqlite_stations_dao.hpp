@@ -53,7 +53,7 @@ class SqliteStationsDao : public StationsDao {
 
         std::string getError();
 
-        void prepare(sqlite3_stmt** prepared, const std::string stmnt);
+        void prepare(sqlite3_stmt** prepared, const std::string& stmnt);
 
         std::string serializeUrls(const std::vector<std::string>& urls);
 

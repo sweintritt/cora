@@ -17,13 +17,13 @@ void RadioSureImporter::import(const std::string& url, const std::shared_ptr<Sta
     std::ifstream file(url);
 
     if (file.is_open()) {
-        long count = 0;
         const std::time_t start = std::time(nullptr);
         stationsDao->beginTransaction();
         // All entries added by the last radiosure import will be removed
         stationsDao->deleteAllAddedBy(getName());
 
         try {
+            long count = 0;
             while (getline(file, line)) {
                 const std::vector<std::string> values = split(line, '\t');
 
@@ -50,10 +50,10 @@ void RadioSureImporter::import(const std::string& url, const std::shared_ptr<Sta
             stationsDao->commit();
         } catch (const std::exception& e) {
             stationsDao->rollback();
-            throw e;
+            throw;
         } catch (const std::string& e) {
             stationsDao->rollback();
-            throw e;
+            throw;
         } catch (...) {
             stationsDao->rollback();
             LOG(plog::error) << "Unknown error";

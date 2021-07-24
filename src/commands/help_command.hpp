@@ -8,7 +8,7 @@
 
 class HelpCommand : public Command {
     public:
-        HelpCommand(const std::shared_ptr<CommandInterpreter> commandInterpreter);
+        explicit HelpCommand(const std::shared_ptr<CommandInterpreter> commandInterpreter);
 
         virtual ~HelpCommand();
 

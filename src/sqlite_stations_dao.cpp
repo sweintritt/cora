@@ -201,7 +201,7 @@ std::string SqliteStationsDao::getError() {
     return std::string{ sqlite3_errstr(errorCode) };
 }
 
-void SqliteStationsDao::prepare(sqlite3_stmt** prepared, const std::string stmnt) {
+void SqliteStationsDao::prepare(sqlite3_stmt** prepared, const std::string& stmnt) {
     if (sqlite3_prepare_v2(db, stmnt.c_str(), -1, prepared, nullptr) != SQLITE_OK) {
         throw "unable to prepare statement '" + stmnt + "': " + getError();
     }
