@@ -20,6 +20,7 @@ const std::string INSERT_STATION_SQL = "INSERT INTO stations "
         "(addedBy, name, genre, country, language, description, urls) "
         "VALUES (?, ?, ?, ?, ?, ?, ?);";
 const std::string GET_ALL_IDS_SQL = "SELECT rowid FROM stations;";
+const std::string SELECT_RANDOM_STATION_SQL = "SELECT rowid, * FROM stations ORDER BY random() limit 1;";
 
 int logStatement(unsigned int t, void* c, void* p, void* x);
 
@@ -29,7 +30,8 @@ SqliteStationsDao::SqliteStationsDao()
     , insertStationStmnt(nullptr)
     , findStationByIdStmnt(nullptr)
     , deleteByAddedByStmnt(nullptr)
-    , getAllIdsStmnt(nullptr) {
+    , getAllIdsStmnt(nullptr)
+    , getRandomStationStmnt(nullptr) {
 }
 
 SqliteStationsDao::~SqliteStationsDao() {
@@ -60,6 +62,7 @@ void SqliteStationsDao::open(const std::string& url) {
     prepare(&deleteByAddedByStmnt, DELETE_BY_ADDED_BY_SQL);
     prepare(&insertStationStmnt, INSERT_STATION_SQL);
     prepare(&getAllIdsStmnt, GET_ALL_IDS_SQL);
+    prepare(&getRandomStationStmnt, SELECT_RANDOM_STATION_SQL);
 }
 
 void SqliteStationsDao::close() {
@@ -71,6 +74,7 @@ void SqliteStationsDao::close() {
         result &= sqlite3_finalize(findStationByIdStmnt) == SQLITE_OK;
         result &= sqlite3_finalize(deleteByAddedByStmnt) == SQLITE_OK; 
         result &= sqlite3_finalize(getAllIdsStmnt) == SQLITE_OK;
+        result &= sqlite3_finalize(getRandomStationStmnt) == SQLITE_OK;
         result &= sqlite3_close_v2(db) == SQLITE_OK;
 
         if (result) {
@@ -140,7 +144,18 @@ void SqliteStationsDao::deleteAllAddedBy(const std::string& addedBy) {
 }
 
 std::shared_ptr<Station> SqliteStationsDao::getRandom() {
-    throw std::runtime_error("getRandom not implemented");
+    const int rc = sqlite3_step(getRandomStationStmnt);
+    std::shared_ptr<Station> station = nullptr;
+
+    if (rc == SQLITE_ROW) {
+        station = std::make_shared<Station>(getStation(getRandomStationStmnt));
+    } else if (rc == SQLITE_ERROR) {
+        sqlite3_reset(getRandomStationStmnt);
+        throw "unable to get station : " + getError();
+    }
+
+    sqlite3_reset(getRandomStationStmnt);
+    return station;
 }
 
 int SqliteStationsDao::getVersion() {

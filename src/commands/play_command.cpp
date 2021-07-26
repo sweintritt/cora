@@ -26,14 +26,20 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
     }
 
     // First entry is the command
-    const std::string idAndUrl = m_cli.getResidualValues()[1];
-    auto mediaPlayer = createPlayer();
+    const std::string idAndUrl = m_cli.getResidualValues()[1];    
+    const std::vector<std::string> values = split(idAndUrl, ':');
+    std::shared_ptr<Station> station;
     auto stationsDao = createStationsDao();
     stationsDao->open(m_cli.getValue('f', getDefaultFile()));
 
-    const std::vector<std::string> values = split(idAndUrl, ':');
-    const long id = std::stol(values[0]);
-    const auto station = stationsDao->findById(id);
+    LOG(plog::debug) << "checking: " << values[0];
+    if (values[0].compare("random") == 0) {
+        station = stationsDao->getRandom();
+    } else {
+        const long id = std::stol(values[0]);
+        station = stationsDao->findById(id);
+    }
+
     if (station != nullptr) {
         LOG(plog::info) << "playing " << station->getName();
         std::string url;
@@ -51,14 +57,20 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
             url = station->getUrls()[0];
         }
 
-        LOG(plog::debug) << "url: " << url;
-        mediaPlayer->setUrl(url);
-        mediaPlayer->play();
-
-        LOG(plog::info) << "Press enter to stop playing";
-        std::cin.get();
-        mediaPlayer->stop();
+        play(url);
     } else {
-        LOG(plog::warning) << "No station found for id:" << id;
+        LOG(plog::warning) << "No station found for id:" << values[0];
     }
+}
+
+void PlayCommand::play(const std::string& url) {
+    auto mediaPlayer = createPlayer();
+
+    LOG(plog::debug) << "url: " << url;
+    mediaPlayer->setUrl(url);
+    mediaPlayer->play();
+
+    LOG(plog::info) << "Press enter to stop playing";
+    std::cin.get();
+    mediaPlayer->stop();
 }

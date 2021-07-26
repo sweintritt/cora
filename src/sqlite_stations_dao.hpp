@@ -51,6 +51,8 @@ class SqliteStationsDao : public StationsDao {
 
         sqlite3_stmt* getAllIdsStmnt;
 
+        sqlite3_stmt* getRandomStationStmnt;
+
         std::string getError();
 
         void prepare(sqlite3_stmt** prepared, const std::string& stmnt);
