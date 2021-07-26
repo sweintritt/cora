@@ -88,7 +88,7 @@ void GstreamerMediaPlayer::printTitle(const GstTagList *list, const gchar *tag, 
             State* state = (State*) data;
 
             if (state->nowPlaying.compare(title) != 0) {
-                LOG(plog::info) << "now playing: " << title;
+                LOG(plog::info) << title;
                 state->nowPlaying = title;
             }
         }
