@@ -38,7 +38,6 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
         LOG(plog::info) << "        genre: " << station->getGenre();
         LOG(plog::info) << "      country: " << station->getCountry();
         LOG(plog::info) << "     language: " << station->getLanguage();
-        LOG(plog::info) << "  description: " << station->getDescription();
         LOG(plog::info) << "  description: " << formatDescription(station->getDescription());
         LOG(plog::info) << "     added by: " << station->getAddedBy();
         for (unsigned int i = 0; i < station->getUrls().size(); ++i) {
