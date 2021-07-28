@@ -1,5 +1,5 @@
 ToDos
 ======
 
-* add random option to play command or random command
-* update readne
+* update readme
+* add more tests
