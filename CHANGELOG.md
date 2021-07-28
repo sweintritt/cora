@@ -6,10 +6,15 @@
 
 * Help command.
 * Showing the currently playing song.
+* Play a random station.
+* Info and List command now show addedBy.
 
 ### Changed
 
 * Switch to gstreamer.
+* Removed 'now playing', because it looks strange in a long list of songs.
+* The description in the info output is now wrapped.
+* Transaction for radio sure import.
 
 ### Fixed
 
