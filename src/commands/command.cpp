@@ -12,7 +12,7 @@ Command::Command(const std::string& name,
     : m_name(name)
     , m_cli(name, description) {
         m_cli.addOption('h', "help", false, "Show help page");
-        m_cli.addOption('f', "file", true, "Database file.");
+        m_cli.addOption('f', "file", true, "Database file. Default is " + getDefaultFile());
     }
 
 Command::~Command() { }
