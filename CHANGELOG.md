@@ -8,6 +8,7 @@
 * Showing the currently playing song.
 * Play a random station.
 * Info and List command now show addedBy.
+* Help is showing the default value for the file option.
 
 ### Changed
 
