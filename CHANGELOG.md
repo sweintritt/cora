@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [v0.7.0] - 2021-07-31
+
 ### Added
 
 * Help command.
