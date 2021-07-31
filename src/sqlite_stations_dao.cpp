@@ -88,12 +88,8 @@ void SqliteStationsDao::close() {
 }
 
 void SqliteStationsDao::save(Station& station) {
-    // TODO check if the station has an id an just needs to be updated
-    // INSERT OR UPDATE
     LOG(plog::debug) << "saving station '" << station.getName() << "'";
 
-    // TODO check if an existing hash has changed
-    // TODO check if an entry with this hash already exists
     sqlite3_bind_text(insertStationStmnt, 1, station.getAddedBy().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(insertStationStmnt, 2, station.getName().c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(insertStationStmnt, 3, station.getGenre().c_str(), -1, SQLITE_STATIC);
@@ -102,7 +98,6 @@ void SqliteStationsDao::save(Station& station) {
     sqlite3_bind_text(insertStationStmnt, 6, station.getDescription().c_str(), -1, SQLITE_STATIC);
     const std::string serializedUrls = serializeUrls(station.getUrls());
     sqlite3_bind_text(insertStationStmnt, 7, serializedUrls.c_str(), -1, SQLITE_STATIC);
-    // TODO Add timestamp of update
 
     if (sqlite3_step(insertStationStmnt) != SQLITE_DONE) {
         const std::string error = getError();
