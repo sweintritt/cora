@@ -123,3 +123,15 @@ User `cpack --help` to see other available generators.
 * [cpputest](https://cpputest.github.io/) for tests.
 
 `sqlite`, `plog` and `cpputest` are available as submodules and can be added with `git submodules init`. `gstreamer` has to installed on your system.
+
+## cppcheck
+
+The build will add a make target ´cppcheck´, which will run *cppcheck* on all source files.
+The result is stored in `<build-dir>/cppcheck` as html and xml.
+This required *cppcheck* to be installed.
+
+## Coverage
+
+After running the unit tests, code coverage can be viewed by running ´make coverage´. The
+report will be available in `<build-dir/coverage` as html and xml.
+This requires *gcovr* to be installed.
