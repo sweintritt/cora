@@ -12,9 +12,10 @@
 #include "utils.hpp"
 #include "version.hpp"
 #include "commands/command_interpreter.hpp"
+#include "commands/find_command.hpp"
+#include "commands/help_command.hpp"
 #include "commands/info_command.hpp"
 #include "commands/import_command.hpp"
-#include "commands/help_command.hpp"
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
 #include "commands/version_command.hpp"
@@ -26,6 +27,7 @@ Cora::Cora() : m_commandInterpreter(std::make_shared<CommandInterpreter>()) {
     m_commandInterpreter->add(std::unique_ptr<Command>(new HelpCommand(m_commandInterpreter)));
     m_commandInterpreter->add(std::unique_ptr<Command>(new ListCommand()));
     m_commandInterpreter->add(std::unique_ptr<Command>(new PlayCommand()));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new FindCommand()));
     m_commandInterpreter->add(std::unique_ptr<Command>(new VersionCommand()));
 }
 

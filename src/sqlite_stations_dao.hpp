@@ -16,6 +16,8 @@ class SqliteStationsDao : public StationsDao {
 
         virtual void save(Station& station) override;
 
+        virtual std::vector<long> find(const std::string& value) override;
+
         virtual std::shared_ptr<Station> findById(const long id) override;
 
         virtual void deleteAllAddedBy(const std::string& addedBy) override;

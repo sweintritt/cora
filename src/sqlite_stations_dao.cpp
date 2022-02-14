@@ -110,6 +110,26 @@ void SqliteStationsDao::save(Station& station) {
     sqlite3_reset(insertStationStmnt);
 }
 
+std::vector<long> SqliteStationsDao::find(const std::string& value) {
+    sqlite3_stmt* findStationStmnt ;
+    prepare(&findStationStmnt, "SELECT rowid, * FROM stations WHERE name LIKE '%" + value + "%' ;");
+    sqlite3_bind_text(findStationStmnt, 1, value.c_str(), -1, SQLITE_STATIC);
+    int rc = sqlite3_step(findStationStmnt);
+    std::vector<long> ids;
+
+    while (rc == SQLITE_ROW) {
+        ids.push_back(sqlite3_column_int64(findStationStmnt, 0));
+        rc = sqlite3_step(findStationStmnt);
+    }
+
+    if (rc == SQLITE_ERROR) {
+        throw "error while loading ids: " + getError();
+    }
+
+    sqlite3_reset(findStationStmnt);
+    return ids;
+}
+
 std::shared_ptr<Station> SqliteStationsDao::findById(const long id) {
     sqlite3_bind_int(findStationByIdStmnt, 1, id);
     const int rc = sqlite3_step(findStationByIdStmnt);

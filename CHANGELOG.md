@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+* Added find commmand. To search for stations by name.
+
+### Changed
+
+* Removed language from the list output
+
 ## [v0.7.0] - 2021-07-31
 
 ### Added

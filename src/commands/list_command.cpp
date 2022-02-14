@@ -25,10 +25,8 @@ void ListCommand::execute(const std::vector<std::string>& args) {
         if (station != nullptr) {
             LOG(plog::info) << "id:" << std::to_string(station->getId())
                 << "\", name:\"" << station->getName()
-                << "\", addedBy:\"" << station->getAddedBy()
                 << "\", genre:\"" << station->getGenre()
-                << "\", country:\"" << station->getCountry()
-                << "\", language:\"" << station->getLanguage() << "\"";
+                << "\", country:\"" << station->getCountry() << "\"";
         } else {
             LOG(plog::warning) << "no station found for id:" << id;
         }

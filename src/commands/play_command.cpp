@@ -19,7 +19,6 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
         return;
     }
 
-    m_cli.parse(args);
     if (m_cli.getResidualValues().empty()) {
         LOG(plog::error) << "No id given. See 'cora play --help' for more information.";
         return;

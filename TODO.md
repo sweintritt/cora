@@ -1,8 +1,6 @@
 ToDos
 ======
 
-* find <value>
-  * search everywhere
 * alias
   * cora alias add <name> <id>
   * cora alias rm <name>

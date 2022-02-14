@@ -15,6 +15,8 @@ class StationsDao {
 
         virtual void save(Station& station) = 0;
 
+        virtual std::vector<long> find(const std::string& value) = 0;
+
         virtual std::shared_ptr<Station> findById(const long id) = 0;
 
         virtual void deleteAllAddedBy(const std::string& addedBy) = 0;
