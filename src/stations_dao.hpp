@@ -7,7 +7,7 @@
 
 class StationsDao {
     public:
-        virtual ~StationsDao() {};
+        virtual ~StationsDao() = default;
 
         virtual void open(const std::string& url) = 0;
 
@@ -15,7 +15,7 @@ class StationsDao {
 
         virtual void save(Station& station) = 0;
 
-        virtual std::vector<long> find(const std::string& value) = 0;
+        virtual std::vector<long> find(const std::string& name, const std::string& genre, const std::string& country) = 0;
 
         virtual std::shared_ptr<Station> findById(const long id) = 0;
 

@@ -4,7 +4,7 @@
 
 ### Added
 
-* Added find commmand. To search for stations by name.
+* Added find commmand. To search for stations by name, genre and country..
 
 ### Changed
 

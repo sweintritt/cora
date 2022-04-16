@@ -15,6 +15,7 @@ const std::string CREATE_TABLE_STATIONS_SQL = "CREATE TABLE IF NOT EXISTS statio
         "description TEXT, "
         "urls TEXT NOT NULL);";
 const std::string FIND_STATION_BY_ID_SQL = "SELECT rowid, * FROM stations WHERE rowid = ?;";
+const std::string FIND_STATION_SQL = "SELECT rowid, * FROM stations WHERE name LIKE ? AND genre LIKE ? AND country LIKE ? ;";
 const std::string DELETE_BY_ADDED_BY_SQL = "DELETE FROM stations WHERE addedBy = ?;";
 const std::string INSERT_STATION_SQL = "INSERT INTO stations "
         "(addedBy, name, genre, country, language, description, urls) "
@@ -29,6 +30,7 @@ SqliteStationsDao::SqliteStationsDao()
     , db(nullptr)
     , insertStationStmnt(nullptr)
     , findStationByIdStmnt(nullptr)
+    , findStationStmnt(nullptr)
     , deleteByAddedByStmnt(nullptr)
     , getAllIdsStmnt(nullptr)
     , getRandomStationStmnt(nullptr) {
@@ -59,6 +61,7 @@ void SqliteStationsDao::open(const std::string& url) {
 
     LOG(plog::debug) << "preparing statements";
     prepare(&findStationByIdStmnt, FIND_STATION_BY_ID_SQL);
+    prepare(&findStationStmnt, FIND_STATION_SQL);
     prepare(&deleteByAddedByStmnt, DELETE_BY_ADDED_BY_SQL);
     prepare(&insertStationStmnt, INSERT_STATION_SQL);
     prepare(&getAllIdsStmnt, GET_ALL_IDS_SQL);
@@ -72,6 +75,7 @@ void SqliteStationsDao::close() {
         bool result = true;
         result &= sqlite3_finalize(insertStationStmnt) == SQLITE_OK;
         result &= sqlite3_finalize(findStationByIdStmnt) == SQLITE_OK;
+        result &= sqlite3_finalize(findStationStmnt) == SQLITE_OK;
         result &= sqlite3_finalize(deleteByAddedByStmnt) == SQLITE_OK; 
         result &= sqlite3_finalize(getAllIdsStmnt) == SQLITE_OK;
         result &= sqlite3_finalize(getRandomStationStmnt) == SQLITE_OK;
@@ -110,10 +114,16 @@ void SqliteStationsDao::save(Station& station) {
     sqlite3_reset(insertStationStmnt);
 }
 
-std::vector<long> SqliteStationsDao::find(const std::string& value) {
-    sqlite3_stmt* findStationStmnt ;
-    prepare(&findStationStmnt, "SELECT rowid, * FROM stations WHERE name LIKE '%" + value + "%' ;");
-    sqlite3_bind_text(findStationStmnt, 1, value.c_str(), -1, SQLITE_STATIC);
+std::vector<long> SqliteStationsDao::find(const std::string& name, const std::string& genre, const std::string& country) {
+    LOG(plog::debug) << "searching for station name:" << name << ", genre:" << genre << ", country:" << country;
+
+    const std::string likeName = "%" + name + "%";
+    const std::string likeGenre = "%" + genre + "%";
+    const std::string likeCountry = "%" + country + "%";
+
+    sqlite3_bind_text(findStationStmnt, 1, likeName.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationStmnt, 2, likeGenre.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(findStationStmnt, 3, likeCountry.c_str(), -1, SQLITE_STATIC);
     int rc = sqlite3_step(findStationStmnt);
     std::vector<long> ids;
 
