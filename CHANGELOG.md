@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [v0.8.0] - 2022-04-16
+
 ### Added
 
 * Added find commmand. To search for stations by name, genre and country..
