@@ -3,6 +3,14 @@ cora
 
 cora (**Co**nsole **Ra**dio) is a very simple command line application to play internet radio streams. 
 
+---
+**NOTE**
+
+RadioSure is no longer available. So currently I am switching to a different source. I picked https://www.radio-browser.info/ and instead
+of loading everything into the database, cora will access the API directly.
+---
+
+
 # Import a stations database
 
 If you run any cora command for the first time, it will create an empty database. To add
