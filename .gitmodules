@@ -16,3 +16,6 @@
 [submodule "third_party/plog"]
 	path = third_party/plog
 	url = https://github.com/SergiusTheBest/plog
+[submodule "third_party/curl"]
+	path = third_party/curl
+	url = https://github.com/curl/curl.git
