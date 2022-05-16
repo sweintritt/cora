@@ -1,5 +1,6 @@
 include(ExternalProject)
 
+# gstreamer
 macro(CoraUseGstreamer)
     if (NOT GSTREAMER_FOUND)
         find_package(gstreamer-1.0)
@@ -14,6 +15,7 @@ macro(CoraUseGstreamer)
     message(STATUS "GSTREAMER_LIBRARIES:    ${GSTREAMER_LIBRARIES}")
 endmacro()
 
+# sqlite
 set(CORA_SQLITE3_PROVIDER "module" CACHE STRING "Provider of sqlite3 library")
 set_property(CACHE CORA_SQLITE3_PROVIDER PROPERTY STRINGS "module" "package")
 
@@ -37,10 +39,8 @@ macro(CoraUseSQLite3)
                 add_dependencies(sqlite3 project_sqlite3)
 
                 set(SQLITE3_FOUND TRUE)
-                set(SQLITE3_INCLUDE_DIR ${SQLITE3_BINARY_DIR})
-                set(SQLITE3_LIBRARY sqlite3)
-                message(STATUS "SQLITE3_INCLUDE_DIR:${SQLITE3_INCLUDE_DIR}")
-                message(STATUS "SQLITE3_LIBRARY:${SQLITE3_LIBRARY}")
+                set(SQLITE3_INCLUDE_DIRS ${SQLITE3_BINARY_DIR})
+                set(SQLITE3_LIBRARIES sqlite3)
                 link_directories(${CMAKE_CURRENT_BINARY_DIR}/sqlite3/.libs ${LINK_DIRECTORIES})
             else()
                 message(WARNING "CORA_SQLITE3_PROVIDER is \"module\" but SQLITE3_ROOT_DIR is wrong: ${SQLITE3_ROOT_DIR}")
@@ -48,16 +48,26 @@ macro(CoraUseSQLite3)
         endif()
     elseif ("${CORA_SQLITE3_PROVIDER}" STREQUAL "package")
         if (NOT SQLITE3_FOUND)
-           find_package(sqlite3)
+           find_package(SQLite3)
 
            if (NOT SQLITE3_FOUND)
               find_package(PkgConfig REQUIRED)
               pkg_check_modules(SQLITE3 REQUIRED sqlite3)
            endif ()
+
+           set(SQLITE3_FOUND ${SQLite3_FOUND})
+           set(SQLITE3_INCLUDE_DIRS ${SQLite3_INCLUDE_DIRS})
+           set(SQLITE3_LIBRARIES ${SQLite3_LIBRARIES})
        endif()
     endif()
+
+    message(STATUS "SQLite3_INCLUDE_DIRS: ${SQLite3_INCLUDE_DIRS}")
+    message(STATUS "SQLite3_LIBRARIES:    ${SQLite3_LIBRARIES}")
+    message(STATUS "SQLITE3_INCLUDE_DIRS: ${SQLITE3_INCLUDE_DIRS}")
+    message(STATUS "SQLITE3_LIBRARIES:    ${SQLITE3_LIBRARIES}")
 endmacro()
 
+# ccputest
 set(CORA_CPPUTEST_PROVIDER "module" CACHE STRING "Provider of Cputest library")
 set_property(CACHE CORA_CPPUTEST_PROVIDER PROPERTY STRINGS "module" "package")
 
@@ -75,10 +85,8 @@ macro(CoraUseCpputest)
                 add_subdirectory(${CPPUTEST_ROOT_DIR} ${CPPUTEST_BINARY_DIR})
 
                 set(CPPUTEST_FOUND TRUE)
-                set(CPPUTEST_INCLUDE_DIR ${CPPUTEST_ROOT_DIR}/include)
-                set(CPPUTEST_LIBRARY CppUTest)
-                message(STATUS "CPPUTEST_INCLUDE_DIR:${CPPUTEST_INCLUDE_DIR}")
-                message(STATUS "CPPUTEST_LIBRARY:${CPPUTEST_LIBRARY}")
+                set(CPPUTEST_INCLUDE_DIRS ${CPPUTEST_ROOT_DIR}/include)
+                set(CPPUTEST_LIBRARIES CppUTest)
             else()
                 message(WARNING "CORA_CPPUTEST_PROVIDER is \"module\" but CPPUTEST_ROOT_DIR is wrong: ${CPPUTEST_ROOT_DIR}")
             endif()
@@ -93,4 +101,17 @@ macro(CoraUseCpputest)
            endif ()
        endif()
     endif()
+
+    message(STATUS "CPPUTEST_INCLUDE_DIRS:  ${CPPUTEST_INCLUDE_DIRS}")
+    message(STATUS "CPPUTEST_LIBRARIES:     ${CPPUTEST_LIBRARYS}")
+endmacro()
+
+# curl
+macro(CoraUseCurl)
+    if (NOT CURL_FOUND)
+        find_package(CURL REQUIRED)
+    endif()
+
+    message(STATUS "CURL_INCLUDE_DIRS: ${CURL_INCLUDE_DIRS}")
+    message(STATUS "CURL_LIBRARIES:    ${CURL_LIBRARIES}")
 endmacro()

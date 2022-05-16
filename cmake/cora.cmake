@@ -3,6 +3,7 @@ set(cora_sources
     
     ${cora_source_dir}/station.cpp
     ${cora_source_dir}/sqlite_stations_dao.cpp
+    ${cora_source_dir}/radio_browser_info_stations_dao.cpp
     ${cora_source_dir}/utils.cpp
     ${cora_source_dir}/cli/cli.cpp
     ${cora_source_dir}/commands/command.cpp
@@ -23,6 +24,7 @@ set(cora_sources
 
 CoraUseGstreamer()
 CoraUseSQLite3()
+CoraUseCurl()
 find_package(Threads REQUIRED)
 
 configure_file(${cora_source_dir}/version.hpp.in ${CMAKE_BINARY_DIR}/generated/version.hpp)
@@ -31,13 +33,14 @@ include_directories(
     ${cora_source_dir}
     ${CMAKE_BINARY_DIR}/generated/
     ${GSTREAMER_INCLUDE_DIRS}
-    ${SQLITE3_INCLUDE_DIR}
+    ${SQLITE3_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include
 )
 
 set(cora_link_libraries
     ${GSTREAMER_LIBRARIES}
-    ${SQLITE3_LIBRARY}
+    ${SQLITE3_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
     ${CMAKE_THREAD_LIBS_INIT})
 
@@ -67,8 +70,8 @@ if(CORA_BUILD_TESTS)
     CoraUseCpputest()
 
    include_directories(SYSTEM
-      ${SQLITE3_INCLUDE_DIR}
-      ${CPPUTEST_INCLUDE_DIR}
+      ${SQLITE3_INCLUDE_DIRS}
+      ${CPPUTEST_INCLUDE_DIRS}
       ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include)
 
     set(cora_test_sources
@@ -77,7 +80,7 @@ if(CORA_BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp)
 
    add_executable(cora_test ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp ${cora_sources} ${cora_test_sources})
-   target_link_libraries(cora_test ${cora_link_libraries} ${CPPUTEST_LIBRARY})
+   target_link_libraries(cora_test ${cora_link_libraries} ${CPPUTEST_LIBRARIES})
    add_test(NAME cora_test_test COMMAND cora_test)
    set_tests_properties(cora_test_test PROPERTIES PASS_REGULAR_EXPRESSION "OK")
 endif ()
