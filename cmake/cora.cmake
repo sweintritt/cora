@@ -3,7 +3,6 @@ set(cora_sources
     
     ${cora_source_dir}/station.cpp
     ${cora_source_dir}/sqlite_stations_dao.cpp
-    ${cora_source_dir}/radio_browser_info_stations_dao.cpp
     ${cora_source_dir}/utils.cpp
     ${cora_source_dir}/cli/cli.cpp
     ${cora_source_dir}/commands/command.cpp
@@ -17,6 +16,7 @@ set(cora_sources
     ${cora_source_dir}/commands/version_command.cpp
     ${cora_source_dir}/importer/importer.cpp
     ${cora_source_dir}/importer/radio_sure_importer.cpp
+    ${cora_source_dir}/importer/radio_browser_importer.cpp
     ${cora_source_dir}/logging/message_only_formatter.cpp
     ${cora_source_dir}/player/media_player.cpp
     ${cora_source_dir}/player/gstreamer_media_player.cpp
@@ -25,24 +25,29 @@ set(cora_sources
 CoraUseGstreamer()
 CoraUseSQLite3()
 CoraUseCurl()
+CoraUseJson()
 find_package(Threads REQUIRED)
 
 configure_file(${cora_source_dir}/version.hpp.in ${CMAKE_BINARY_DIR}/generated/version.hpp)
 
-include_directories(
+set(cora_include_dirs
     ${cora_source_dir}
     ${CMAKE_BINARY_DIR}/generated/
     ${GSTREAMER_INCLUDE_DIRS}
     ${SQLITE3_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include
+    ${JSON_INCLUDE_DIRS}
 )
+include_directories(${cora_include_dirs})
 
 set(cora_link_libraries
     ${GSTREAMER_LIBRARIES}
     ${SQLITE3_LIBRARIES}
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
-    ${CMAKE_THREAD_LIBS_INIT})
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${JSON_LIBRARIES}
+)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic -Wextra -Wall -Wundef -Wunused")
@@ -69,10 +74,7 @@ if(CORA_BUILD_TESTS)
     enable_testing()
     CoraUseCpputest()
 
-   include_directories(SYSTEM
-      ${SQLITE3_INCLUDE_DIRS}
-      ${CPPUTEST_INCLUDE_DIRS}
-      ${CMAKE_CURRENT_SOURCE_DIR}/third_party/plog/include)
+   include_directories(SYSTEM ${cora_include_dirs})
 
     set(cora_test_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/test/cli_test.cpp

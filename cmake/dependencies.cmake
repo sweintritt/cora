@@ -67,7 +67,7 @@ macro(CoraUseSQLite3)
     message(STATUS "SQLITE3_LIBRARIES:    ${SQLITE3_LIBRARIES}")
 endmacro()
 
-# ccputest
+# cpputest
 set(CORA_CPPUTEST_PROVIDER "module" CACHE STRING "Provider of Cputest library")
 set_property(CACHE CORA_CPPUTEST_PROVIDER PROPERTY STRINGS "module" "package")
 
@@ -114,4 +114,43 @@ macro(CoraUseCurl)
 
     message(STATUS "CURL_INCLUDE_DIRS: ${CURL_INCLUDE_DIRS}")
     message(STATUS "CURL_LIBRARIES:    ${CURL_LIBRARIES}")
+endmacro()
+
+# json
+set(CORA_JSON_PROVIDER "module" CACHE STRING "Provider of JSON library")
+set_property(CACHE CORA_JSON_PROVIDER PROPERTY STRINGS "module" "package")
+
+macro(CoraUseJson)
+    if ("${CORA_JSON_PROVIDER}" STREQUAL "module")
+        if (NOT JSON_FOUND)
+            set(JSON_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/json)
+            set(JSON_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/json)
+            if (EXISTS "${JSON_ROOT_DIR}")
+                message(STATUS "JSON_ROOT_DIR:${JSON_ROOT_DIR}")
+
+                #set(TESTS FALSE CACHE BOOL "Turn off tests")
+                #set(TESTS_BUILD_DISCOVER FALSE CACHE BOOL "No build time test discover")
+                #set(VERBOSE_CONFIG FALSE CACHE BOOL "No printing of configuration")
+                add_subdirectory(${JSON_ROOT_DIR} ${JSON_BINARY_DIR})
+
+                set(JSON_FOUND TRUE)
+                set(JSON_INCLUDE_DIRS ${JSON_ROOT_DIR}/include)
+                set(JSON_LIBRARIES nlohmann_json::nlohmann_json)
+            else()
+                message(WARNING "CORA_JSON_PROVIDER is \"module\" but JSON_ROOT_DIR is wrong: ${JSON_ROOT_DIR}")
+            endif()
+        endif()
+    elseif ("${CORA_JSON_PROVIDER}" STREQUAL "package")
+        if (NOT JSON_FOUND)
+           find_package(json)
+
+           if (NOT JSON_FOUND)
+              find_package(PkgConfig REQUIRED)
+              pkg_check_modules(JSON REQUIRED json)
+           endif ()
+       endif()
+    endif()
+
+    message(STATUS "JSON_INCLUDE_DIRS:  ${JSON_INCLUDE_DIRS}")
+    message(STATUS "JSON_LIBRARIES:     ${JSON_LIBRARIES}")
 endmacro()

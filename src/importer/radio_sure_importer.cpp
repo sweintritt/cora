@@ -36,9 +36,9 @@ void RadioSureImporter::import(const std::string& url, const std::shared_ptr<Sta
                 station.setAddedBy(getName());
 
                 for (unsigned int i = 5; i < values.size(); ++i) {
-                if (values[i].compare("-")) {
-                    station.addUrl(values[i]);
-                }
+                    if (values[i].compare("-")) {
+                        station.addUrl(values[i]);
+                    }
                 }
 
                 stationsDao->save(station);
