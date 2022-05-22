@@ -37,3 +37,20 @@ std::string toString(const std::vector<std::string>& values) {
 
   return stream.str();
 }
+
+void ltrim(std::string& value) {
+    value.erase(value.begin(), std::find_if(value.begin(), value.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+}
+
+void rtrim(std::string& value) {
+    value.erase(std::find_if(value.rbegin(), value.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), value.end());
+}
+
+void trim(std::string& value) {
+    ltrim(value);
+    rtrim(value);
+}

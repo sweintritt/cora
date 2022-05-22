@@ -8,6 +8,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
+#include <regex>
+
+const std::regex NEWLINES_REG_EX("[\n\r\t]");
 
 RadioBrowserImporter::RadioBrowserImporter()
     : Importer("radio-browser") {}
@@ -15,43 +19,36 @@ RadioBrowserImporter::RadioBrowserImporter()
 RadioBrowserImporter::~RadioBrowserImporter() {}
 
 void RadioBrowserImporter::import(const std::string& url, const std::shared_ptr<StationsDao> stationsDao) {
-    std::string line;
-    std::ifstream file(url);
+    const std::time_t start = std::time(nullptr);
+    stationsDao->beginTransaction();
+    // All entries added by the last RadioBrowser import will be removed
+    stationsDao->deleteAllAddedBy(getName());
 
-    if (file.is_open()) {
-        const std::time_t start = std::time(nullptr);
-        stationsDao->beginTransaction();
-        // All entries added by the last RadioBrowser import will be removed
-        stationsDao->deleteAllAddedBy(getName());
+    try {
+        std::string json;
 
-        try {
-            std::string json;
-
-            if (url.empty()) {
-                json = getStationsJson("https://de1.api.radio-browser.info/json/stations");
-            } else {
-                json = getStationsJson(url);
-            }
-
-            std::vector<Station> stations = parseJson(json);
-            for (auto& station : stations) {
-                stationsDao->save(station);
-            }
-
-            LOG(plog::info) << stations.size() << " stations imported in " << std::difftime(std::time(nullptr), start) << " s";
-            stationsDao->commit();
-        } catch (const std::exception& e) {
-            stationsDao->rollback();
-            throw;
-        } catch (const std::string& e) {
-            stationsDao->rollback();
-            throw;
-        } catch (...) {
-            stationsDao->rollback();
-            LOG(plog::error) << "Unknown error";
+        if (url.empty()) {
+            json = getStationsJson("https://de1.api.radio-browser.info/json/stations");
+        } else {
+            json = getStationsJson(url);
         }
-    } else {
-        throw std::runtime_error("Unable to open file " + url);
+
+        std::vector<Station> stations = parseJson(json);
+        for (auto& station : stations) {
+            stationsDao->save(station);
+        }
+
+        LOG(plog::info) << stations.size() << " stations imported in " << std::difftime(std::time(nullptr), start) << " s";
+        stationsDao->commit();
+    } catch (const std::exception& e) {
+        stationsDao->rollback();
+        throw;
+    } catch (const std::string& e) {
+        stationsDao->rollback();
+        throw;
+    } catch (...) {
+        stationsDao->rollback();
+        LOG(plog::error) << "Unknown error";
     }
 }
 
@@ -74,7 +71,7 @@ std::string RadioBrowserImporter::getStationsJson(const std::string& url) {
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, &json);
       curl_easy_setopt(curl, CURLOPT_USERAGENT, "com.github/sweintritt/cora");
       curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-      LOG(plog::debug) << "perform";
+      LOG(plog::debug) << "loading stations from " << url;
       res = curl_easy_perform(curl);
 
       if(res != CURLE_OK) {
@@ -91,13 +88,17 @@ std::string RadioBrowserImporter::getStationsJson(const std::string& url) {
 }
 
 std::vector<Station> RadioBrowserImporter::parseJson(const std::string& json) {
-    nlohmann::json array = json;
+    nlohmann::json array = nlohmann::json::parse(json);
     std::vector<Station> stations;
 
     for (auto& entry : array) {
         Station station;
-        station.setName(entry["name"]);
-        station.setDescription(entry["name"]);
+        std::string name = entry["name"];
+        trim(name);
+        name = std::regex_replace(name, NEWLINES_REG_EX, " ");
+        LOG(plog::debug) << "name: '" << name << "'"; 
+        station.setName(name);
+        station.setDescription(name);
         station.setGenre(entry["tags"]);
         station.setCountry(entry["country"]);
         station.setLanguage(entry["language"]);

@@ -3,28 +3,25 @@ cora
 
 cora (**Co**nsole **Ra**dio) is a very simple command line application to play internet radio streams. 
 
----
-**NOTE**
-
-RadioSure is no longer available. So currently I am switching to a different source. I picked https://www.radio-browser.info/ and instead
-of loading everything into the database, cora will access the API directly.
----
-
-
 # Import a stations database
 
-If you run any cora command for the first time, it will create an empty database. To add
-some stations you have to download and unzip the current version of the RadioSure database
-and import it.
+If you run any cora command for the first time, it will create an empty database.
+
+## RadioBrowser
+
+To import station data jus run `cora import`. This will import all stations from https://www.radio-browser.info/ and store it in the local
+databse.
+
+## RadioSurce
+
+If you have a copy of a CSV from RadioSure (because the page is no longer available), you can run the import to add the stations into your
+local database. You have to unzip the current version of the RadioSure database and import it.
 
 ```bash
 $ wget http://www.radiosure.com/rsdbms/stations2.zip
 $ unzip stations2.zip
 $ cora import --input stations-2021-07-28.rsd --type radio-sure 
 ```
-
-> **NOTE**: Currently cora can only import stations from a 
-> [RadioSure](http://www.radiosure.com/stations/).
 
 # Search for station
 
@@ -158,8 +155,8 @@ User `cpack --help` to see other available generators.
 * [sqlite](https://sqlite.org/index.html) as database,
 * [plog](https://github.com/SergiusTheBest/plog) for logging and
 * [cpputest](https://cpputest.github.io/) for tests.
-
-`sqlite`, `plog` and `cpputest` are available as submodules and can be added with `git submodules init`. `gstreamer` has to installed on your system.
+* [cur](https://github.com/curl/curl) for download of the RadioBrowser stations.
+* [json](https://github.com/nlohmann/json) processing of the RadioBrowser data.
 
 ## cppcheck
 

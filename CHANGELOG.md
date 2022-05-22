@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+* Import from https://www.radio-browser.info/, because RadioSure no longer works.
+
 ## [v0.8.0] - 2022-04-16
 
 ### Added
