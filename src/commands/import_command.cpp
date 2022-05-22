@@ -13,7 +13,7 @@ ImportCommand::ImportCommand() : Command("import", "Import radio stations from d
         auto radioBrowserImporter = std::unique_ptr<RadioBrowserImporter>(new RadioBrowserImporter());
         m_importerByName.insert(std::make_pair(radioBrowserImporter->getName(), std::move(radioBrowserImporter)));
         m_cli.addOption('i', "input", true, "Input to import stations from. Depends on the type an could be a file or URL.");
-        m_cli.addOption('t', "type", true, "Type of imported data. Supported types are: radio-sure (requires a file as input).");
+        m_cli.addOption('t', "type", true, "Type of imported data. Supported types are: 'radio-sure', which requires a file as input and 'radio-browser', which requires a URL. 'radio-browser' is the default and provides a default url.");
 }
 
 ImportCommand::~ImportCommand() { }

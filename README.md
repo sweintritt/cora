@@ -127,6 +127,35 @@ cora - listen to internet radio stations
    version  Show the version
 ```
 
+and the `--help` option so see all about a specific command
+
+
+```bash
+$ cora import --help
+NAME
+  import - Import radio stations from different sources
+
+SYNOPSIS
+  import [OPTIONS]
+
+DESCRIPTION
+  -h, --help
+              Show help page
+
+  -f, --file <VALUE> 
+              Database file. Default is /home/sweintritt/.cora.sqlite
+
+  -i, --input <VALUE> 
+              Input to import stations from. Depends on the type an could be
+              a file or URL.
+
+  -t, --type <VALUE> 
+              Type of imported data. Supported types are: 'radio-sure', which
+              requires a file as input and 'radio-browser',
+              which requires a URL. 'radio-browser' is the default
+              and provides a default url.
+```
+
 # Build
 
 The project can be build with
