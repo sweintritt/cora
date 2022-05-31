@@ -59,38 +59,40 @@ static size_t writeCallback(void* content, size_t size, size_t nmemb, void* data
 }
 
 std::string RadioBrowserImporter::getStationsJson(const std::string& url) {
-   CURL *curl;
-   CURLcode res;
-   std::string json;
+    CURL *curl;
+    CURLcode res;
+    std::string json;
 
-   curl = curl_easy_init();
-   if(curl) {
-      // https://curl.se/libcurl/c/curl_easy_setopt.html
-      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
-      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &json);
-      curl_easy_setopt(curl, CURLOPT_USERAGENT, "com.github/sweintritt/cora");
-      curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-      LOG(plog::debug) << "loading stations from " << url;
-      res = curl_easy_perform(curl);
+    curl = curl_easy_init();
+    if(curl) {
+        // https://curl.se/libcurl/c/curl_easy_setopt.html
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &json);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, "com.github/sweintritt/cora");
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        LOG(plog::debug) << "Loading stations from " << url;
+        res = curl_easy_perform(curl);
 
-      if(res != CURLE_OK) {
-         LOG(plog::error) << "error while loading stations: " << curl_easy_strerror(res);
-            return "";
+        if(res != CURLE_OK) {
+           LOG(plog::error) << "Error while loading stations: " << curl_easy_strerror(res);
+           return "";
         }
 
         curl_easy_cleanup(curl);
         return json;  
     } else {
-        LOG(plog::error) << "error while loading stations";
+        LOG(plog::error) << "Error while loading stations";
         return "";
     }
 }
 
 std::vector<Station> RadioBrowserImporter::parseJson(const std::string& json) {
+    LOG(plog::info) << "Parsing RadioBrowser data";
     nlohmann::json array = nlohmann::json::parse(json);
     std::vector<Station> stations;
 
+    LOG(plog::info) << "Saving stations";
     for (auto& entry : array) {
         Station station;
         std::string name = entry["name"];

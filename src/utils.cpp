@@ -1,5 +1,8 @@
 #include "utils.hpp"
 
+#include <plog/Log.h>
+
+#include <iostream>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
