@@ -1,5 +1,6 @@
 #include "importer/radio_browser_importer.hpp"
 #include "utils.hpp"
+#include "version.hpp"
 
 #include <curl/curl.h>
 #include <plog/Log.h>
@@ -11,6 +12,7 @@
 #include <algorithm>
 #include <regex>
 
+const std::string USER_AGENT = "cora/" + CORA_VERSION + " +(com.github/sweintritt/cora)";
 const std::regex NEWLINES_REG_EX("[\n\r\t]");
 
 RadioBrowserImporter::RadioBrowserImporter()
@@ -69,7 +71,7 @@ std::string RadioBrowserImporter::getStationsJson(const std::string& url) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &json);
-        curl_easy_setopt(curl, CURLOPT_USERAGENT, "com.github/sweintritt/cora");
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, USER_AGENT);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         LOG(plog::debug) << "Loading stations from " << url;
         res = curl_easy_perform(curl);

@@ -1,3 +1,5 @@
 #pragma once
 
-#define CORA_VERSION "@PROJECT_VERSION@";
+#include <string>
+
+const std::string CORA_VERSION = "@PROJECT_VERSION@";
