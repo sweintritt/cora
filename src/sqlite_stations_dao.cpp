@@ -26,9 +26,7 @@ const std::string SELECT_RANDOM_STATION_SQL = "SELECT rowid, * FROM stations ORD
 int logStatement(unsigned int t, void* c, void* p, void* x);
 
 SqliteStationsDao::SqliteStationsDao()
-    : version(1)
-    , db(nullptr)
-    , insertStationStmnt(nullptr)
+    : insertStationStmnt(nullptr)
     , findStationByIdStmnt(nullptr)
     , findStationStmnt(nullptr)
     , deleteByAddedByStmnt(nullptr)
@@ -36,27 +34,11 @@ SqliteStationsDao::SqliteStationsDao()
     , getRandomStationStmnt(nullptr) {
 }
 
-SqliteStationsDao::~SqliteStationsDao() {
-    close();
-}
-
-void SqliteStationsDao::open(const std::string& url) {
-    file = url;
-    LOG(plog::debug) << "opening file " << url;
-    if (sqlite3_open_v2(file.c_str(), &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr) != SQLITE_OK) {
-        throw "unable to open " + file + "': " + getError();
-    }
-
+void SqliteStationsDao::onOpen() {
     LOG(plog::debug) << "creating table stations";
     char* errorMessage;
     if (sqlite3_exec(db, CREATE_TABLE_STATIONS_SQL.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
         throw "unable to create table stations: " + std::string{errorMessage};
-    }
-
-    IF_PLOG(plog::debug) {
-        if (sqlite3_trace_v2(db, SQLITE_TRACE_STMT, &logStatement, nullptr) != SQLITE_OK) {
-            LOG(plog::warning) << "unable to set up sqlite trace";
-        }
     }
 
     LOG(plog::debug) << "preparing statements";
@@ -68,27 +50,16 @@ void SqliteStationsDao::open(const std::string& url) {
     prepare(&getRandomStationStmnt, SELECT_RANDOM_STATION_SQL);
 }
 
-void SqliteStationsDao::close() {
-    LOG(plog::debug) << "closing database " << file;
-
-    if (db != nullptr) {
-        bool result = true;
-        result &= sqlite3_finalize(insertStationStmnt) == SQLITE_OK;
-        result &= sqlite3_finalize(findStationByIdStmnt) == SQLITE_OK;
-        result &= sqlite3_finalize(findStationStmnt) == SQLITE_OK;
-        result &= sqlite3_finalize(deleteByAddedByStmnt) == SQLITE_OK; 
-        result &= sqlite3_finalize(getAllIdsStmnt) == SQLITE_OK;
-        result &= sqlite3_finalize(getRandomStationStmnt) == SQLITE_OK;
-        result &= sqlite3_close_v2(db) == SQLITE_OK;
-
-        if (result) {
-            db = nullptr;
-        } else {
-            throw "error closing database: " + getError();
-        }
-    } else {
-        LOG(plog::info) << "file already closed";
-    }
+bool SqliteStationsDao::onClose() {
+    bool result = true;
+    result &= sqlite3_finalize(insertStationStmnt) == SQLITE_OK;
+    result &= sqlite3_finalize(findStationByIdStmnt) == SQLITE_OK;
+    result &= sqlite3_finalize(findStationStmnt) == SQLITE_OK;
+    result &= sqlite3_finalize(deleteByAddedByStmnt) == SQLITE_OK; 
+    result &= sqlite3_finalize(getAllIdsStmnt) == SQLITE_OK;
+    result &= sqlite3_finalize(getRandomStationStmnt) == SQLITE_OK;
+    result &= sqlite3_close_v2(db) == SQLITE_OK;
+    return result;
 }
 
 void SqliteStationsDao::save(Station& station) {
@@ -183,18 +154,6 @@ std::shared_ptr<Station> SqliteStationsDao::getRandom() {
     return station;
 }
 
-int SqliteStationsDao::getVersion() {
-    throw std::runtime_error("getVersion not implemented");
-}
-
-void SqliteStationsDao::create() {
-    throw std::runtime_error("create not implemented");
-}
-
-void SqliteStationsDao::upgrade(const int oldVersion, const int newVersion) {
-    throw std::runtime_error("upgrade not implemented");
-}
-
 std::vector<long> SqliteStationsDao::getAllIds() {
     int rc = sqlite3_step(getAllIdsStmnt);
     std::vector<long> ids;
@@ -210,41 +169,6 @@ std::vector<long> SqliteStationsDao::getAllIds() {
 
     sqlite3_reset(getAllIdsStmnt);
     return ids;
-}
-
-void SqliteStationsDao::beginTransaction() {
-    char* errorMessage;
-    const std::string sql = "BEGIN TRANSACTION;";
-    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
-        throw "unable to begin transaction: " + std::string{errorMessage};
-    }
-}
-
-void SqliteStationsDao::commit() {
-    char* errorMessage;
-    const std::string sql = "COMMIT;";
-    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
-        throw "unable to begin transaction: " + std::string{errorMessage};
-    }
-}
-
-void SqliteStationsDao::rollback() {
-    char* errorMessage;
-    const std::string sql = "ROLLBACK;";
-    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
-        throw "unable to begin transaction: " + std::string{errorMessage};
-    }
-}
-
-std::string SqliteStationsDao::getError() {
-    const int errorCode = sqlite3_errcode(db);
-    return std::string{ sqlite3_errstr(errorCode) };
-}
-
-void SqliteStationsDao::prepare(sqlite3_stmt** prepared, const std::string& stmnt) {
-    if (sqlite3_prepare_v2(db, stmnt.c_str(), -1, prepared, nullptr) != SQLITE_OK) {
-        throw "unable to prepare statement '" + stmnt + "': " + getError();
-    }
 }
 
 std::string SqliteStationsDao::serializeUrls(const std::vector<std::string>& urls) {
@@ -303,12 +227,4 @@ Station SqliteStationsDao::getStation(sqlite3_stmt* stmnt) {
     }
 
     return station;
-}
-
-int logStatement(unsigned int t, void* c, void* p, void* x) {
-    if (t == SQLITE_TRACE_STMT) {
-        LOG(plog::debug) << "sqlite stmt:'" << sqlite3_expanded_sql((sqlite3_stmt*) p) << "'";
-    }
-
-    return 0;
 }
