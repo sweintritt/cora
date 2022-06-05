@@ -14,4 +14,4 @@ class Settings {
         int getAsInt(const std::string& key);
     private:
         std::map<std::string, std::string> settings;
-}
+};

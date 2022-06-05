@@ -1,12 +1,11 @@
 #include "CppUTest/TestHarness.h"
-#include "sqlite_stations_dao.hpp"
+#include "stations_dao.hpp"
 #include <plog/Log.h>
 
-TEST_GROUP(SqliteStationsDaoTest) {
-};
+TEST_GROUP(StationsDaoTest) { };
 
-TEST(SqliteStationsDaoTest, SaveAndGet) {
-    SqliteStationsDao dao;
+TEST(StationsDaoTest, SaveAndGet) {
+    StationsDao dao;
     dao.open(":memory:");
 
     CHECK_EQUAL(0, dao.getAllIds().size());

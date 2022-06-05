@@ -3,11 +3,11 @@
 #include <string>
 #include <sqlite3.h>
 
-class Sqlite3Dao {
+class Dao {
     public:
-        Sqlite3Dao();
+        Dao();
 
-        virtual ~Sqlite3Dao() = default;
+        virtual ~Dao();
 
         virtual void open(const std::string& url);
 

@@ -1,16 +1,18 @@
-#include "sqlite3_dao.hpp"
+#include "dao.hpp"
 
 #include <plog/Log.h>
 
-Sqlite3Dao::Sqlite3Dao() {
+int logStatement(unsigned int t, void* c, void* p, void* x);
+
+Dao::Dao() {
     
 }
 
-Sqlite3Dao::~Sqlite3Dao() {
+Dao::~Dao() {
     close();
 }
 
-void Sqlite3Dao::open(const std::string& url) {
+void Dao::open(const std::string& url) {
     file = url;
 
     LOG(plog::debug) << "opening file " << url;
@@ -24,10 +26,10 @@ void Sqlite3Dao::open(const std::string& url) {
         }
     }
 
-    onOpen():
+    onOpen();
 }
 
-void Sqlite3Dao::close() {
+void Dao::close() {
     LOG(plog::debug) << "closing database " << file;
 
     if (db != nullptr) {
@@ -43,7 +45,7 @@ void Sqlite3Dao::close() {
     }
 }
 
-void Sqlite3Dao::beginTransaction() {
+void Dao::beginTransaction() {
     char* errorMessage;
     const std::string sql = "BEGIN TRANSACTION;";
     if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
@@ -51,7 +53,7 @@ void Sqlite3Dao::beginTransaction() {
     }
 }
 
-void Sqlite3Dao::commit() {
+void Dao::commit() {
     char* errorMessage;
     const std::string sql = "COMMIT;";
     if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
@@ -59,7 +61,7 @@ void Sqlite3Dao::commit() {
     }
 }
 
-void Sqlite3Dao::rollback() {
+void Dao::rollback() {
     char* errorMessage;
     const std::string sql = "ROLLBACK;";
     if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
@@ -67,12 +69,12 @@ void Sqlite3Dao::rollback() {
     }
 }
 
-std::string Sqlite3Dao::getError() {
+std::string Dao::getError() {
     const int errorCode = sqlite3_errcode(db);
     return std::string{ sqlite3_errstr(errorCode) };
 }
 
-void Sqlite3Dao::prepare(sqlite3_stmt** prepared, const std::string& stmnt) {
+void Dao::prepare(sqlite3_stmt** prepared, const std::string& stmnt) {
     if (sqlite3_prepare_v2(db, stmnt.c_str(), -1, prepared, nullptr) != SQLITE_OK) {
         throw "unable to prepare statement '" + stmnt + "': " + getError();
     }

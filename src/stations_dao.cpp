@@ -1,4 +1,4 @@
-#include "sqlite_stations_dao.hpp"
+#include "stations_dao.hpp"
 
 #include <stdexcept>
 #include <functional>
@@ -23,9 +23,7 @@ const std::string INSERT_STATION_SQL = "INSERT INTO stations "
 const std::string GET_ALL_IDS_SQL = "SELECT rowid FROM stations;";
 const std::string SELECT_RANDOM_STATION_SQL = "SELECT rowid, * FROM stations ORDER BY random() limit 1;";
 
-int logStatement(unsigned int t, void* c, void* p, void* x);
-
-SqliteStationsDao::SqliteStationsDao()
+StationsDao::StationsDao()
     : insertStationStmnt(nullptr)
     , findStationByIdStmnt(nullptr)
     , findStationStmnt(nullptr)
@@ -34,7 +32,7 @@ SqliteStationsDao::SqliteStationsDao()
     , getRandomStationStmnt(nullptr) {
 }
 
-void SqliteStationsDao::onOpen() {
+void StationsDao::onOpen() {
     LOG(plog::debug) << "creating table stations";
     char* errorMessage;
     if (sqlite3_exec(db, CREATE_TABLE_STATIONS_SQL.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
@@ -50,7 +48,7 @@ void SqliteStationsDao::onOpen() {
     prepare(&getRandomStationStmnt, SELECT_RANDOM_STATION_SQL);
 }
 
-bool SqliteStationsDao::onClose() {
+bool StationsDao::onClose() {
     bool result = true;
     result &= sqlite3_finalize(insertStationStmnt) == SQLITE_OK;
     result &= sqlite3_finalize(findStationByIdStmnt) == SQLITE_OK;
@@ -62,7 +60,7 @@ bool SqliteStationsDao::onClose() {
     return result;
 }
 
-void SqliteStationsDao::save(Station& station) {
+void StationsDao::save(Station& station) {
     LOG(plog::debug) << "saving station '" << station.getName() << "'";
 
     sqlite3_bind_text(insertStationStmnt, 1, station.getAddedBy().c_str(), -1, SQLITE_STATIC);
@@ -85,7 +83,7 @@ void SqliteStationsDao::save(Station& station) {
     sqlite3_reset(insertStationStmnt);
 }
 
-std::vector<long> SqliteStationsDao::find(const std::string& name, const std::string& genre, const std::string& country) {
+std::vector<long> StationsDao::find(const std::string& name, const std::string& genre, const std::string& country) {
     LOG(plog::debug) << "searching for station name:" << name << ", genre:" << genre << ", country:" << country;
 
     const std::string likeName = "%" + name + "%";
@@ -111,7 +109,7 @@ std::vector<long> SqliteStationsDao::find(const std::string& name, const std::st
     return ids;
 }
 
-std::shared_ptr<Station> SqliteStationsDao::findById(const long id) {
+std::shared_ptr<Station> StationsDao::findById(const long id) {
     sqlite3_bind_int(findStationByIdStmnt, 1, id);
     const int rc = sqlite3_step(findStationByIdStmnt);
     std::shared_ptr<Station> station = nullptr;
@@ -127,7 +125,7 @@ std::shared_ptr<Station> SqliteStationsDao::findById(const long id) {
     return station;
 }
 
-void SqliteStationsDao::deleteAllAddedBy(const std::string& addedBy) {
+void StationsDao::deleteAllAddedBy(const std::string& addedBy) {
     sqlite3_bind_text(deleteByAddedByStmnt, 1, addedBy.c_str(), -1, SQLITE_STATIC);
 
     if (sqlite3_step(deleteByAddedByStmnt) != SQLITE_DONE) {
@@ -139,7 +137,7 @@ void SqliteStationsDao::deleteAllAddedBy(const std::string& addedBy) {
     sqlite3_reset(deleteByAddedByStmnt);
 }
 
-std::shared_ptr<Station> SqliteStationsDao::getRandom() {
+std::shared_ptr<Station> StationsDao::getRandom() {
     const int rc = sqlite3_step(getRandomStationStmnt);
     std::shared_ptr<Station> station = nullptr;
 
@@ -154,7 +152,7 @@ std::shared_ptr<Station> SqliteStationsDao::getRandom() {
     return station;
 }
 
-std::vector<long> SqliteStationsDao::getAllIds() {
+std::vector<long> StationsDao::getAllIds() {
     int rc = sqlite3_step(getAllIdsStmnt);
     std::vector<long> ids;
 
@@ -171,7 +169,7 @@ std::vector<long> SqliteStationsDao::getAllIds() {
     return ids;
 }
 
-std::string SqliteStationsDao::serializeUrls(const std::vector<std::string>& urls) {
+std::string StationsDao::serializeUrls(const std::vector<std::string>& urls) {
     std::stringstream stream;
     for (const auto& url : urls) {
         stream << "{" << url << "}";
@@ -179,7 +177,7 @@ std::string SqliteStationsDao::serializeUrls(const std::vector<std::string>& url
     return stream.str();
 }
 
-std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& value) {
+std::vector<std::string> StationsDao::deserializeUrls(const std::string& value) {
     std::vector<std::string> urls;
 
     size_t pos = 0;
@@ -203,7 +201,7 @@ std::vector<std::string> SqliteStationsDao::deserializeUrls(const std::string& v
     return urls;
 }
 
-Station SqliteStationsDao::getStation(sqlite3_stmt* stmnt) {
+Station StationsDao::getStation(sqlite3_stmt* stmnt) {
     const uint64_t rowid = sqlite3_column_int64(stmnt, 0);
     const std::string name{(const char*) sqlite3_column_text(stmnt, 1)};
     const std::string addedBy{(const char*) sqlite3_column_text(stmnt, 2)};

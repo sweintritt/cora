@@ -2,7 +2,9 @@ set(cora_sources
     ${cora_source_dir}/cora.cpp
     
     ${cora_source_dir}/station.cpp
-    ${cora_source_dir}/sqlite_stations_dao.cpp
+    ${cora_source_dir}/settings.cpp
+    ${cora_source_dir}/dao.cpp
+    ${cora_source_dir}/stations_dao.cpp
     ${cora_source_dir}/utils.cpp
     ${cora_source_dir}/cli/cli.cpp
     ${cora_source_dir}/commands/command.cpp
@@ -78,7 +80,7 @@ if(CORA_BUILD_TESTS)
 
     set(cora_test_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/test/cli_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/sqlite_stations_dao_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/stations_dao_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp)
 
    add_executable(cora_test ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp ${cora_sources} ${cora_test_sources})
