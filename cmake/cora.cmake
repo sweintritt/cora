@@ -5,6 +5,7 @@ set(cora_sources
     ${cora_source_dir}/settings.cpp
     ${cora_source_dir}/dao.cpp
     ${cora_source_dir}/stations_dao.cpp
+    ${cora_source_dir}/settings_dao.cpp
     ${cora_source_dir}/utils.cpp
     ${cora_source_dir}/cli/cli.cpp
     ${cora_source_dir}/commands/command.cpp
