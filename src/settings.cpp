@@ -16,6 +16,6 @@ int Settings::getAsInt(const std::string& name) {
     return stoi(settings[name]);
 }
 
-const std::map<std::string, std::string>& Settings::all() {
+const std::map<std::string, std::string>& Settings::all() const {
     return settings;
 }

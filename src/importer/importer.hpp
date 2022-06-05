@@ -6,14 +6,14 @@
 
 class Importer {
     public:
-        Importer(const std::string& name);
+        explicit Importer(const std::string& name);
 
-        virtual ~Importer();
+        virtual ~Importer() = default;
 
         virtual void import(const std::string& url, const std::shared_ptr<StationsDao> stationsDao) = 0;
 
         const std::string& getName() const;
 
-    protected:
-        std::string m_name;
+    private:
+        std::string name;
 };
