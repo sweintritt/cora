@@ -12,8 +12,6 @@ FindCommand::FindCommand() : Command("find", "Find stations by name, genre and c
     m_cli.addOption('c', "country", true, "Search by country");   
 }
 
-FindCommand::~FindCommand() = default;
-
 void FindCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
 

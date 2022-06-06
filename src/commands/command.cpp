@@ -14,8 +14,6 @@ Command::Command(const std::string& name,
         m_cli.addOption('f', "file", true, "Database file. Default is " + getDefaultFile());
     }
 
-Command::~Command() { }
-
 const std::string& Command::getName() const {
     return m_name;
 }

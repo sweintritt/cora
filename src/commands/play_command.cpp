@@ -9,8 +9,6 @@
 PlayCommand::PlayCommand() : Command("play", "Play a station, given by id") {
 }
 
-PlayCommand::~PlayCommand() { }
-
 void PlayCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
 

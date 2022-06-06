@@ -9,9 +9,6 @@
 class HelpCommand : public Command {
     public:
         explicit HelpCommand(const std::shared_ptr<CommandInterpreter> commandInterpreter);
-
-        virtual ~HelpCommand();
-
         virtual void execute(const std::vector<std::string>& args) override;
 
     private:

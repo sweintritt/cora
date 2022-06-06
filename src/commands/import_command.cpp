@@ -16,8 +16,6 @@ ImportCommand::ImportCommand() : Command("import", "Import radio stations from d
         m_cli.addOption('t', "type", true, "Type of imported data. Supported types are: 'radio-sure', which requires a file as input and 'radio-browser', which requires a URL. 'radio-browser' is the default and provides a default url.");
 }
 
-ImportCommand::~ImportCommand() { }
-
 void ImportCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
 

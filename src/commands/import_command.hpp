@@ -9,9 +9,6 @@
 class ImportCommand : public Command {
     public:
         ImportCommand();
-
-        virtual ~ImportCommand();
-
         virtual void execute(const std::vector<std::string>& args) override;
 
     private:

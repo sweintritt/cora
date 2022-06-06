@@ -9,8 +9,6 @@
 InfoCommand::InfoCommand() : Command("info", "Show information about a station, given by id") {
 }
 
-InfoCommand::~InfoCommand() { }
-
 void InfoCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
 
