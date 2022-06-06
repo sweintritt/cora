@@ -33,7 +33,7 @@ void Cli::parse(int argc, char* argv[]) {
    std::vector<std::string> args;
 
    for (int i = 0; i < argc; ++i)    {
-      args.push_back(std::string{argv[i]});
+      args.emplace_back(argv[i]);
    }
 
    parse(args);
@@ -52,11 +52,10 @@ void Cli::parse(const std::vector<std::string>& args) {
             current.erase(0, 1);
          }
 
-         LOG(plog::debug) << "found option: " << current;
+         LOG(plog::debug) << "found possible option: " << current;
          for (auto& it : m_options) {
-            std::string sopt;
-            sopt.push_back(it.opt);
-            if (current.compare(sopt) == 0 || current.compare(it.longOpt) == 0) {
+            LOG(plog::debug) << "checking against: " << it.opt << ", " << it.longOpt;
+            if (current.compare(std::string{it.opt}) == 0 || current.compare(it.longOpt) == 0) {
                LOG(plog::debug) << "setting option: " << current;
                it.found = true;
                if (it.hasValue && (i + 1) < args.size()) {
@@ -78,7 +77,7 @@ void Cli::parse(const std::vector<std::string>& args) {
 }
 
 bool Cli::hasOption(const char opt) const {
-   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](Option o){ return o.opt == opt && o.found; });
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](const Option& o){ return o.opt == opt && o.found; });
 
    if (result != m_options.end()) {
       LOG(plog::debug) << "searched for '" << opt << "', found '" << result->opt << "' isSet:" << result->found;
@@ -89,7 +88,7 @@ bool Cli::hasOption(const char opt) const {
 }
 
 bool Cli::hasOption(const std::string& longOpt) const {
-   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](Option o){ return o.longOpt.compare(longOpt) == 0 && o.found; });
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](const Option& o){ return o.longOpt.compare(longOpt) == 0 && o.found; });
 
    if (result != m_options.end()) {
       LOG(plog::debug) << "searched for '" << longOpt << "', found '" << result->longOpt << "' isSet:" << result->found;
@@ -100,7 +99,7 @@ bool Cli::hasOption(const std::string& longOpt) const {
 }
 
 bool Cli::hasValue(const char opt) const {
-   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](Option o){ return o.opt == opt && o.found && o.hasValue; });
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](const Option& o){ return o.opt == opt && o.found && o.hasValue; });
 
    if (result != m_options.end()) {
       return !result->value.empty();
@@ -110,7 +109,7 @@ bool Cli::hasValue(const char opt) const {
 }
 
 bool Cli::hasValue(const std::string& longOpt) const {
-   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](Option o){ return o.longOpt.compare(longOpt) == 0 && o.found && o.hasValue; });
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](const Option& o){ return o.longOpt.compare(longOpt) == 0 && o.found && o.hasValue; });
 
    if (result != m_options.end()) {
       return !result->value.empty();
@@ -124,7 +123,7 @@ std::string Cli::getValue(const char opt) const {
 }
 
 std::string Cli::getValue(const char opt, const std::string& defaultValue) const {
-   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](Option o){ return o.opt == opt && o.found && o.hasValue; });
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [opt](const Option& o){ return o.opt == opt && o.found && o.hasValue; });
 
    if (result != m_options.end()) {
       return result->value;
@@ -138,7 +137,7 @@ std::string Cli::getValue(const std::string& longOpt) const {
 }
 
 std::string Cli::getValue(const std::string& longOpt, const std::string& defaultValue) const {
-   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](Option o){ return o.longOpt.compare(longOpt) == 0 && o.found && o.hasValue; });
+   const auto result = std::find_if(m_options.begin(), m_options.end(), [longOpt](const Option& o){ return o.longOpt.compare(longOpt) == 0 && o.found && o.hasValue; });
 
    if (result != m_options.end()) {
       return result->value;

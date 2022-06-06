@@ -2,10 +2,19 @@
 
 #include "cli/cli.hpp"
 
-TEST_GROUP(CliTest) {
-};
+TEST_GROUP(CliTest) { };
 
-TEST(CliTest, simpleTest) {
+TEST(CliTest, simpleVectorTest) {
+    Cli cli("cmd", "test");
+    cli.addOption('d', false, "debug");
+    std::vector<std::string> args = {"cmd", "-d"};
+    cli.parse(args);
+    CHECK_FALSE(cli.hasOption('c'));
+    CHECK_FALSE(cli.hasValue('c'));
+    CHECK_TRUE(cli.hasOption('d'));
+}
+
+TEST(CliTest, simpleArrayTest) {
     Cli cli("cmd", "test");
     cli.addOption('d', false, "debug");
     char *args[2] = {"cmd", "-d"};
@@ -20,8 +29,8 @@ TEST(CliTest, complexTest) {
     cli.addOption('d', "debug", false, "debug");
     cli.addOption('f', "file", true, "filename");
     cli.addOption('b', "blub", false, "blub");
-    char *args[8] = {"cmd", "value-1", "-d", "value-2", "--file", "foo", "--blub", "value-3"};
-    cli.parse(8, args);
+    std::vector<std::string> args = {"cmd", "value-1", "-d", "value-2", "--file", "foo", "--blub", "value-3"};
+    cli.parse(args);
     CHECK_FALSE(cli.hasOption('c'));
     CHECK_FALSE(cli.hasValue('c'));
 
@@ -45,5 +54,4 @@ TEST(CliTest, complexTest) {
     CHECK_EQUAL("value-1", cli.getResidualValues()[0]);
     CHECK_EQUAL("value-2", cli.getResidualValues()[1]);
     CHECK_EQUAL("value-3", cli.getResidualValues()[2]);
-
 }

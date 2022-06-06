@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "stations_dao.hpp"
+#include "db/stations_dao.hpp"
 #include "cli/cli.hpp"
 #include "player/media_player.hpp"
 

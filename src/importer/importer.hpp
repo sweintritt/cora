@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "stations_dao.hpp"
+#include "db/stations_dao.hpp"
 
 class Importer {
     public:
@@ -15,5 +15,5 @@ class Importer {
         const std::string& getName() const;
 
     private:
-        std::string name;
+        std::string m_name;
 };

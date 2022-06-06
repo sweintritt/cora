@@ -1,5 +1,5 @@
 #include "CppUTest/TestHarness.h"
-/*
+
 #include "utils.hpp"
 
 TEST_GROUP(UtilsTest) {
@@ -36,4 +36,3 @@ TEST(UtilsTest, splitWithDelimiter) {
     CHECK_EQUAL("value2", t2[4]);
     CHECK_EQUAL("value3", t2[5]);
 }
-*/

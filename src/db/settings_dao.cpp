@@ -1,4 +1,4 @@
-#include "settings_dao.hpp"
+#include "db/settings_dao.hpp"
 
 #include <plog/Log.h>
 

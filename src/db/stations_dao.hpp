@@ -1,7 +1,7 @@
 #pragma once
 
-#include "dao.hpp"
-#include "station.hpp"
+#include "db/dao.hpp"
+#include "db/station.hpp"
 
 #include <sqlite3.h>
 #include <memory>

@@ -1,11 +1,6 @@
 set(cora_sources
     ${cora_source_dir}/cora.cpp
     
-    ${cora_source_dir}/station.cpp
-    ${cora_source_dir}/settings.cpp
-    ${cora_source_dir}/dao.cpp
-    ${cora_source_dir}/stations_dao.cpp
-    ${cora_source_dir}/settings_dao.cpp
     ${cora_source_dir}/utils.cpp
     ${cora_source_dir}/cli/cli.cpp
     ${cora_source_dir}/commands/command.cpp
@@ -17,6 +12,11 @@ set(cora_sources
     ${cora_source_dir}/commands/list_command.cpp
     ${cora_source_dir}/commands/play_command.cpp
     ${cora_source_dir}/commands/version_command.cpp
+    ${cora_source_dir}/db/station.cpp
+    ${cora_source_dir}/db/settings.cpp
+    ${cora_source_dir}/db/dao.cpp
+    ${cora_source_dir}/db/stations_dao.cpp
+    ${cora_source_dir}/db/settings_dao.cpp
     ${cora_source_dir}/importer/importer.cpp
     ${cora_source_dir}/importer/radio_sure_importer.cpp
     ${cora_source_dir}/importer/radio_browser_importer.cpp

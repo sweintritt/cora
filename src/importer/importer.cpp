@@ -1,8 +1,8 @@
 #include "importer/importer.hpp"
 
-Importer::Importer(const std::string& importerName) : name(importerName) {
+Importer::Importer(const std::string& name) : m_name(name) {
 }
 
 const std::string& Importer::getName() const {
-    return name;
+    return m_name;
 }

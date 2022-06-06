@@ -1,5 +1,5 @@
 #include "CppUTest/TestHarness.h"
-#include "stations_dao.hpp"
+#include "db/stations_dao.hpp"
 #include <plog/Log.h>
 
 TEST_GROUP(StationsDaoTest) { };
