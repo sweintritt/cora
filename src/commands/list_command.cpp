@@ -5,8 +5,6 @@
 ListCommand::ListCommand() : Command("list", "List all available stations") {
 }
 
-ListCommand::~ListCommand() { }
-
 void ListCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
 
