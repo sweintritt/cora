@@ -29,16 +29,6 @@ void Cli::addOption(const char opt, const std::string& longOpt, const bool hasVa
    m_options.push_back(option);
 }
 
-void Cli::parse(int argc, char* argv[]) {
-   std::vector<std::string> args;
-
-   for (int i = 0; i < argc; ++i)    {
-      args.emplace_back(argv[i]);
-   }
-
-   parse(args);
-}
-
 void Cli::parse(const std::vector<std::string>& args) {
    reset();
    LOG(plog::debug) << "parsing arguments";

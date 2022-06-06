@@ -31,21 +31,13 @@ Cora::Cora() : m_commandInterpreter(std::make_shared<CommandInterpreter>()) {
     m_commandInterpreter->add(std::unique_ptr<Command>(new VersionCommand()));
 }
 
-Cora::~Cora() {}
-
-void Cora::run(int argc, char* argv[]) {
+void Cora::run(const std::vector<std::string>& args) {
     configureLogger();
     LOG(plog::debug) << "Starting cora v" << CORA_VERSION;
 
-    if (argc < 2) {
-        LOG(plog::debug) << "argc = " << argc;
+    if (args.size() < 2) {
         LOG(plog::warning) << "No command given. Try 'cora help' for more information.";
         return;
-    }
-
-    std::vector<std::string> args;
-    for (int i = 0; i < argc; ++i) {
-        args.push_back(argv[i]);
     }
 
     runCommand(args);

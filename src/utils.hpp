@@ -17,3 +17,11 @@ void ltrim(std::string& value);
 void rtrim(std::string& value);
 
 void trim(std::string& value);
+
+/**
+ * Convert the given arguments array provided by the main method into a
+ * more easy to use string vector.
+ * @param[in] length length of the array.
+ * @param[in] values array with values.
+ */
+std::vector<std::string> toStringVector(int length, char* values[]);

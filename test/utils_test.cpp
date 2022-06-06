@@ -36,3 +36,15 @@ TEST(UtilsTest, splitWithDelimiter) {
     CHECK_EQUAL("value2", t2[4]);
     CHECK_EQUAL("value3", t2[5]);
 }
+
+TEST(UtilsTest, toStringVector) {
+    char* argv[] = { "Hello", "World" };
+    const std::vector<std::string> t1 = toStringVector(2, argv);
+    CHECK_EQUAL("Hello", t1[0]);
+    CHECK_EQUAL("World", t1[1]);
+
+    argv[0] = {};
+
+    const std::vector<std::string> t2 = toStringVector(0, argv);
+    CHECK_TRUE(t2.empty());
+}

@@ -3,11 +3,13 @@
 #include <exception>
 
 #include "cora.hpp"
+#include "utils.hpp"
 
 int main(int argc, char* argv[]) {
     try {
+        const std::vector<std::string> args = toStringVector(argc, argv);
         Cora cora;
-        cora.run(argc, argv);
+        cora.run(args);
         return EXIT_SUCCESS;
     } catch (const std::exception& error) {
         std::cerr << error.what() << std::endl;

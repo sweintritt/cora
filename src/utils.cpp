@@ -57,3 +57,13 @@ void trim(std::string& value) {
     ltrim(value);
     rtrim(value);
 }
+
+std::vector<std::string> toStringVector(int length, char* values[]) {
+    std::vector<std::string> result;
+
+    for (int i = 0; i < length; ++i) {
+        result.push_back(values[i]);
+    }
+
+    return result;
+}

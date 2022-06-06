@@ -8,15 +8,10 @@
 class Cora {
     public:
         Cora();
-
-        ~Cora();
-
-        void run(int argc, char* argv[]);
+        void run(const std::vector<std::string>& args);
 
     private:
         std::shared_ptr<CommandInterpreter> m_commandInterpreter;
-
         void runCommand(const std::vector<std::string>& args);
-
         void configureLogger() const;
 };
