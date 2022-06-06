@@ -18,8 +18,6 @@ const std::regex NEWLINES_REG_EX("[\n\r\t]");
 RadioBrowserImporter::RadioBrowserImporter()
     : Importer("radio-browser") {}
 
-RadioBrowserImporter::~RadioBrowserImporter() {}
-
 void RadioBrowserImporter::import(const std::string& url, const std::shared_ptr<StationsDao> stationsDao) {
     const std::time_t start = std::time(nullptr);
     stationsDao->beginTransaction();
@@ -42,10 +40,10 @@ void RadioBrowserImporter::import(const std::string& url, const std::shared_ptr<
 
         LOG(plog::info) << stations.size() << " stations imported in " << std::difftime(std::time(nullptr), start) << " s";
         stationsDao->commit();
-    } catch (const std::exception& e) {
+    } catch (const std::exception&) {
         stationsDao->rollback();
         throw;
-    } catch (const std::string& e) {
+    } catch (const std::string&) {
         stationsDao->rollback();
         throw;
     } catch (...) {

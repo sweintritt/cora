@@ -6,8 +6,6 @@ class RadioBrowserImporter : public Importer {
     public:
         RadioBrowserImporter();
 
-        virtual ~RadioBrowserImporter();
-
         virtual void import(const std::string& url, const std::shared_ptr<StationsDao> stationsDao) override;
 
     private:

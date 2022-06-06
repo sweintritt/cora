@@ -10,8 +10,6 @@
 RadioSureImporter::RadioSureImporter()
     : Importer("radio-sure") {}
 
-RadioSureImporter::~RadioSureImporter() {}
-
 void RadioSureImporter::import(const std::string& url, const std::shared_ptr<StationsDao> stationsDao) {
     std::string line;
     std::ifstream file(url);
@@ -48,10 +46,10 @@ void RadioSureImporter::import(const std::string& url, const std::shared_ptr<Sta
             LOG(plog::info) << count << " stations imported in " << std::difftime(std::time(nullptr), start) << " s";
             file.close();
             stationsDao->commit();
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
             stationsDao->rollback();
             throw;
-        } catch (const std::string& e) {
+        } catch (const std::string&) {
             stationsDao->rollback();
             throw;
         } catch (...) {
