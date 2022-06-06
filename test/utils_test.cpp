@@ -44,7 +44,6 @@ TEST(UtilsTest, toStringVector) {
     CHECK_EQUAL("World", t1[1]);
 
     argv[0] = {};
-
     const std::vector<std::string> t2 = toStringVector(0, argv);
     CHECK_TRUE(t2.empty());
 }
