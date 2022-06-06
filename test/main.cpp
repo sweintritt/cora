@@ -5,7 +5,7 @@
 
 IMPORT_TEST_GROUP(CliTest);
 IMPORT_TEST_GROUP(StationsDaoTest);
-IMPORT_TEST_GROUP(UtilsTest);
+//IMPORT_TEST_GROUP(UtilsTest);
 
 int main(int argc, char* argv[]) {
     try {

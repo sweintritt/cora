@@ -4,14 +4,6 @@
 
 int logStatement(unsigned int t, void* c, void* p, void* x);
 
-Dao::Dao() {
-    
-}
-
-Dao::~Dao() {
-    close();
-}
-
 void Dao::open(const std::string& url) {
     file = url;
 
