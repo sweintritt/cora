@@ -7,8 +7,8 @@
 
 #include <memory>
 
-ImportCommand::ImportCommand(const std::shared_ptr<Settings> settings) 
-    : Command("import", "Import radio stations from different sources", settings)
+ImportCommand::ImportCommand() 
+    : Command("import", "Import radio stations from different sources")
     , m_importerByName() {
         auto radioSureImporter = std::unique_ptr<RadioSureImporter>(new RadioSureImporter());
         m_importerByName.insert(std::make_pair(radioSureImporter->getName(), std::move(radioSureImporter)));
@@ -37,9 +37,11 @@ void ImportCommand::execute(const std::vector<std::string>& args) {
         const std::string input = m_cli.getValue('i', "");
         LOG(plog::info) << "importing from " << input << " using " << importer->second->getName() << " importer";
         importer->second->import(input, stationsDao);
+        stationsDao->close();
 
         auto settingsDao = createSettingsDao();
         settingsDao->open(m_cli.getValue('f', getDefaultFile()));
-        m_settings.set(Settings::LAST_UPDATE, "")
+        settingsDao->save(Settings::LAST_UPDATE, "");
+        settingsDao->close();
     }
 }

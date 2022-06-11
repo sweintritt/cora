@@ -4,7 +4,7 @@
 
 class InfoCommand : public Command {
     public:
-        InfoCommand(const std::shared_ptr<Settings> settings);
+        InfoCommand();
         virtual void execute(const std::vector<std::string>& args) override;
 
     private:

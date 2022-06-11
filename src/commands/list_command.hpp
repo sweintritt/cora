@@ -4,6 +4,6 @@
 
 class ListCommand : public Command {
     public:
-        ListCommand(const std::shared_ptr<Settings> settings);
+        ListCommand();
         virtual void execute(const std::vector<std::string>& args) override;
 };

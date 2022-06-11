@@ -6,8 +6,8 @@
 
 #include "utils.hpp"
 
-PlayCommand::PlayCommand(const std::shared_ptr<Settings> settings)
-    : Command("play", "Play a station, given by id", settings) { }
+PlayCommand::PlayCommand()
+    : Command("play", "Play a station, given by id") { }
 
 void PlayCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);

@@ -81,7 +81,6 @@ if(CORA_BUILD_TESTS)
 
     set(cora_test_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/test/cli_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/settings_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/settings_dao_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/stations_dao_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp)

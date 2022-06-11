@@ -5,7 +5,6 @@
 #include <plog/Appenders/ConsoleAppender.h>
 
 IMPORT_TEST_GROUP(CliTest);
-IMPORT_TEST_GROUP(SettingsTest);
 IMPORT_TEST_GROUP(SettingsDaoTest);
 IMPORT_TEST_GROUP(StationsDaoTest);
 IMPORT_TEST_GROUP(UtilsTest);

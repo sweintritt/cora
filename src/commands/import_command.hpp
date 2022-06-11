@@ -8,7 +8,7 @@
 
 class ImportCommand : public Command {
     public:
-        ImportCommand(const std::shared_ptr<Settings> settings);
+        ImportCommand();
         virtual void execute(const std::vector<std::string>& args) override;
 
     private:

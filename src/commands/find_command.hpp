@@ -4,6 +4,6 @@
 
 class FindCommand : public Command {
     public:
-        FindCommand(const std::shared_ptr<Settings> settings);
+        FindCommand();
         virtual void execute(const std::vector<std::string>& args) override;
 };

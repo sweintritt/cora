@@ -7,10 +7,8 @@
 #include "player/gstreamer_media_player.hpp"
 
 Command::Command(const std::string& name,
-                 const std::string& description,
-                 const std::shared_ptr<Settings> settings)
+                 const std::string& description)
     : m_name(name)
-    , m_settings(settings)
     , m_cli(name, description) {
         m_cli.addOption('h', "help", false, "Show help page");
         m_cli.addOption('f', "file", true, "Database file. Default is " + getDefaultFile());
@@ -39,4 +37,8 @@ std::shared_ptr<MediaPlayer> Command::createPlayer() const {
 
 std::shared_ptr<StationsDao> Command::createStationsDao() const {
     return std::make_shared<StationsDao>();
+}
+
+std::shared_ptr<SettingsDao> Command::createSettingsDao() const {
+    return std::make_shared<SettingsDao>();
 }

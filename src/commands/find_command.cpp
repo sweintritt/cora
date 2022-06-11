@@ -6,8 +6,8 @@
 
 const std::regex FIND_REGEX{"[- a-zA-Z0-9]*"};
 
-FindCommand::FindCommand(const std::shared_ptr<Settings> settings) 
-    : Command("find", "Find stations by name, genre and country.", settings) {
+FindCommand::FindCommand() 
+    : Command("find", "Find stations by name, genre and country.") {
     m_cli.addOption('n', "name", true, "Search by name");
     m_cli.addOption('g', "genre", true, "Search by genre");   
     m_cli.addOption('c', "country", true, "Search by country");   

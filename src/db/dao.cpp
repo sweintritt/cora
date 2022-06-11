@@ -40,7 +40,7 @@ void Dao::close() {
 void Dao::beginTransaction() {
     char* errorMessage;
     const std::string sql = "BEGIN TRANSACTION;";
-    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
+    if (sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errorMessage) != SQLITE_OK) {
         throw "unable to begin transaction: " + std::string{errorMessage};
     }
 }
@@ -48,7 +48,7 @@ void Dao::beginTransaction() {
 void Dao::commit() {
     char* errorMessage;
     const std::string sql = "COMMIT;";
-    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
+    if (sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errorMessage) != SQLITE_OK) {
         throw "unable to begin transaction: " + std::string{errorMessage};
     }
 }
@@ -56,7 +56,7 @@ void Dao::commit() {
 void Dao::rollback() {
     char* errorMessage;
     const std::string sql = "ROLLBACK;";
-    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
+    if (sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errorMessage) != SQLITE_OK) {
         throw "unable to begin transaction: " + std::string{errorMessage};
     }
 }

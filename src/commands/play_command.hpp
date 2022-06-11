@@ -4,7 +4,7 @@
 
 class PlayCommand : public Command {
     public:
-        PlayCommand(const std::shared_ptr<Settings> settings);
+        PlayCommand();
         virtual void execute(const std::vector<std::string>& args) override;
 
     private:
