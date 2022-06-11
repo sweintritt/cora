@@ -6,6 +6,5 @@
 class MessageOnlyFormatter {
     public:
         static plog::util::nstring header();
-
         static plog::util::nstring format(const plog::Record& record);
 };

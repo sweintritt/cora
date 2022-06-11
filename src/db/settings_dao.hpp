@@ -8,7 +8,6 @@
 class SettingsDao : public Dao {
     public:
         SettingsDao();
-        virtual ~SettingsDao() = default;
         virtual void save(Settings& settings);
         virtual Settings load();
     

@@ -4,8 +4,8 @@
 
 #include <plog/Log.h>
 
-VersionCommand::VersionCommand() : Command("version", "Show the version") {
-}
+VersionCommand::VersionCommand(const std::shared_ptr<Settings> settings)
+    : Command("version", "Show the version", settings) { }
 
 void VersionCommand::execute(const std::vector<std::string>& args) {
     LOG(plog::info) << "Cora v" << CORA_VERSION;

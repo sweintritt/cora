@@ -25,3 +25,15 @@ void trim(std::string& value);
  * @param[in] values array with values.
  */
 std::vector<std::string> toStringVector(int length, char* values[]);
+
+/**
+ * Returns the current date as String (YYYY-MM-DD).
+ */
+std::string currentDate();
+
+/**
+ * Parse the given string into a struct tm. Expected format is YYYY-mm-dd HH:MM:SS
+ */
+struct tm parseDate(const std::string& datestr);
+
+std::string toString(struct tm* datetime);

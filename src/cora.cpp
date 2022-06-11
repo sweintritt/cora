@@ -22,6 +22,7 @@
 #include "logging/message_only_formatter.hpp"
 
 Cora::Cora() : m_commandInterpreter(std::make_shared<CommandInterpreter>()) {
+    // TODO Load settings   
     m_commandInterpreter->add(std::unique_ptr<Command>(new InfoCommand()));
     m_commandInterpreter->add(std::unique_ptr<Command>(new ImportCommand()));
     m_commandInterpreter->add(std::unique_ptr<Command>(new HelpCommand(m_commandInterpreter)));

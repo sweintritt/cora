@@ -4,7 +4,7 @@
 
 class VersionCommand : public Command {
     public:
-        VersionCommand();
+        VersionCommand(const std::shared_ptr<Settings> settings);
         virtual void execute(const std::vector<std::string>& args) override;
 
     private:

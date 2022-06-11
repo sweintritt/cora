@@ -6,7 +6,8 @@
 
 #include "utils.hpp"
 
-InfoCommand::InfoCommand() : Command("info", "Show information about a station, given by id") {
+InfoCommand::InfoCommand(const std::shared_ptr<Settings> settings)
+    : Command("info", "Show information about a station, given by id", settings) {
 }
 
 void InfoCommand::execute(const std::vector<std::string>& args) {

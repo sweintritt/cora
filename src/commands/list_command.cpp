@@ -2,7 +2,8 @@
 
 #include <plog/Log.h>
 
-ListCommand::ListCommand() : Command("list", "List all available stations") {
+ListCommand::ListCommand(const std::shared_ptr<Settings> settings)
+    : Command("list", "List all available stations", settings) {
 }
 
 void ListCommand::execute(const std::vector<std::string>& args) {

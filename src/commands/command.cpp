@@ -7,8 +7,10 @@
 #include "player/gstreamer_media_player.hpp"
 
 Command::Command(const std::string& name,
-                 const std::string& description)
+                 const std::string& description,
+                 const std::shared_ptr<Settings> settings)
     : m_name(name)
+    , m_settings(settings)
     , m_cli(name, description) {
         m_cli.addOption('h', "help", false, "Show help page");
         m_cli.addOption('f', "file", true, "Database file. Default is " + getDefaultFile());
@@ -26,7 +28,7 @@ std::string Command::getUsage() const {
     return m_cli.usage();
 }
 
-const std::string Command::getDefaultFile() const {
+std::string Command::getDefaultFile() const {
     const std::string username{getenv("USER")};
     return "/home/" + username + "/.cora.sqlite";
 }

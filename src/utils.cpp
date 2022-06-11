@@ -4,8 +4,14 @@
 
 #include <iostream>
 #include <sstream>
+#include <chrono>
 #include <algorithm>
 #include <iterator>
+#include <string>
+#include <cstdio>
+#include <ctime>
+
+const std::string DATE_TIME_FORMAT = "%Y-%m-%d %H-%M-%S";
 
 std::vector<std::string> split(const std::string& value) {
     std::vector<std::string> tokens;
@@ -62,7 +68,7 @@ std::vector<std::string> toStringVector(int length, char* values[]) {
     std::vector<std::string> result;
 
     for (int i = 0; i < length; ++i) {
-        result.push_back(values[i]);
+        result.emplace_back(values[i]);
     }
 
     return result;

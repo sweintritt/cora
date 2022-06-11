@@ -4,21 +4,11 @@
 
 TEST_GROUP(CliTest) { };
 
-TEST(CliTest, simpleVectorTest) {
+TEST(CliTest, simpleTest) {
     Cli cli("cmd", "test");
     cli.addOption('d', false, "debug");
     std::vector<std::string> args = {"cmd", "-d"};
     cli.parse(args);
-    CHECK_FALSE(cli.hasOption('c'));
-    CHECK_FALSE(cli.hasValue('c'));
-    CHECK_TRUE(cli.hasOption('d'));
-}
-
-TEST(CliTest, simpleArrayTest) {
-    Cli cli("cmd", "test");
-    cli.addOption('d', false, "debug");
-    char *args[2] = {"cmd", "-d"};
-    cli.parse(2, args);
     CHECK_FALSE(cli.hasOption('c'));
     CHECK_FALSE(cli.hasValue('c'));
     CHECK_TRUE(cli.hasOption('d'));
