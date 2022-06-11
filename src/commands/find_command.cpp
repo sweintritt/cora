@@ -51,4 +51,6 @@ void FindCommand::execute(const std::vector<std::string>& args) {
             LOG(plog::warning) << "no station found for id:" << id;
         }
     }
+
+    stationsDao->close();
 }

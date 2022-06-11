@@ -41,7 +41,7 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
         LOG(plog::info) << "playing " << station->getName();
         std::string url;
         if (values.size() > 1) {
-            const long index = std::stol(values[1]);
+            const size_t index = std::stol(values[1]);
 
             if (station->getUrls().size() < index) {
                 LOG(plog::warning) << "Only " << station->getUrls().size() << " found. Index " << index << " is invalid";
@@ -58,6 +58,8 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
     } else {
         LOG(plog::warning) << "No station found for id:" << values[0];
     }
+
+    stationsDao->close();
 }
 
 void PlayCommand::play(const std::string& url) {

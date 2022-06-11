@@ -44,6 +44,8 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
     } else {
         LOG(plog::warning) << "No station found for id:" << id;
     }
+
+    stationsDao->close();
 }
 
 std::string InfoCommand::formatDescription(const std::string& description) const {
