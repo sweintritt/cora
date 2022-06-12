@@ -12,7 +12,12 @@ TEST_GROUP(SettingsDaoTest) { };
 TEST(SettingsDaoTest, saveAndLoad) {
     SettingsDao dao;
     dao.open(":memory:");
-    
+
+    CHECK_EQUAL(dao.get(Settings::LAST_PLAYED), "");
+    CHECK_EQUAL(dao.get(Settings::CORA_VERSION), "");
+    CHECK_EQUAL(dao.get(Settings::LAST_UPDATE), "");
+    CHECK_EQUAL(dao.get("Hello"), "");
+
     dao.save(Settings::LAST_PLAYED, "1333");
     dao.save(Settings::CORA_VERSION, "v1.0.0");
     dao.save(Settings::LAST_UPDATE, "2022-01-01");

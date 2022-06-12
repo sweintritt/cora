@@ -5,8 +5,10 @@
 class PlayCommand : public Command {
     public:
         PlayCommand();
-        virtual void execute(const std::vector<std::string>& args) override;
+        void execute(const std::vector<std::string>& args) override;
 
     private:
-        void play(const std::string& url);
+        void play(const std::string& url) const;
+        std::shared_ptr<Station> getStation(const std::vector<std::string>& values) const;
+        std::string getUrl(std::shared_ptr<Station> station, const std::vector<std::string>& values) const;
 };
