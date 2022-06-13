@@ -5,12 +5,14 @@
 ### Added
 
 * Import from https://www.radio-browser.info/, because RadioSure no longer works.
+* 'play last' command.
+* Settings to store last played station, date of the last update and the version used to create the database.
 
 ## [v0.8.0] - 2022-04-16
 
 ### Added
 
-* Added find commmand. To search for stations by name, genre and country..
+* Added find commmand. To search for stations by name, genre and country.
 
 ### Changed
 

@@ -110,6 +110,14 @@ If you just want to play a random station just call
 
 ```bash
 $ cora play random
+
+```
+## Play random station
+
+If you want to listen to the station you played the last time call
+
+```bash
+$ cora play last
 ```
 
 ## Help
