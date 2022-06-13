@@ -1,17 +1,5 @@
 #include "db/station.hpp"
 
-Station::Station()
-    : m_id()
-    , m_addedBy()
-    , m_name()
-    , m_genre()
-    , m_country()
-    , m_language()
-    , m_description()
-    , m_urls() { }
-
-Station::~Station() { }
-
 void Station::setId(const int64_t id) {
     m_id = id;
 }

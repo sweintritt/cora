@@ -52,7 +52,7 @@ std::shared_ptr<Station> PlayCommand::getStation(const std::vector<std::string>&
             LOG(plog::info) << "There is no last played station. Selecting random.";
             station = stationsDao->getRandom();
         } else {
-            const long id = std::stol(values[0]);
+            const long id = std::stol(lastPlayed);
             station = stationsDao->findById(id);
         }
     } else {

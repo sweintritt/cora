@@ -6,9 +6,6 @@
 
 class Station {
     public:
-        Station();
-        ~Station();
-
         void setId(const int64_t id);
         int64_t getId() const;
 
