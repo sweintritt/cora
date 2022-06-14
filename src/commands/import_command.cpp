@@ -7,9 +7,10 @@
 
 #include <memory>
 
-ImportCommand::ImportCommand() 
-    : Command("import", "Import radio stations from different sources")
-    , m_importerByName() {
+ImportCommand::ImportCommand(const std::shared_ptr<StationsDao> stationsDao, 
+                             const std::shared_ptr<SettingsDao> settingsDao,
+                             const std::shared_ptr<MediaPlayer> mediaPlayer) 
+    : Command("import", "Import radio stations from different sources", stationsDao, settingsDao, mediaPlayer) {
         auto radioSureImporter = std::unique_ptr<RadioSureImporter>(new RadioSureImporter());
         m_importerByName.insert(std::make_pair(radioSureImporter->getName(), std::move(radioSureImporter)));
         auto radioBrowserImporter = std::unique_ptr<RadioBrowserImporter>(new RadioBrowserImporter());
@@ -32,16 +33,14 @@ void ImportCommand::execute(const std::vector<std::string>& args) {
     if (importer == m_importerByName.end()) {
         LOG(plog::error) << "Unknown importer type " << m_cli.getValue('t') << ". Try " << m_name << " --help for more information.";
     } else {
-        auto stationsDao = createStationsDao();
-        stationsDao->open(m_cli.getValue('f', getDefaultFile()));
+        m_stationsDao->open(m_cli.getValue('f', getDefaultFile()));
         const std::string input = m_cli.getValue('i', "");
         LOG(plog::info) << "importing from " << input << " using " << importer->second->getName() << " importer";
-        importer->second->import(input, stationsDao);
-        stationsDao->close();
+        importer->second->import(input, m_stationsDao);
+        m_stationsDao->close();
 
-        auto settingsDao = createSettingsDao();
-        settingsDao->open(m_cli.getValue('f', getDefaultFile()));
-        settingsDao->save(Settings::LAST_UPDATE, "");
-        settingsDao->close();
+        m_settingsDao->open(m_cli.getValue('f', getDefaultFile()));
+        m_settingsDao->save(Settings::LAST_UPDATE, "");
+        m_settingsDao->close();
     }
 }

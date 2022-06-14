@@ -7,11 +7,19 @@
 #include "player/gstreamer_media_player.hpp"
 
 Command::Command(const std::string& name,
-                 const std::string& description)
+                 const std::string& description, 
+                 const std::shared_ptr<StationsDao> stationsDao, 
+                 const std::shared_ptr<SettingsDao> settingsDao,
+                 const std::shared_ptr<MediaPlayer> mediaPlayer)
     : m_name(name)
-    , m_cli(name, description) {
+    , m_cli(name, description) 
+    , m_stationsDao(stationsDao) 
+    , m_settingsDao(settingsDao)
+    , m_mediaPlayer(mediaPlayer) {
+
         m_cli.addOption('h', "help", false, "Show help page");
         m_cli.addOption('f', "file", true, "Database file. Default is " + getDefaultFile());
+
     }
 
 const std::string& Command::getName() const {
@@ -29,16 +37,4 @@ std::string Command::getUsage() const {
 std::string Command::getDefaultFile() const {
     const std::string username{getenv("USER")};
     return "/home/" + username + "/.cora.sqlite";
-}
-
-std::shared_ptr<MediaPlayer> Command::createPlayer() const {
-    return std::make_shared<GstreamerMediaPlayer>();
-}
-
-std::shared_ptr<StationsDao> Command::createStationsDao() const {
-    return std::make_shared<StationsDao>();
-}
-
-std::shared_ptr<SettingsDao> Command::createSettingsDao() const {
-    return std::make_shared<SettingsDao>();
 }

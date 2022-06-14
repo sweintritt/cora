@@ -2,8 +2,10 @@
 
 #include <plog/Log.h>
 
-ListCommand::ListCommand()
-    : Command("list", "List all available stations") {
+ListCommand::ListCommand(const std::shared_ptr<StationsDao> stationsDao, 
+                         const std::shared_ptr<SettingsDao> settingsDao,
+                         const std::shared_ptr<MediaPlayer> mediaPlayer)
+    : Command("list", "List all available stations", stationsDao, settingsDao, mediaPlayer) {
 }
 
 void ListCommand::execute(const std::vector<std::string>& args) {
@@ -14,13 +16,11 @@ void ListCommand::execute(const std::vector<std::string>& args) {
         return;
     }
 
-    auto stationsDao = createStationsDao();
-    stationsDao->open(m_cli.getValue('f', getDefaultFile()));
-
-    const auto ids = stationsDao->getAllIds();
+    m_stationsDao->open(m_cli.getValue('f', getDefaultFile()));
+    const auto ids = m_stationsDao->getAllIds();
 
     for (const auto& id : ids) {
-        const auto station = stationsDao->findById(id);
+        const auto station = m_stationsDao->findById(id);
         if (station != nullptr) {
             LOG(plog::info) << "id:" << std::to_string(station->getId())
                 << "\", name:\"" << station->getName()
@@ -31,5 +31,5 @@ void ListCommand::execute(const std::vector<std::string>& args) {
         }
     }
 
-    stationsDao->close();
+    m_stationsDao->close();
 }

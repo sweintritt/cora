@@ -4,8 +4,10 @@
 
 #include <plog/Log.h>
 
-VersionCommand::VersionCommand()
-    : Command("version", "Show the version") { }
+VersionCommand::VersionCommand(const std::shared_ptr<StationsDao> stationsDao, 
+                               const std::shared_ptr<SettingsDao> settingsDao,
+                               const std::shared_ptr<MediaPlayer> mediaPlayer)
+    : Command("version", "Show the version", stationsDao, settingsDao, mediaPlayer) { }
 
 void VersionCommand::execute(const std::vector<std::string>& args) {
     LOG(plog::info) << "Cora v" << CORA_VERSION;

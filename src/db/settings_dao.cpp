@@ -11,7 +11,7 @@ const std::string INSERT_SETTING_SQL = "INSERT OR IGNORE INTO settings (key, val
 void SettingsDao::onOpen() {
     LOG(plog::debug) << "creating table settings";
     char* errorMessage;
-    if (sqlite3_exec(db, CREATE_TABLE_SETTINGS_SQL.c_str(), nullptr, 0, &errorMessage) != SQLITE_OK) {
+    if (sqlite3_exec(db, CREATE_TABLE_SETTINGS_SQL.c_str(), nullptr, nullptr, &errorMessage) != SQLITE_OK) {
         throw "unable to create table stations: " + std::string{errorMessage};
     }
 

@@ -19,16 +19,23 @@
 #include "commands/list_command.hpp"
 #include "commands/play_command.hpp"
 #include "commands/version_command.hpp"
+#include "db/stations_dao.hpp"
+#include "db/settings_dao.hpp"
 #include "logging/message_only_formatter.hpp"
+#include "player/gstreamer_media_player.hpp"
 
-Cora::Cora() : m_commandInterpreter(std::make_shared<CommandInterpreter>()) {
-    m_commandInterpreter->add(std::unique_ptr<Command>(new InfoCommand()));
-    m_commandInterpreter->add(std::unique_ptr<Command>(new ImportCommand()));
-    m_commandInterpreter->add(std::unique_ptr<Command>(new HelpCommand(m_commandInterpreter)));
-    m_commandInterpreter->add(std::unique_ptr<Command>(new ListCommand()));
-    m_commandInterpreter->add(std::unique_ptr<Command>(new PlayCommand()));
-    m_commandInterpreter->add(std::unique_ptr<Command>(new FindCommand()));
-    m_commandInterpreter->add(std::unique_ptr<Command>(new VersionCommand()));
+Cora::Cora() {
+    m_stationsDao = std::make_shared<StationsDao>();
+    m_settingsDao = std::make_shared<SettingsDao>();
+    m_mediaPlayer = std::make_shared<GstreamerMediaPlayer>();
+    m_commandInterpreter = std::make_shared<CommandInterpreter>();
+    m_commandInterpreter->add(std::unique_ptr<Command>(new InfoCommand(m_stationsDao, m_settingsDao, m_mediaPlayer)));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new ImportCommand(m_stationsDao, m_settingsDao, m_mediaPlayer)));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new HelpCommand(m_commandInterpreter, m_stationsDao, m_settingsDao, m_mediaPlayer)));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new ListCommand(m_stationsDao, m_settingsDao, m_mediaPlayer)));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new PlayCommand(m_stationsDao, m_settingsDao, m_mediaPlayer)));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new FindCommand(m_stationsDao, m_settingsDao, m_mediaPlayer)));
+    m_commandInterpreter->add(std::unique_ptr<Command>(new VersionCommand(m_stationsDao, m_settingsDao, m_mediaPlayer)));
 }
 
 void Cora::run(const std::vector<std::string>& args) {

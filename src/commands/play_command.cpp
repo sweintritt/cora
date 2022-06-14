@@ -6,8 +6,10 @@
 
 #include "utils.hpp"
 
-PlayCommand::PlayCommand()
-    : Command("play", "Play a station, given by id") { }
+PlayCommand::PlayCommand(const std::shared_ptr<StationsDao> stationsDao, 
+                         const std::shared_ptr<SettingsDao> settingsDao,
+                         const std::shared_ptr<MediaPlayer> mediaPlayer)
+    : Command("play", "Play a station, given by id", stationsDao, settingsDao, mediaPlayer) { }
 
 void PlayCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
@@ -38,30 +40,28 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
 
 std::shared_ptr<Station> PlayCommand::getStation(const std::vector<std::string>& values) const {
     LOG(plog::debug) << "checking: " << values[0];
-    auto stationsDao = createStationsDao();
-    stationsDao->open(m_cli.getValue('f', getDefaultFile()));
-    auto settingsDao = createSettingsDao();
-    settingsDao->open(m_cli.getValue('f', getDefaultFile()));
+    m_stationsDao->open(m_cli.getValue('f', getDefaultFile()));
+    m_settingsDao->open(m_cli.getValue('f', getDefaultFile()));
     std::shared_ptr<Station> station;
 
     if (values[0].compare("random") == 0) {
-        station = stationsDao->getRandom();
+        station = m_stationsDao->getRandom();
     } else if (values[0].compare("last") == 0) {
-        std::string lastPlayed = settingsDao->get(Settings::LAST_PLAYED);
+        std::string lastPlayed = m_settingsDao->get(Settings::LAST_PLAYED);
         if (lastPlayed.empty()) {
             LOG(plog::info) << "There is no last played station. Selecting random.";
-            station = stationsDao->getRandom();
+            station = m_stationsDao->getRandom();
         } else {
             const long id = std::stol(lastPlayed);
-            station = stationsDao->findById(id);
+            station = m_stationsDao->findById(id);
         }
     } else {
         const long id = std::stol(values[0]);
-        station = stationsDao->findById(id);
+        station = m_stationsDao->findById(id);
     }
 
-    settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
-    stationsDao->close();
+    m_settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
+    m_stationsDao->close();
     return station;
 }
 
@@ -85,13 +85,11 @@ std::string PlayCommand::getUrl(std::shared_ptr<Station> station, const std::vec
 }
 
 void PlayCommand::play(const std::string& url) const {
-    auto mediaPlayer = createPlayer();
-
     LOG(plog::debug) << "url: " << url;
-    mediaPlayer->setUrl(url);
-    mediaPlayer->play();
+    m_mediaPlayer->setUrl(url);
+    m_mediaPlayer->play();
 
     LOG(plog::info) << "Press enter to stop playing";
     std::cin.get();
-    mediaPlayer->stop();
+    m_mediaPlayer->stop();
 }

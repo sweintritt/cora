@@ -2,8 +2,11 @@
 
 #include <plog/Log.h>
 
-HelpCommand::HelpCommand(const std::shared_ptr<CommandInterpreter> commandInterpreter) 
-    : Command("help", "Show help page")
+HelpCommand::HelpCommand(const std::shared_ptr<CommandInterpreter> commandInterpreter, 
+                         const std::shared_ptr<StationsDao> stationsDao, 
+                         const std::shared_ptr<SettingsDao> settingsDao,
+                         const std::shared_ptr<MediaPlayer> mediaPlayer) 
+    : Command("help", "Show help page", stationsDao, settingsDao, mediaPlayer)
     , m_commandInterpreter(commandInterpreter) {
 }
 

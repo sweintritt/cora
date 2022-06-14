@@ -4,8 +4,10 @@
 
 class VersionCommand : public Command {
     public:
-        VersionCommand();
-        virtual void execute(const std::vector<std::string>& args) override;
+        VersionCommand(const std::shared_ptr<StationsDao> stationsDao, 
+                       const std::shared_ptr<SettingsDao> settingsDao,
+                       const std::shared_ptr<MediaPlayer> mediaPlayer);
+        void execute(const std::vector<std::string>& args) override;
 
     private:
         std::string findId(const std::vector<std::string>& args) const;

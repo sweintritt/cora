@@ -6,8 +6,10 @@
 
 #include "utils.hpp"
 
-InfoCommand::InfoCommand()
-    : Command("info", "Show information about a station, given by id") {
+InfoCommand::InfoCommand(const std::shared_ptr<StationsDao> stationsDao, 
+                         const std::shared_ptr<SettingsDao> settingsDao,
+                         const std::shared_ptr<MediaPlayer> mediaPlayer)
+    : Command("info", "Show information about a station, given by id", stationsDao, settingsDao, mediaPlayer) {
 }
 
 void InfoCommand::execute(const std::vector<std::string>& args) {
@@ -25,12 +27,11 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
 
     // First entry is the command
     const std::string idStr = m_cli.getResidualValues()[1];
-    auto stationsDao = createStationsDao();
-    stationsDao->open(m_cli.getValue('f', getDefaultFile()));
+    m_stationsDao->open(m_cli.getValue('f', getDefaultFile()));
 
     LOG(plog::debug) << "parsing id: " << idStr;
     const long id = std::stol(idStr);
-    const auto station = stationsDao->findById(id);
+    const auto station = m_stationsDao->findById(id);
     if (station != nullptr) {
         LOG(plog::info) << "      station: " << station->getName();
         LOG(plog::info) << "        genre: " << station->getGenre();
@@ -45,7 +46,7 @@ void InfoCommand::execute(const std::vector<std::string>& args) {
         LOG(plog::warning) << "No station found for id:" << id;
     }
 
-    stationsDao->close();
+    m_stationsDao->close();
 }
 
 std::string InfoCommand::formatDescription(const std::string& description) const {
