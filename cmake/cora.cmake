@@ -1,6 +1,5 @@
 set(cora_sources
     ${cora_source_dir}/cora.cpp
-    
     ${cora_source_dir}/utils.cpp
     ${cora_source_dir}/cli/cli.cpp
     ${cora_source_dir}/commands/command.cpp
@@ -77,13 +76,19 @@ if(CORA_BUILD_TESTS)
     enable_testing()
     CoraUseCpputest()
 
-   include_directories(SYSTEM ${cora_include_dirs})
+   include_directories(SYSTEM ${cora_include_dirs} ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
     set(cora_test_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/cli_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/settings_dao_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/stations_dao_test.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/string_stream_appender.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/in_memory_stations_dao.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/in_memory_settings_dao.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/test_media_player.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/cli/cli_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/play_command_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/db/settings_dao_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/db/stations_dao_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp
+    )
 
    add_executable(cora_test ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp ${cora_sources} ${cora_test_sources})
    target_link_libraries(cora_test ${cora_link_libraries} ${CPPUTEST_LIBRARIES})

@@ -9,7 +9,7 @@
 PlayCommand::PlayCommand(const std::shared_ptr<StationsDao> stationsDao, 
                          const std::shared_ptr<SettingsDao> settingsDao,
                          const std::shared_ptr<MediaPlayer> mediaPlayer)
-    : Command("play", "Play a station, given by id", stationsDao, settingsDao, mediaPlayer) { }
+    : Command("play", "Play a station, given by id", stationsDao, settingsDao, mediaPlayer), m_waitOnPlay(true) { }
 
 void PlayCommand::execute(const std::vector<std::string>& args) {
     m_cli.parse(args);
@@ -89,7 +89,14 @@ void PlayCommand::play(const std::string& url) const {
     m_mediaPlayer->setUrl(url);
     m_mediaPlayer->play();
 
-    LOG(plog::info) << "Press enter to stop playing";
-    std::cin.get();
+    if (m_waitOnPlay) { // For easy testing this can be deactivated
+        LOG(plog::info) << "Press enter to stop playing";
+        std::cin.get();
+    }
+
     m_mediaPlayer->stop();
+}
+
+void PlayCommand::waitOnPlay(const bool waitOnPlay) {
+    m_waitOnPlay = waitOnPlay;
 }

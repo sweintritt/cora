@@ -7,12 +7,14 @@
 
 class SettingsDao : public Dao {
     public:
+        SettingsDao() = default;
+        virtual ~SettingsDao() = default;
         virtual void save(const std::string& key, const std::string& value);
         virtual std::string get(const std::string& key);
     
     protected:
-        virtual void onOpen() override;
-        virtual bool onClose() override;
+        void onOpen() override;
+        bool onClose() override;
 
     private:
         sqlite3_stmt* saveStmnt;

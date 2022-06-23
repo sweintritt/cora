@@ -9,6 +9,7 @@
 class StationsDao : public Dao {
     public:
         StationsDao();
+        virtual ~StationsDao() = default;
         virtual void save(Station& station);
         virtual std::vector<long> find(const std::string& name, const std::string& genre, const std::string& country);
         virtual std::shared_ptr<Station> findById(const long id);
@@ -17,8 +18,8 @@ class StationsDao : public Dao {
         virtual std::vector<long> getAllIds();
     
     protected:
-        virtual void onOpen() override;
-        virtual bool onClose() override;
+        void onOpen() override;
+        bool onClose() override;
 
     private:
         sqlite3_stmt* insertStationStmnt;
