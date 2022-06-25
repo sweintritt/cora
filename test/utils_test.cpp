@@ -48,5 +48,65 @@ TEST(UtilsTest, toStringVector) {
     CHECK_TRUE(t2.empty());
 }
 
-// TODO vector to string test
-// TODO tests for trim methods
+TEST(UtilsTest, ltrim) {
+    std::string value = "";
+    ltrim(value);
+    CHECK_EQUAL("", value);
+
+    value = "  ";
+    ltrim(value);
+    CHECK_EQUAL("", value);
+
+    value = " f ";
+    ltrim(value);
+    CHECK_EQUAL("f ", value);
+
+    value = "foo";
+    ltrim(value);
+    CHECK_EQUAL("foo", value);
+}
+
+TEST(UtilsTest, rtrim) {
+    std::string value = "";
+    rtrim(value);
+    CHECK_EQUAL("", value);
+
+    value = "  ";
+    rtrim(value);
+    CHECK_EQUAL("", value);
+
+    value = " f ";
+    rtrim(value);
+    CHECK_EQUAL(" f", value);
+
+    value = "foo";
+    rtrim(value);
+    CHECK_EQUAL("foo", value);
+}
+
+TEST(UtilsTest, trim) {
+    std::string value = "";
+    trim(value);
+    CHECK_EQUAL("", value);
+
+    value = "  ";
+    trim(value);
+    CHECK_EQUAL("", value);
+
+    value = " f ";
+    trim(value);
+    CHECK_EQUAL("f", value);
+
+    value = "foo";
+    trim(value);
+    CHECK_EQUAL("foo", value);
+}
+
+TEST(UtilsTest, toString) {
+    const std::vector<std::string> values{ "Hello", "World"};
+    CHECK_EQUAL("Hello,World", toString(values));
+    CHECK_EQUAL("", toString(std::vector<std::string>()));
+
+    const std::vector<std::string> values2{ "Hello", "World", "", ""};
+    CHECK_EQUAL("Hello,World,,", toString(values2));
+}
