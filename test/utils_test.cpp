@@ -47,3 +47,6 @@ TEST(UtilsTest, toStringVector) {
     const std::vector<std::string> t2 = toStringVector(0, argv);
     CHECK_TRUE(t2.empty());
 }
+
+// TODO vector to string test
+// TODO tests for trim methods

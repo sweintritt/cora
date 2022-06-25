@@ -138,6 +138,7 @@ void StationsDao::deleteAllAddedBy(const std::string& addedBy) {
 }
 
 std::shared_ptr<Station> StationsDao::getRandom() {
+    LOG(plog::debug) << "getting random id";
     const int rc = sqlite3_step(getRandomStationStmnt);
     std::shared_ptr<Station> station = nullptr;
 
@@ -169,7 +170,7 @@ std::vector<long> StationsDao::getAllIds() {
     return ids;
 }
 
-std::string StationsDao::serializeUrls(const std::vector<std::string>& urls) {
+std::string StationsDao::serializeUrls(const std::vector<std::string>& urls) const {
     std::stringstream stream;
     for (const auto& url : urls) {
         stream << "{" << url << "}";
@@ -177,7 +178,7 @@ std::string StationsDao::serializeUrls(const std::vector<std::string>& urls) {
     return stream.str();
 }
 
-std::vector<std::string> StationsDao::deserializeUrls(const std::string& value) {
+std::vector<std::string> StationsDao::deserializeUrls(const std::string& value) const {
     std::vector<std::string> urls;
 
     size_t pos = 0;
@@ -220,7 +221,7 @@ Station StationsDao::getStation(sqlite3_stmt* stmnt) {
     station.setLanguage(language);
     station.setDescription(description);
 
-    for (auto& url : deserializeUrls(urls)) {
+    for (const auto& url : deserializeUrls(urls)) {
         station.addUrl(url);
     }
 

@@ -45,8 +45,10 @@ std::shared_ptr<Station> PlayCommand::getStation(const std::vector<std::string>&
     std::shared_ptr<Station> station;
 
     if (values[0].compare("random") == 0) {
+        LOG(plog::info) << "playing random station";
         station = m_stationsDao->getRandom();
     } else if (values[0].compare("last") == 0) {
+        LOG(plog::info) << "playing last station";
         std::string lastPlayed = m_settingsDao->get(Settings::LAST_PLAYED);
         if (lastPlayed.empty()) {
             LOG(plog::info) << "There is no last played station. Selecting random.";
@@ -60,7 +62,9 @@ std::shared_ptr<Station> PlayCommand::getStation(const std::vector<std::string>&
         station = m_stationsDao->findById(id);
     }
 
-    m_settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
+    if (station != nullptr) {
+        m_settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
+    }
     m_stationsDao->close();
     return station;
 }

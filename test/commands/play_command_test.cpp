@@ -13,68 +13,107 @@
 #include "testutils/in_memory_settings_dao.hpp"
 #include "testutils/test_media_player.hpp"
 
-TEST_GROUP(PlayCommandTest) { };
+std::shared_ptr<StationsDao> stationsDao = nullptr;
+std::shared_ptr<SettingsDao> settingsDao = nullptr;
+std::shared_ptr<TestMediaPlayer> mediaPlayer = nullptr;
+std::shared_ptr<Station> station = nullptr;
+std::shared_ptr<PlayCommand> cmd = nullptr;
+
+TEST_GROUP(PlayCommandTest) {
+    void setup() {
+        stationsDao = std::make_shared<InMemoryStationsDao>();
+        settingsDao = std::make_shared<InMemorySettingsDao>();
+        mediaPlayer = std::make_shared<TestMediaPlayer>();
+        cmd = std::make_shared<PlayCommand>(stationsDao, settingsDao, mediaPlayer);
+        station = std::make_shared<Station>();
+        station->setAddedBy("user");
+        station->setName("Sound of Movies");
+        station->setGenre("Soundtracks");
+        station->setLanguage("English");
+        station->setCountry("England");
+        station->setDescription("cool station");
+        station->addUrl("http://somehost.co.uk");
+        station->addUrl("http://anotherhost.co.uk");
+        station->addUrl("http://andonemorehost.co.uk");
+    }
+};
+
+// TODO Check log messages
 
 TEST(PlayCommandTest, simplePlay) {
-    auto stationsDao = std::make_shared<InMemoryStationsDao>();
-    auto settingsDao = std::make_shared<InMemorySettingsDao>();
-    auto mediaPlayer = std::make_shared<TestMediaPlayer>();
-    PlayCommand cmd(stationsDao, settingsDao, mediaPlayer);
-    cmd.waitOnPlay(false);
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
 
-    Station station;
-    station.setAddedBy("user");
-    station.setName("Sound of Movies");
-    station.setGenre("Soundtracks");
-    station.setLanguage("English");
-    station.setCountry("England");
-    station.setDescription("cool station");
-    station.addUrl("http://somehost.co.uk");
-    station.addUrl("http://anotherhost.co.uk");
-    station.addUrl("http://andonemorehost.co.uk");
-    stationsDao->save(station);
-
-    CHECK_EQUAL(cmd.getName(), "play");
+    CHECK_EQUAL(cmd->getName(), "play");
     std::vector<std::string> args;
-    cmd.execute(args);
-    // TODO Check log messages
+    cmd->execute(args);
 
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
     args.emplace_back("--file");
     args.emplace_back("foo.sqlite");
-    args.emplace_back(std::to_string(station.getId()));
-    cmd.execute(args);
+    args.emplace_back(std::to_string(station->getId()));
+    cmd->execute(args);
 
-    CHECK_EQUAL(std::to_string(station.getId()), settingsDao->get(Settings::LAST_PLAYED));
-    CHECK_EQUAL(station.getUrls()[0], mediaPlayer->m_url);
+    CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
+    CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
 }
 
 TEST(PlayCommandTest, selectUrl) {
-    auto stationsDao = std::make_shared<InMemoryStationsDao>();
-    auto settingsDao = std::make_shared<InMemorySettingsDao>();
-    auto mediaPlayer = std::make_shared<TestMediaPlayer>();
-    PlayCommand cmd(stationsDao, settingsDao, mediaPlayer);
-    cmd.waitOnPlay(false);
-
-    Station station;
-    station.setAddedBy("user");
-    station.setName("Sound of Movies");
-    station.setGenre("Soundtracks");
-    station.setLanguage("English");
-    station.setCountry("England");
-    station.setDescription("cool station");
-    station.addUrl("http://somehost.co.uk");
-    station.addUrl("http://anotherhost.co.uk");
-    station.addUrl("http://andonemorehost.co.uk");
-    stationsDao->save(station);
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
 
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
     std::vector<std::string> args;
     args.emplace_back("--file");
     args.emplace_back("foo.sqlite");
-    args.emplace_back(std::to_string(station.getId()) + ":1");
-    cmd.execute(args);
+    args.emplace_back(std::to_string(station->getId()) + ":1");
+    cmd->execute(args);
 
-    CHECK_EQUAL(std::to_string(station.getId()), settingsDao->get(Settings::LAST_PLAYED));
-    CHECK_EQUAL(station.getUrls()[1], mediaPlayer->m_url);
+    CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
+    CHECK_EQUAL(station->getUrls()[1], mediaPlayer->m_url);
+}
+
+TEST(PlayCommandTest, selectUrlInvalidIndex) {
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
+
+    CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
+    std::vector<std::string> args;
+    args.emplace_back("--file");
+    args.emplace_back("foo.sqlite");
+    args.emplace_back(std::to_string(station->getId()) + ":13");
+    cmd->execute(args);
+
+    CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
+    CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
+}
+
+TEST(PlayCommandTest, playLast) {
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
+    settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
+    CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), std::to_string(station->getId()));
+
+    std::vector<std::string> args;
+    args.emplace_back("--file");
+    args.emplace_back("foo.sqlite");
+    args.emplace_back("last");
+    cmd->execute(args);
+
+    CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
+    CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
+}
+
+TEST(PlayCommandTest, playRandom) {
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
+
+    std::vector<std::string> args;
+    args.emplace_back("--file");
+    args.emplace_back("foo.sqlite");
+    args.emplace_back("random");
+    cmd->execute(args);
+
+    CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
+    CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
 }

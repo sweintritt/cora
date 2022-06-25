@@ -29,7 +29,7 @@ class StationsDao : public Dao {
         sqlite3_stmt* getAllIdsStmnt;
         sqlite3_stmt* getRandomStationStmnt;
 
-        std::string serializeUrls(const std::vector<std::string>& urls);
-        std::vector<std::string> deserializeUrls(const std::string& urls);
+        std::string serializeUrls(const std::vector<std::string>& urls) const;
+        std::vector<std::string> deserializeUrls(const std::string& urls) const;
         Station getStation(sqlite3_stmt* stmnt);
 };

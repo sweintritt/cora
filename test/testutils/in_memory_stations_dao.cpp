@@ -21,7 +21,7 @@ void InMemoryStationsDao::save(Station& station) {
 
 std::vector<long> InMemoryStationsDao::find(const std::string& name, const std::string& genre, const std::string& country) {
     // TODO Implement
-    return std::vector<long>();
+    throw std::runtime_error("not implemented");
 }
 
 std::shared_ptr<Station> InMemoryStationsDao::findById(const long id) {
@@ -39,11 +39,14 @@ void InMemoryStationsDao::deleteAllAddedBy(const std::string& addedBy) {
 }
 
 std::shared_ptr<Station> InMemoryStationsDao::getRandom() {
-    // TODO Implement
-    return nullptr;
+    if (m_stations.empty()) {
+        return nullptr;
+    } else {
+        return m_stations[0];
+    }
 }
 
 std::vector<long> InMemoryStationsDao::getAllIds() {
     // TODO Implement
-    return std::vector<long>();
+    throw std::runtime_error("not implemented");
 }
