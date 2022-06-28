@@ -5,9 +5,11 @@
 #include <plog/Appenders/ConsoleAppender.h>
 
 IMPORT_TEST_GROUP(CliTest);
+IMPORT_TEST_GROUP(ImporterTest);
+IMPORT_TEST_GROUP(MessageOnlyFormatterTest);
+IMPORT_TEST_GROUP(PlayCommandTest);
 IMPORT_TEST_GROUP(SettingsDaoTest);
 IMPORT_TEST_GROUP(StationsDaoTest);
-IMPORT_TEST_GROUP(PlayCommandTest);
 IMPORT_TEST_GROUP(UtilsTest);
 
 int main(int argc, char* argv[]) {

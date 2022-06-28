@@ -79,15 +79,17 @@ if(CORA_BUILD_TESTS)
    include_directories(SYSTEM ${cora_include_dirs} ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
     set(cora_test_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/string_stream_appender.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/in_memory_stations_dao.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/in_memory_settings_dao.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/test_media_player.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/cli/cli_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/play_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/db/settings_dao_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/db/stations_dao_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/importer/importer_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/logging/message_only_formatter_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/utils_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/string_stream_appender.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/in_memory_stations_dao.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/in_memory_settings_dao.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/testutils/test_media_player.cpp
     )
 
    add_executable(cora_test ${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp ${cora_sources} ${cora_test_sources})
