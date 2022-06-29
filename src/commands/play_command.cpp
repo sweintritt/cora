@@ -75,8 +75,7 @@ std::string PlayCommand::getUrl(std::shared_ptr<Station> station, const std::vec
         const size_t index = std::stol(values[1]);
 
         if (station->getUrls().size() < index) {
-            LOG(plog::warning) << "Only " << station->getUrls().size() << " found. Index " << index << " is invalid";
-            LOG(plog::info) << "Using default index 0";
+            LOG(plog::warning) << "Only " << station->getUrls().size() << " URLs found. Index " << index << " is invalid. Using default index 0";
             url = station->getUrls()[0];
         } else {
             url = station->getUrls()[index];

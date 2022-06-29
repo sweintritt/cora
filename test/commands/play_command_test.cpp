@@ -12,6 +12,7 @@
 #include "testutils/in_memory_stations_dao.hpp"
 #include "testutils/in_memory_settings_dao.hpp"
 #include "testutils/test_media_player.hpp"
+#include "testutils/string_stream_appender.hpp"
 
 std::shared_ptr<StationsDao> stationsDao = nullptr;
 std::shared_ptr<SettingsDao> settingsDao = nullptr;
@@ -38,42 +39,44 @@ TEST_GROUP(PlayCommandTest) {
     }
 };
 
-// TODO Check log messages
-
 TEST(PlayCommandTest, simplePlay) {
+    STRING_STREAM_APPENDER->clear();
     cmd->waitOnPlay(false);
     stationsDao->save(*station);
-
     CHECK_EQUAL(cmd->getName(), "play");
     std::vector<std::string> args;
     cmd->execute(args);
-
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
+    CHECK_EQUAL("No id given. See 'cora play --help' for more information.\n", STRING_STREAM_APPENDER->messages());
+    
+    STRING_STREAM_APPENDER->clear();
     args.emplace_back("--file");
     args.emplace_back("foo.sqlite");
     args.emplace_back(std::to_string(station->getId()));
     cmd->execute(args);
-
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
+    CHECK_EQUAL("playing Sound of Movies\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, selectUrl) {
+    STRING_STREAM_APPENDER->clear();
     cmd->waitOnPlay(false);
     stationsDao->save(*station);
-
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
+
     std::vector<std::string> args;
     args.emplace_back("--file");
     args.emplace_back("foo.sqlite");
     args.emplace_back(std::to_string(station->getId()) + ":1");
     cmd->execute(args);
-
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[1], mediaPlayer->m_url);
+    CHECK_EQUAL("playing Sound of Movies\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, selectUrlInvalidIndex) {
+    STRING_STREAM_APPENDER->clear();
     cmd->waitOnPlay(false);
     stationsDao->save(*station);
 
@@ -86,9 +89,11 @@ TEST(PlayCommandTest, selectUrlInvalidIndex) {
 
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
+    CHECK_EQUAL("playing Sound of Movies\nOnly 3 URLs found. Index 13 is invalid. Using default index 0\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, playLast) {
+    STRING_STREAM_APPENDER->clear();
     cmd->waitOnPlay(false);
     stationsDao->save(*station);
     settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
@@ -102,9 +107,11 @@ TEST(PlayCommandTest, playLast) {
 
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
+    CHECK_EQUAL("playing last station\nplaying Sound of Movies\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, playRandom) {
+    STRING_STREAM_APPENDER->clear();
     cmd->waitOnPlay(false);
     stationsDao->save(*station);
 
@@ -116,4 +123,31 @@ TEST(PlayCommandTest, playRandom) {
 
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
+    CHECK_EQUAL("playing random station\nplaying Sound of Movies\n", STRING_STREAM_APPENDER->messages());
 }
+
+TEST(PlayCommandTest, getName) {
+    CHECK_EQUAL("play", cmd->getName());
+}
+
+TEST(PlayCommandTest, getDescription) {
+    CHECK_EQUAL("Play a station, given by id", cmd->getDescription());
+}
+
+TEST(PlayCommandTest, getUsage) {
+    const std::string usage = "NAME\n"
+    "  play - Play a station, given by id\n"
+    "\n"
+    "SYNOPSIS\n"
+    "  play [OPTIONS]\n"
+    "\n"
+    "DESCRIPTION\n"
+    "  -h, --help\n"
+    "              Show help page\n"
+    "\n"
+    "  -f, --file <VALUE>\n"
+    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n";
+
+    CHECK_EQUAL(usage, cmd->getUsage());
+}
+

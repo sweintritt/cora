@@ -6,6 +6,7 @@ void InMemorySettingsDao::onOpen() {
 
 bool InMemorySettingsDao::onClose() {
     // Do nothing
+    return true;
 }
 
 void InMemorySettingsDao::save(const std::string& key, const std::string& value) {

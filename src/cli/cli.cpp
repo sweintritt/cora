@@ -178,7 +178,7 @@ const std::string Cli::usage() const {
       }
 
       if (it.hasValue) {
-         stream << " <VALUE> ";
+         stream << " <VALUE>";
       }
 
       // Wrap long descriptions
