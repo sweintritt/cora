@@ -39,20 +39,30 @@ TEST_GROUP(PlayCommandTest) {
     }
 };
 
-TEST(PlayCommandTest, simplePlay) {
+TEST(PlayCommandTest, noIdGiven) {
     STRING_STREAM_APPENDER->clear();
     cmd->waitOnPlay(false);
-    stationsDao->save(*station);
     CHECK_EQUAL(cmd->getName(), "play");
     std::vector<std::string> args;
     cmd->execute(args);
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
     CHECK_EQUAL("No id given. See 'cora play --help' for more information.\n", STRING_STREAM_APPENDER->messages());
-    
+}
+
+TEST(PlayCommandTest, idNotFound) {
     STRING_STREAM_APPENDER->clear();
-    args.emplace_back("--file");
-    args.emplace_back("foo.sqlite");
-    args.emplace_back(std::to_string(station->getId()));
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
+    std::vector<std::string> args{ "--file", "foo.sqlite", "24" };
+    cmd->execute(args);
+    CHECK_EQUAL("No station found for id:24\n", STRING_STREAM_APPENDER->messages());
+}
+
+TEST(PlayCommandTest, simplePlay) {
+    STRING_STREAM_APPENDER->clear();
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
+    std::vector<std::string> args{ "--file", "foo.sqlite", std::to_string(station->getId()) };
     cmd->execute(args);
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
@@ -65,10 +75,7 @@ TEST(PlayCommandTest, selectUrl) {
     stationsDao->save(*station);
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
 
-    std::vector<std::string> args;
-    args.emplace_back("--file");
-    args.emplace_back("foo.sqlite");
-    args.emplace_back(std::to_string(station->getId()) + ":1");
+    std::vector<std::string> args{ "--file", "foo.sqlite", std::to_string(station->getId()) + ":1" };
     cmd->execute(args);
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[1], mediaPlayer->m_url);
@@ -81,15 +88,25 @@ TEST(PlayCommandTest, selectUrlInvalidIndex) {
     stationsDao->save(*station);
 
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
-    std::vector<std::string> args;
-    args.emplace_back("--file");
-    args.emplace_back("foo.sqlite");
-    args.emplace_back(std::to_string(station->getId()) + ":13");
+    std::vector<std::string> args{ "--file", "foo.sqlite", std::to_string(station->getId()) + ":13" };
     cmd->execute(args);
 
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
     CHECK_EQUAL("playing Sound of Movies\nOnly 3 URLs found. Index 13 is invalid. Using default index 0\n", STRING_STREAM_APPENDER->messages());
+}
+
+TEST(PlayCommandTest, noLastStations) {
+    STRING_STREAM_APPENDER->clear();
+    cmd->waitOnPlay(false);
+    stationsDao->save(*station);
+
+    std::vector<std::string> args{ "--file", "foo.sqlite", "last" };
+    cmd->execute(args);
+
+    CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
+    CHECK_EQUAL(station->getUrls()[0], mediaPlayer->m_url);
+    CHECK_EQUAL("playing last station\nThere is no last played station. Selecting random.\nplaying Sound of Movies\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, playLast) {
@@ -99,10 +116,7 @@ TEST(PlayCommandTest, playLast) {
     settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), std::to_string(station->getId()));
 
-    std::vector<std::string> args;
-    args.emplace_back("--file");
-    args.emplace_back("foo.sqlite");
-    args.emplace_back("last");
+    std::vector<std::string> args{ "--file", "foo.sqlite", "last" };
     cmd->execute(args);
 
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
@@ -115,10 +129,7 @@ TEST(PlayCommandTest, playRandom) {
     cmd->waitOnPlay(false);
     stationsDao->save(*station);
 
-    std::vector<std::string> args;
-    args.emplace_back("--file");
-    args.emplace_back("foo.sqlite");
-    args.emplace_back("random");
+    std::vector<std::string> args{ "--file", "foo.sqlite", "random" };
     cmd->execute(args);
 
     CHECK_EQUAL(std::to_string(station->getId()), settingsDao->get(Settings::LAST_PLAYED));
@@ -151,3 +162,23 @@ TEST(PlayCommandTest, getUsage) {
     CHECK_EQUAL(usage, cmd->getUsage());
 }
 
+TEST(PlayCommandTest, showHelp) {
+    STRING_STREAM_APPENDER->clear();
+    std::vector<std::string> args{ "play", "--help" };
+    cmd->execute(args);
+
+    const std::string usage = "NAME\n"
+    "  play - Play a station, given by id\n"
+    "\n"
+    "SYNOPSIS\n"
+    "  play [OPTIONS]\n"
+    "\n"
+    "DESCRIPTION\n"
+    "  -h, --help\n"
+    "              Show help page\n"
+    "\n"
+    "  -f, --file <VALUE>\n"
+    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n\n";
+
+    CHECK_EQUAL(usage, STRING_STREAM_APPENDER->messages());
+}
