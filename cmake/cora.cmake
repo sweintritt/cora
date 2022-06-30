@@ -80,6 +80,7 @@ if(CORA_BUILD_TESTS)
 
     set(cora_test_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/test/cli/cli_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/info_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/play_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/version_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/db/settings_dao_test.cpp

@@ -14,13 +14,14 @@
 #include "testutils/test_media_player.hpp"
 #include "testutils/string_stream_appender.hpp"
 
-std::shared_ptr<StationsDao> stationsDao = nullptr;
-std::shared_ptr<SettingsDao> settingsDao = nullptr;
-std::shared_ptr<TestMediaPlayer> mediaPlayer = nullptr;
-std::shared_ptr<Station> station = nullptr;
-std::shared_ptr<PlayCommand> cmd = nullptr;
-
 TEST_GROUP(PlayCommandTest) {
+
+    std::shared_ptr<StationsDao> stationsDao = nullptr;
+    std::shared_ptr<SettingsDao> settingsDao = nullptr;
+    std::shared_ptr<TestMediaPlayer> mediaPlayer = nullptr;
+    std::shared_ptr<Station> station = nullptr;
+    std::shared_ptr<PlayCommand> cmd = nullptr;
+
     void setup() {
         stationsDao = std::make_shared<InMemoryStationsDao>();
         settingsDao = std::make_shared<InMemorySettingsDao>();
@@ -42,7 +43,6 @@ TEST_GROUP(PlayCommandTest) {
 TEST(PlayCommandTest, noIdGiven) {
     STRING_STREAM_APPENDER->clear();
     cmd->waitOnPlay(false);
-    CHECK_EQUAL(cmd->getName(), "play");
     std::vector<std::string> args;
     cmd->execute(args);
     CHECK_EQUAL(settingsDao->get(Settings::LAST_PLAYED), "");
@@ -157,7 +157,7 @@ TEST(PlayCommandTest, getUsage) {
     "              Show help page\n"
     "\n"
     "  -f, --file <VALUE>\n"
-    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n";
+    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n"; // FIXME will not work on other machines
 
     CHECK_EQUAL(usage, cmd->getUsage());
 }
@@ -178,7 +178,7 @@ TEST(PlayCommandTest, showHelp) {
     "              Show help page\n"
     "\n"
     "  -f, --file <VALUE>\n"
-    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n\n";
+    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n\n"; // FIXME will not work on other machines
 
     CHECK_EQUAL(usage, STRING_STREAM_APPENDER->messages());
 }
