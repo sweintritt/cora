@@ -146,18 +146,19 @@ TEST(PlayCommandTest, getDescription) {
 }
 
 TEST(PlayCommandTest, getUsage) {
+    const std::string filename = "/home/" + std::string(getenv("USER")) + "/.cora.sqlite";
     const std::string usage = "NAME\n"
-    "  play - Play a station, given by id\n"
-    "\n"
-    "SYNOPSIS\n"
-    "  play [OPTIONS]\n"
-    "\n"
-    "DESCRIPTION\n"
-    "  -h, --help\n"
-    "              Show help page\n"
-    "\n"
-    "  -f, --file <VALUE>\n"
-    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n"; // FIXME will not work on other machines
+        "  play - Play a station, given by id\n"
+        "\n"
+        "SYNOPSIS\n"
+        "  play [OPTIONS]\n"
+        "\n"
+        "DESCRIPTION\n"
+        "  -h, --help\n"
+        "              Show help page\n"
+        "\n"
+        "  -f, --file <VALUE>\n"
+        "              Database file. Default is " + filename + "\n\n";
 
     CHECK_EQUAL(usage, cmd->getUsage());
 }
@@ -167,18 +168,19 @@ TEST(PlayCommandTest, showHelp) {
     std::vector<std::string> args{ "play", "--help" };
     cmd->execute(args);
 
+    const std::string filename = "/home/" + std::string(getenv("USER")) + "/.cora.sqlite";
     const std::string usage = "NAME\n"
-    "  play - Play a station, given by id\n"
-    "\n"
-    "SYNOPSIS\n"
-    "  play [OPTIONS]\n"
-    "\n"
-    "DESCRIPTION\n"
-    "  -h, --help\n"
-    "              Show help page\n"
-    "\n"
-    "  -f, --file <VALUE>\n"
-    "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n\n"; // FIXME will not work on other machines
+        "  play - Play a station, given by id\n"
+        "\n"
+        "SYNOPSIS\n"
+        "  play [OPTIONS]\n"
+        "\n"
+        "DESCRIPTION\n"
+        "  -h, --help\n"
+        "              Show help page\n"
+        "\n"
+        "  -f, --file <VALUE>\n"
+        "              Database file. Default is " + filename + "\n\n\n";
 
     CHECK_EQUAL(usage, STRING_STREAM_APPENDER->messages());
 }

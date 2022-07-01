@@ -1,8 +1,6 @@
 ToDos
 ======
 
-* Unittest showing the default cora file in usage will fail, because they show
-  an absolute path => make relative
 * write tests
 * show last update timestamp
 * "cora play classic guitar"

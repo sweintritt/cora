@@ -85,6 +85,7 @@ TEST(InfoCommandTest, getDescription) {
 }
 
 TEST(InfoCommandTest, getUsage) {
+    const std::string filename = "/home/" + std::string(getenv("USER")) + "/.cora.sqlite";
     const std::string usage = "NAME\n"
         "  info - Show information about a station, given by id\n"
         "\n"
@@ -96,17 +97,16 @@ TEST(InfoCommandTest, getUsage) {
         "              Show help page\n"
         "\n"
         "  -f, --file <VALUE>\n"
-        "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n";
-        // FIXME will not work on other machines
-
+        "              Database file. Default is " + filename + "\n\n";
     CHECK_EQUAL(usage, cmd->getUsage());
 }
 
 TEST(InfoCommandTest, showHelp) {
     STRING_STREAM_APPENDER->clear();
-    std::vector<std::string> args{ "play", "--help" };
+    std::vector<std::string> args{ "info", "--help" };
     cmd->execute(args);
 
+    const std::string filename = "/home/" + std::string(getenv("USER")) + "/.cora.sqlite";
     const std::string usage = "NAME\n"
         "  info - Show information about a station, given by id\n"
         "\n"
@@ -118,8 +118,7 @@ TEST(InfoCommandTest, showHelp) {
         "              Show help page\n"
         "\n"
         "  -f, --file <VALUE>\n"
-        "              Database file. Default is /home/sweintritt/.cora.sqlite\n\n\n";
-    // FIXME will not work on other machines
+        "              Database file. Default is " + filename + "\n\n\n";
 
     CHECK_EQUAL(usage, STRING_STREAM_APPENDER->messages());
 }
