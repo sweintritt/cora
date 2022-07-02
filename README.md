@@ -49,24 +49,24 @@ id of the station.
 
 ```bash
 $ cora find --file import_test.sqlite --name rock --genre alternative --country usa
-id:1324", name:"a-0 Alternative Rock Hits", genre:"Rock-Alternative", country:"USA"
-id:1325", name:"a-0 Modern Rock", genre:"Rock-Alternative", country:"USA"
-id:5675", name:"WRPS 88.3 FM Rockland, MA", genre:"Rock-Alternative", country:"USA"
-id:9287", name:"WYTX 98.5 LPFM Rock Hill, SC", genre:"Rock-Alternative", country:"USA"
-id:9342", name:"181.fm - The Buzz {Alt. Rock}", genre:"Rock-Alternative", country:"USA"
-id:9470", name:"AceRadio.Net - 90s Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:9820", name:"Bestnet Radio - Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:11020", name:"iHeart Supercuts Alt Rock", genre:"Rock-Alternative", country:"USA"
-id:11351", name:"Third Rock - NASA", genre:"Rock-Alternative", country:"USA"
-id:12010", name:"KDJE 100.3 FM Little Rock, AR", genre:"Rock-Alternative", country:"USA"
-id:13041", name:"iHeart Rock Nation", genre:"Rock-Alternative", country:"USA"
-id:14205", name:"2000 FM - Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:16252", name:"XitFM Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:20643", name:"POWERHITZ - The Planet (New Rock)", genre:"Rock-Alternative", country:"USA"
-id:20660", name:"GotRadio - Rock Room (Alternative)", genre:"Rock-Alternative", country:"USA"
-id:22409", name:"Big R Radio - Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:22420", name:"Big R Radio - 90s Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:22693", name:"MEGASHUFFLE - Alternative Rock Variety", genre:"Rock-Alternative", country:"USA"
+id:1324, name:"a-0 Alternative Rock Hits", genre:"Rock-Alternative", country:"USA"
+id:1325, name:"a-0 Modern Rock", genre:"Rock-Alternative", country:"USA"
+id:5675, name:"WRPS 88.3 FM Rockland, MA", genre:"Rock-Alternative", country:"USA"
+id:9287, name:"WYTX 98.5 LPFM Rock Hill, SC", genre:"Rock-Alternative", country:"USA"
+id:9342, name:"181.fm - The Buzz {Alt. Rock}", genre:"Rock-Alternative", country:"USA"
+id:9470, name:"AceRadio.Net - 90s Alternative Rock", genre:"Rock-Alternative", country:"USA"
+id:9820, name:"Bestnet Radio - Alternative Rock", genre:"Rock-Alternative", country:"USA"
+id:11020, name:"iHeart Supercuts Alt Rock", genre:"Rock-Alternative", country:"USA"
+id:11351, name:"Third Rock - NASA", genre:"Rock-Alternative", country:"USA"
+id:12010, name:"KDJE 100.3 FM Little Rock, AR", genre:"Rock-Alternative", country:"USA"
+id:13041, name:"iHeart Rock Nation", genre:"Rock-Alternative", country:"USA"
+id:14205, name:"2000 FM - Alternative Rock", genre:"Rock-Alternative", country:"USA"
+id:16252, name:"XitFM Alternative Rock", genre:"Rock-Alternative", country:"USA"
+id:20643, name:"POWERHITZ - The Planet (New Rock)", genre:"Rock-Alternative", country:"USA"
+id:20660, name:"GotRadio - Rock Room (Alternative)", genre:"Rock-Alternative", country:"USA"
+id:22409, name:"Big R Radio - Alternative Rock", genre:"Rock-Alternative", country:"USA"
+id:22420, name:"Big R Radio - 90s Alternative Rock", genre:"Rock-Alternative", country:"USA"
+id:22693, name:"MEGASHUFFLE - Alternative Rock Variety", genre:"Rock-Alternative", country:"USA"
 ```
 
 # Show detailed infos about a station
@@ -112,7 +112,7 @@ If you just want to play a random station just call
 $ cora play random
 
 ```
-## Play random station
+## Play last station
 
 If you want to listen to the station you played the last time call
 

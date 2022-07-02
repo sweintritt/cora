@@ -11,6 +11,7 @@ IMPORT_TEST_GROUP(CliTest);
 IMPORT_TEST_GROUP(ImporterTest);
 IMPORT_TEST_GROUP(MessageOnlyFormatterTest);
 IMPORT_TEST_GROUP(InfoCommandTest);
+IMPORT_TEST_GROUP(ListCommandTest);
 IMPORT_TEST_GROUP(PlayCommandTest);
 IMPORT_TEST_GROUP(VersionCommandTest);
 IMPORT_TEST_GROUP(SettingsDaoTest);

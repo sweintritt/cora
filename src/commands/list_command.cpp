@@ -23,7 +23,7 @@ void ListCommand::execute(const std::vector<std::string>& args) {
         const auto station = m_stationsDao->findById(id);
         if (station != nullptr) {
             LOG(plog::info) << "id:" << std::to_string(station->getId())
-                << "\", name:\"" << station->getName()
+                << ", name:\"" << station->getName()
                 << "\", genre:\"" << station->getGenre()
                 << "\", country:\"" << station->getCountry() << "\"";
         } else {

@@ -47,6 +47,11 @@ std::shared_ptr<Station> InMemoryStationsDao::getRandom() {
 }
 
 std::vector<long> InMemoryStationsDao::getAllIds() {
-    // TODO Implement
-    throw std::runtime_error("not implemented");
+    std::vector<long> keys;
+
+    for(const auto& entry : m_stations) {
+        keys.push_back(entry.first);
+    }
+
+    return keys;
 }
