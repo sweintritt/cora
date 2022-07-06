@@ -10,6 +10,7 @@
 IMPORT_TEST_GROUP(CliTest);
 IMPORT_TEST_GROUP(ImporterTest);
 IMPORT_TEST_GROUP(MessageOnlyFormatterTest);
+IMPORT_TEST_GROUP(CommandInterpreterTest);
 IMPORT_TEST_GROUP(HelpCommandTest);
 IMPORT_TEST_GROUP(InfoCommandTest);
 IMPORT_TEST_GROUP(ListCommandTest);

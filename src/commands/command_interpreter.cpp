@@ -9,7 +9,7 @@ CommandInterpreter::CommandInterpreter()
 
 void CommandInterpreter::add(std::unique_ptr<Command> cmd) {
     if (hasCommand(cmd->getName())) {
-        throw std::runtime_error("duplicate command " + cmd->getName());
+        throw std::runtime_error("duplicate command: '" + cmd->getName() + "'");
     }
 
     if (cmd->getName().size() > m_maxLengthCommand) {
