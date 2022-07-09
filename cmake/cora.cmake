@@ -83,6 +83,7 @@ if(CORA_BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/command_interpreter_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/help_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/info_command_test.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/find_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/list_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/play_command_test.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/test/commands/version_command_test.cpp

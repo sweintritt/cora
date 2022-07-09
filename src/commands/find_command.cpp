@@ -22,19 +22,22 @@ void FindCommand::execute(const std::vector<std::string>& args) {
         LOG(plog::info) << m_cli.usage();
         return;
     }
-    // FIXME c?
+    
     if (!std::regex_match(m_cli.getValue('n'), FIND_REGEX)) {
-        LOG(plog::error) << "Invalid search value. See 'cora find --help' for more information.";
-        return;
-    }
-
-    if (!std::regex_match(m_cli.getValue('n'), FIND_REGEX)) {
-        LOG(plog::error) << "Invalid value for name. See 'cora find --help' for more information.";
+        LOG(plog::error) << "Invalid search value: '" << m_cli.getValue('n') 
+                         << "'. See 'cora find --help' for more information.";
         return;
     }
 
     if (!std::regex_match(m_cli.getValue('g'), FIND_REGEX)) {
-        LOG(plog::error) << "Invalid value for genre. See 'cora find --help' for more information.";
+        LOG(plog::error) << "Invalid search value: '" << m_cli.getValue('g') 
+                         << "'. See 'cora find --help' for more information.";
+        return;
+    }
+
+    if (!std::regex_match(m_cli.getValue('c'), FIND_REGEX)) {
+        LOG(plog::error) << "Invalid search value: '" << m_cli.getValue('c') 
+                         << "'. See 'cora find --help' for more information.";
         return;
     }
 
@@ -45,12 +48,16 @@ void FindCommand::execute(const std::vector<std::string>& args) {
         const auto station = m_stationsDao->findById(id);
         if (station != nullptr) {
             LOG(plog::info) << "id:" << std::to_string(station->getId())
-                << "\", name:\"" << station->getName()
+                << ", name:\"" << station->getName()
                 << "\", genre:\"" << station->getGenre()
                 << "\", country:\"" << station->getCountry() << "\"";
         } else {
-            LOG(plog::warning) << "no station found for id:" << id;
+            LOG(plog::warning) << "No station found for id:" << id;
         }
+    }
+
+    if (ids.empty()) {
+        LOG(plog::info) << "No stations found";
     }
 
     m_stationsDao->close();

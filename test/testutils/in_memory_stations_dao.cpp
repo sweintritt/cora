@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <functional>
 #include <sstream>
+#include <cstring>
 
 void InMemoryStationsDao::onOpen() {
     m_id = 0;
@@ -20,8 +21,18 @@ void InMemoryStationsDao::save(Station& station) {
 }
 
 std::vector<long> InMemoryStationsDao::find(const std::string& name, const std::string& genre, const std::string& country) {
-    // TODO Implement
-    throw std::runtime_error("not implemented");
+    std::vector<long> ids;
+
+    for (auto& station : m_stations) {
+
+        if (strcasecmp(station.second->getName().c_str(), name.c_str()) == 0
+            || strcasecmp(station.second->getGenre().c_str(), genre.c_str()) == 0
+            || strcasecmp(station.second->getCountry().c_str(), country.c_str()) == 0) {
+            ids.push_back(station.second->getId());
+        }
+    }
+
+    return ids;
 }
 
 std::shared_ptr<Station> InMemoryStationsDao::findById(const long id) {

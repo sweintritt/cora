@@ -27,7 +27,7 @@ void ListCommand::execute(const std::vector<std::string>& args) {
                 << "\", genre:\"" << station->getGenre()
                 << "\", country:\"" << station->getCountry() << "\"";
         } else {
-            LOG(plog::warning) << "no station found for id:" << id;
+            LOG(plog::warning) << "No station found for id:" << id;
         }
     }
 
