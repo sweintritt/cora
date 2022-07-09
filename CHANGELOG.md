@@ -7,6 +7,11 @@
 * Import from https://www.radio-browser.info/, because RadioSure no longer works.
 * 'play last' command.
 * Settings to store last played station, date of the last update and the version used to create the database.
+* Unittests
+
+### Fixed
+
+* The find command did ignore the country value.
 
 ## [v0.8.0] - 2022-04-16
 

@@ -1,6 +1,7 @@
 if (CMAKE_COMPILER_IS_GNUCXX)
    find_program(GCOVR_EXECUTABLE NAMES gcovr)
 
+   file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/coverage)
    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/coverage)
    set(COVERAGE_XML_FILE  "${CMAKE_CURRENT_BINARY_DIR}/coverage/coverage.xml")
    set(COVERAGE_HTML_FILE "${CMAKE_CURRENT_BINARY_DIR}/coverage/coverage.html")

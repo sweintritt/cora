@@ -5,8 +5,6 @@
 #include "importer/radio_sure_importer.hpp"
 #include "importer/radio_browser_importer.hpp"
 
-#include <memory>
-
 ImportCommand::ImportCommand(const std::shared_ptr<StationsDao> stationsDao, 
                              const std::shared_ptr<SettingsDao> settingsDao,
                              const std::shared_ptr<MediaPlayer> mediaPlayer) 
@@ -31,7 +29,7 @@ void ImportCommand::execute(const std::vector<std::string>& args) {
     auto importer = m_importerByName.find(m_cli.getValue('t', "radio-browser"));
 
     if (importer == m_importerByName.end()) {
-        LOG(plog::error) << "Unknown importer type " << m_cli.getValue('t') << ". Try " << m_name << " --help for more information.";
+        LOG(plog::error) << "Unknown importer type " << m_cli.getValue('t') << ". Try 'cora " << m_name << " --help' for more information.";
     } else {
         m_stationsDao->open(m_cli.getValue('f', getDefaultFile()));
         const std::string input = m_cli.getValue('i', "");
