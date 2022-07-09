@@ -10,7 +10,7 @@ If you run any cora command for the first time, it will create an empty database
 ## RadioBrowser
 
 To import station data jus run `cora import`. This will import all stations from https://www.radio-browser.info/ and store it in the local
-databse.
+databse. The database will not be updated automatically. To update the database, simply run `import` again.
 
 ## RadioSurce
 
@@ -41,33 +41,6 @@ id:25400", name:"100Hitz - 90s Alternative Hitz", addedBy:"radio-sure", genre:"9
 ```
 
 or use the `find` command
-
-# Show detailed infos about a station
-
-The `info` command gives more information about a station. Just call the command with the
-id of the station.
-
-```bash
-$ cora find --file import_test.sqlite --name rock --genre alternative --country usa
-id:1324, name:"a-0 Alternative Rock Hits", genre:"Rock-Alternative", country:"USA"
-id:1325, name:"a-0 Modern Rock", genre:"Rock-Alternative", country:"USA"
-id:5675, name:"WRPS 88.3 FM Rockland, MA", genre:"Rock-Alternative", country:"USA"
-id:9287, name:"WYTX 98.5 LPFM Rock Hill, SC", genre:"Rock-Alternative", country:"USA"
-id:9342, name:"181.fm - The Buzz {Alt. Rock}", genre:"Rock-Alternative", country:"USA"
-id:9470, name:"AceRadio.Net - 90s Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:9820, name:"Bestnet Radio - Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:11020, name:"iHeart Supercuts Alt Rock", genre:"Rock-Alternative", country:"USA"
-id:11351, name:"Third Rock - NASA", genre:"Rock-Alternative", country:"USA"
-id:12010, name:"KDJE 100.3 FM Little Rock, AR", genre:"Rock-Alternative", country:"USA"
-id:13041, name:"iHeart Rock Nation", genre:"Rock-Alternative", country:"USA"
-id:14205, name:"2000 FM - Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:16252, name:"XitFM Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:20643, name:"POWERHITZ - The Planet (New Rock)", genre:"Rock-Alternative", country:"USA"
-id:20660, name:"GotRadio - Rock Room (Alternative)", genre:"Rock-Alternative", country:"USA"
-id:22409, name:"Big R Radio - Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:22420, name:"Big R Radio - 90s Alternative Rock", genre:"Rock-Alternative", country:"USA"
-id:22693, name:"MEGASHUFFLE - Alternative Rock Variety", genre:"Rock-Alternative", country:"USA"
-```
 
 # Show detailed infos about a station
 
@@ -136,7 +109,6 @@ cora - listen to internet radio stations
 ```
 
 and the `--help` option so see all about a specific command
-
 
 ```bash
 $ cora import --help
