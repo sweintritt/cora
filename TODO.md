@@ -1,6 +1,7 @@
 ToDos
 ======
 
+* Error on import
 * write tests
 * show last update timestamp
 * "cora play classic guitar"

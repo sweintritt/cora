@@ -28,8 +28,10 @@ void RadioBrowserImporter::import(const std::string& url, const std::shared_ptr<
         std::string json;
 
         if (url.empty()) {
+            LOG(plog::debug) << "Loading stations using default URL";
             json = getStationsJson("https://de1.api.radio-browser.info/json/stations");
         } else {
+            LOG(plog::debug) << "Loading stations using URL: " << url;
             json = getStationsJson(url);
         }
 
@@ -69,7 +71,7 @@ std::string RadioBrowserImporter::getStationsJson(const std::string& url) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &json);
-        curl_easy_setopt(curl, CURLOPT_USERAGENT, USER_AGENT);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, USER_AGENT.c_str());
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         LOG(plog::debug) << "Loading stations from " << url;
         res = curl_easy_perform(curl);
