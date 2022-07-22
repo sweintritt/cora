@@ -141,6 +141,7 @@ void Cli::reset() {
       option.value = "";
       option.found = false;
    }
+   m_residualValues.clear();
 }
 
 const std::string Cli::command() const {

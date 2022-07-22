@@ -2,7 +2,18 @@
 
 ## [Unreleased]
 
-## [v0.8.0] - 2022-07-09
+### Fixed
+
+* Last played station is only saved the first time.
+* Fixed error in cli parser.
+
+## [v0.9.1] - 2022-07-12
+
+### Fixed
+
+* Unable to load stations. Error with the sent user agent. 
+
+## [v0.9.0] - 2022-07-09
 
 ### Added
 

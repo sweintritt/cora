@@ -6,7 +6,7 @@ const std::string CREATE_TABLE_SETTINGS_SQL = "CREATE TABLE IF NOT EXISTS settin
         "key TEXT NOT NULL PRIMARY KEY, "
         "value TEXT NOT NULL);";
 const std::string LOAD_SETTINGS_SQL = "SELECT value FROM settings WHERE key = ?;";
-const std::string INSERT_SETTING_SQL = "INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?);";
+const std::string INSERT_SETTING_SQL = "INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?);";
 
 void SettingsDao::onOpen() {
     LOG(plog::debug) << "creating table settings";

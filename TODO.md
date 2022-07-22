@@ -1,6 +1,7 @@
 ToDos
 ======
 
+* merge releases to master
 * write documentation
 * fix sonar issues and compiler warnings
 * show last update timestamp

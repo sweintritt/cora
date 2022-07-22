@@ -1,5 +1,7 @@
 #include "testutils/in_memory_settings_dao.hpp"
 
+#include <plog/Log.h>
+
 void InMemorySettingsDao::onOpen() {
     // Do nothing
 }
@@ -10,6 +12,7 @@ bool InMemorySettingsDao::onClose() {
 }
 
 void InMemorySettingsDao::save(const std::string& key, const std::string& value) {
+    m_settings.erase(key);
     m_settings.emplace(key, value);
 }
 

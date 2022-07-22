@@ -10,7 +10,6 @@ void InMemoryStationsDao::onOpen() {
 }
 
 bool InMemoryStationsDao::onClose() {
-    m_stations.clear();
     return true;
 }
 
@@ -36,7 +35,13 @@ std::vector<long> InMemoryStationsDao::find(const std::string& name, const std::
 }
 
 std::shared_ptr<Station> InMemoryStationsDao::findById(const long id) {
-    return m_stations[id];
+    for (auto& station : m_stations) {
+        if (station.second->getId() == id) {
+            return station.second;
+        }
+    }
+
+    return nullptr;
 }
 
 void InMemoryStationsDao::deleteAllAddedBy(const std::string& addedBy) {

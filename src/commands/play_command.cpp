@@ -25,7 +25,7 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
     }
 
     // First entry is the command
-    const std::string idAndUrl = m_cli.getResidualValues()[1];    
+    const std::string idAndUrl = m_cli.getResidualValues()[1];
     const std::vector<std::string> values = split(idAndUrl, ':');
     std::shared_ptr<Station> station = getStation(values);
 
@@ -39,7 +39,6 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
 }
 
 std::shared_ptr<Station> PlayCommand::getStation(const std::vector<std::string>& values) const {
-    LOG(plog::debug) << "checking: " << values[0];
     m_stationsDao->open(m_cli.getValue('f', getDefaultFile()));
     m_settingsDao->open(m_cli.getValue('f', getDefaultFile()));
     std::shared_ptr<Station> station;
@@ -49,7 +48,7 @@ std::shared_ptr<Station> PlayCommand::getStation(const std::vector<std::string>&
         station = m_stationsDao->getRandom();
     } else if (values[0].compare("last") == 0) {
         LOG(plog::info) << "playing last station";
-        std::string lastPlayed = m_settingsDao->get(Settings::LAST_PLAYED);
+        const std::string lastPlayed = m_settingsDao->get(Settings::LAST_PLAYED);
         if (lastPlayed.empty()) {
             LOG(plog::info) << "There is no last played station. Selecting random.";
             station = m_stationsDao->getRandom();
@@ -63,7 +62,9 @@ std::shared_ptr<Station> PlayCommand::getStation(const std::vector<std::string>&
     }
 
     if (station != nullptr) {
+        LOG(plog::debug) << "saving last played station " << station->getName() << "(id:" << station->getId() << ")";
         m_settingsDao->save(Settings::LAST_PLAYED, std::to_string(station->getId()));
+        m_settingsDao->close();
     }
     m_stationsDao->close();
     return station;

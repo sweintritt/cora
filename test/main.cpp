@@ -24,6 +24,7 @@ IMPORT_TEST_GROUP(UtilsTest);
 int main(int argc, char* argv[]) {
     try {
         static plog::ConsoleAppender<MessageOnlyFormatter> consoleAppender;
+        // static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
         plog::init(plog::info, &consoleAppender).addAppender(&*STRING_STREAM_APPENDER);
         LOG(plog::info) << "Running cora tests";
         MemoryLeakWarningPlugin::turnOffNewDeleteOverloads();

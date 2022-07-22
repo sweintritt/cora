@@ -110,7 +110,7 @@ std::vector<long> StationsDao::find(const std::string& name, const std::string& 
 }
 
 std::shared_ptr<Station> StationsDao::findById(const long id) {
-    sqlite3_bind_int(findStationByIdStmnt, 1, id);
+    sqlite3_bind_int64(findStationByIdStmnt, 1, id);
     const int rc = sqlite3_step(findStationByIdStmnt);
     std::shared_ptr<Station> station = nullptr;
 
