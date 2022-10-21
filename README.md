@@ -65,13 +65,34 @@ $ cora info 22420
 To play a station run the `play` command with the id of the station
 
 ```bash
-$ cora play 22420
+$ cora play 25719
+playing Soundtrack Radio
+Press enter to stop playing
+Soldaat van Oranje (Rogier Van Otterloo) - Soldaat van Oranje
+Edward Scissorhands (Danny Elfman) - Death!
+Band of Brothers (Michael Kamen) - The Mission Begins
+August Rush (Mark Mancina) - August's Rhapsody
 ```
 
-If you want to select a specific url of the station, shown by the output of the show
+While playing cora will list the played songs. To stop, just press enter.
+
+## Select a specific url
+
+If you want to select a specific url of the station, shown by the output of the `show`
 command, add a colon and the shown position of the url in the list of the `info` command.
 
 ```bash
+$ cora info 22420
+      station: Big R Radio - 90s Alternative Rock
+        genre: Rock-Alternative
+      country: USA
+     language: English
+  description: -
+     added by: radio-sure
+       url[0]: http://bigrradio.cdnstream1.com/5187_128
+       url[1]: http://107.155.111.170:8030
+       url[2]: http://bigrradio.cdnstream1.com/5187_48  
+
 $ cora play 22420:1
 ```
 
