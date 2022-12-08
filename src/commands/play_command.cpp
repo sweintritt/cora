@@ -30,7 +30,7 @@ void PlayCommand::execute(const std::vector<std::string>& args) {
     std::shared_ptr<Station> station = getStation(values);
 
     if (station != nullptr) {
-        LOG(plog::info) << "playing " << station->getName();
+        LOG(plog::info) << "playing " << station->getName() << " (id:" << station->getId() << ")";
         std::string url = getUrl(station, values);
         play(url);
     } else {
