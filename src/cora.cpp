@@ -5,8 +5,10 @@
 #include <thread>
 #include <iostream>
 
+#include <plog/Init.h>
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
+#include <plog/Formatters/TxtFormatter.h>
 
 #include "cora.hpp"
 #include "utils.hpp"

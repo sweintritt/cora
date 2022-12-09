@@ -2,6 +2,7 @@
 
 #include <plog/Log.h>
 
+#include <algorithm>
 #include <sstream>
 
 Cli::Cli(const std::string& command, const std::string& description)

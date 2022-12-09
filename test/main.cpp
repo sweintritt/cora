@@ -1,6 +1,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 #include <CppUTest/MemoryLeakWarningPlugin.h>
 
+#include <plog/Init.h>
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
