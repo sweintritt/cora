@@ -77,14 +77,14 @@ TEST(PlayCommandTest, simplePlay) {
     cmd->execute(args);
     CHECK_EQUAL(std::to_string(station1->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station1->getUrls()[0], mediaPlayer->m_url);
-    CHECK_EQUAL("playing Sound of Movies\n", STRING_STREAM_APPENDER->messages());
+    CHECK_EQUAL("playing Sound of Movies (id:0)\n", STRING_STREAM_APPENDER->messages());
 
     STRING_STREAM_APPENDER->clear();
     args = { "--file", "foo.sqlite", std::to_string(station2->getId()) };
     cmd->execute(args);
     CHECK_EQUAL(std::to_string(station2->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station2->getUrls()[0], mediaPlayer->m_url);
-    CHECK_EQUAL("playing Sound of Rock\n", STRING_STREAM_APPENDER->messages());
+    CHECK_EQUAL("playing Sound of Rock (id:1)\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, selectUrl) {
@@ -96,7 +96,7 @@ TEST(PlayCommandTest, selectUrl) {
     cmd->execute(args);
     CHECK_EQUAL(std::to_string(station1->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station1->getUrls()[1], mediaPlayer->m_url);
-    CHECK_EQUAL("playing Sound of Movies\n", STRING_STREAM_APPENDER->messages());
+    CHECK_EQUAL("playing Sound of Movies (id:0)\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, selectUrlInvalidIndex) {
@@ -109,7 +109,7 @@ TEST(PlayCommandTest, selectUrlInvalidIndex) {
 
     CHECK_EQUAL(std::to_string(station1->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station1->getUrls()[0], mediaPlayer->m_url);
-    CHECK_EQUAL("playing Sound of Movies\nOnly 3 URLs found. Index 13 is invalid. Using default index 0\n", STRING_STREAM_APPENDER->messages());
+    CHECK_EQUAL("playing Sound of Movies (id:0)\nOnly 3 URLs found. Index 13 is invalid. Using default index 0\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, noLastStations) {
@@ -121,7 +121,7 @@ TEST(PlayCommandTest, noLastStations) {
 
     CHECK_EQUAL(std::to_string(station1->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station1->getUrls()[0], mediaPlayer->m_url);
-    CHECK_EQUAL("playing last station\nThere is no last played station. Selecting random.\nplaying Sound of Movies\n", STRING_STREAM_APPENDER->messages());
+    CHECK_EQUAL("playing last station\nThere is no last played station. Selecting random.\nplaying Sound of Movies (id:0)\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, playLast) {
@@ -135,7 +135,7 @@ TEST(PlayCommandTest, playLast) {
 
     CHECK_EQUAL(std::to_string(station1->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station1->getUrls()[0], mediaPlayer->m_url);
-    CHECK_EQUAL("playing last station\nplaying Sound of Movies\n", STRING_STREAM_APPENDER->messages());
+    CHECK_EQUAL("playing last station\nplaying Sound of Movies (id:0)\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, playRandom) {
@@ -147,7 +147,7 @@ TEST(PlayCommandTest, playRandom) {
 
     CHECK_EQUAL(std::to_string(station1->getId()), settingsDao->get(Settings::LAST_PLAYED));
     CHECK_EQUAL(station1->getUrls()[0], mediaPlayer->m_url);
-    CHECK_EQUAL("playing random station\nplaying Sound of Movies\n", STRING_STREAM_APPENDER->messages());
+    CHECK_EQUAL("playing random station\nplaying Sound of Movies (id:0)\n", STRING_STREAM_APPENDER->messages());
 }
 
 TEST(PlayCommandTest, getName) {
