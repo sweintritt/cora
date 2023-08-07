@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+* Switched to python
+
 ### Added
 
 * Show id of the current station playing.
