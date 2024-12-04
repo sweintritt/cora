@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from threading import Thread
-import os
 import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst, GLib

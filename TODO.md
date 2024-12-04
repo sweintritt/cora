@@ -1,6 +1,9 @@
 ToDos
 ======
 
+* Switch to python
+* Simple curses gui
+* 
 * Implement favorites
 * Update dependencies
 * Merge releases to master
@@ -11,4 +14,3 @@ ToDos
   * Search in name, description and genre for "classic guitar"
     and play a random station from that list
 * "play 12 --file foo.sqlite" does not work. "play --file foo.sqlite 12" does
-* VisualCode formatter?

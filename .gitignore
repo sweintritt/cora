@@ -3,3 +3,7 @@ __pycache__
 data/
 build/
 build-*/
+test.sqlite
+cora.session.sql
+*.iml
+.idea/

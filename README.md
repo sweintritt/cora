@@ -182,20 +182,15 @@ User `cpack --help` to see other available generators.
 ## Dependencies
 
 * [gstreamer](https://gstreamer.freedesktop.org/) for playback,
-* [sqlite](https://sqlite.org/index.html) as database,
-* [plog](https://github.com/SergiusTheBest/plog) for logging and
-* [cpputest](https://cpputest.github.io/) for tests.
-* [cur](https://github.com/curl/curl) for download of the RadioBrowser stations.
-* [json](https://github.com/nlohmann/json) processing of the RadioBrowser data.
-
-## cppcheck
-
-The build will add a make target ´cppcheck´, which will run *cppcheck* on all source files.
-The result is stored in `<build-dir>/cppcheck` as html and xml.
-This required *cppcheck* to be installed.
 
 ## Coverage
 
 After running the unit tests, code coverage can be viewed by running ´make coverage´. The
 report will be available in `<build-dir/coverage` as html and xml.
 This requires *gcovr* to be installed.
+
+## Run tests
+
+```bash
+$ make test
+```
