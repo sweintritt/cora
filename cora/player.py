@@ -9,6 +9,8 @@ class Player():
 
     def __init__(self):
         Gst.init(None)
+        self.loop = None
+        self.thread = None
         self.player = Gst.ElementFactory.make("playbin", "player")
         fakesink = Gst.ElementFactory.make("fakesink", "fakesink")
         self.player.set_property("video-sink", fakesink)
@@ -29,14 +31,15 @@ class Player():
         self.loop = GLib.MainLoop()
         try:
             self.loop.run()
-        except e:
+        except Exception as e:
             e.print_exc()
             self.loop.quit()
 
     def stop(self):
-        self.player.set_state(Gst.State.PAUSED)
-        self.loop.quit()
-        self.thread.join()
+        if self.loop is not None:
+            self.player.set_state(Gst.State.PAUSED)
+            self.loop.quit()
+            self.thread.join()
 
     def on_message(self, bus, message):
         t = message.type

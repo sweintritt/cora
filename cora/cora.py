@@ -1,20 +1,29 @@
 #!/bin/python
 
+import argparse
+import import_command
+import play_command
 import player
 import stations
+import sys
+
+parser = argparse.ArgumentParser(
+                    prog='cora',
+                    description='Play internet radio streams on your console')
+subparsers = parser.add_subparsers(required=True)
 
 player = player.Player()
-player.set_url('http://94.23.51.96:8001') # Cinemix
-player.play()
-playing = True
-
 db = stations.Stations()
 db.open(file="test.sqlite")
-db.close()
 
-while playing:
-    print("Press any key to stop playing\n")
-    key = input()
-    playing = False
+import_command = import_command.ImportCommand(db, None, player, subparsers)
+play_command = play_command.PlayCommand(db, None, player, subparsers)
 
-player.stop()
+try:
+    args = parser.parse_args(sys.argv[1:])
+    args.func(args)
+    player.stop()
+    db.close()
+except Exception as e:
+    e.print_exc()
+    sys.exit(0)

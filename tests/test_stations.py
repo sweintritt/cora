@@ -1,5 +1,7 @@
 import unittest
+
 import cora.stations as stations
+
 
 class TestStringMethods(unittest.TestCase):
 
@@ -7,6 +9,13 @@ class TestStringMethods(unittest.TestCase):
         self.maxDiff = None
         self.stations = stations.Stations()
         self.stations.open(':memory:')
+
+    def test_transaction(self):
+        self.stations.begin_transaction()
+        station = stations.Station("Cinemix", "Soundtracks", "USA", "English", "Best of Soundtracks", "http://cinemix.us/cine.asx")
+        self.stations.save(station)
+        self.stations.commit()
+
 
     def test_save(self):
         station = stations.Station("Cinemix", "Soundtracks", "USA", "English", "Best of Soundtracks", "http://cinemix.us/cine.asx")

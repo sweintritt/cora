@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class Db:
 
     def __init__(self):
@@ -8,22 +9,27 @@ class Db:
 
     def open(self, file):
         self.connection = sqlite3.connect(file)
+        self.connection.isolation_level = None
         self.cursor = self.connection.cursor()
 
     def close(self):
         self.connection.close()
-        
+
     def begin_transaction(self):
-        self.cursor.execute("BEGIN TRANSACTION;")
+        print("begin transaction")
+        self.cursor.execute("begin transaction;")
 
     def commit(self):
-        self.cursor.execute("COMMIT;")
+        print("commmit")
+        self.cursor.execute("commit;")
 
     def rollback(self):
-        self.cursor.execute("ROLLBACK;")
-        
+        print("rollback")
+        self.cursor.execute("rollback;")
+
     def execute(self, query):
         self.cursor.execute(query)
 
     def executemany(self, query, data):
         self.cursor.executemany(query, data)
+

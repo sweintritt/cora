@@ -1,10 +1,11 @@
-import db
 import json
+
+import db
 
 __CREATE_TABLE_STATIONS_SQL__ = "CREATE TABLE IF NOT EXISTS stations (name TEXT NOT NULL, addedBy TEXT NOT NULL, genre TEXT NOT NULL, country TEXT NOT NULL, language TEXT NOT NULL, description TEXT, urls TEXT NOT NULL)"
 __FIND_STATION_BY_ID_SQL__    = "SELECT rowid, * FROM stations WHERE rowid = ?;"
 __FIND_STATION_SQL__          = "SELECT rowid, * FROM stations WHERE name LIKE ? AND genre LIKE ? AND country LIKE ? ;"
-__DELETE_BY_ADDED_BY_SQL__    = "DELETE FROM stations WHERE addedBy = ?;"
+__DELETE_ALL_SQL__            = "DELETE FROM stations;"
 __INSERT_STATION_SQL__        = "INSERT INTO stations (addedBy, name, genre, country, language, description, urls) VALUES (?, ?, ?, ?, ?, ?, ?);"
 __GET_ALL_IDS_SQL__           = "SELECT rowid FROM stations;"
 __SELECT_RANDOM_STATION_SQL__ = "SELECT rowid, * FROM stations ORDER BY random() limit 1;"
@@ -41,6 +42,7 @@ class Stations(db.Db):
     def open(self, file):
         super().open(file)
         self.execute(__CREATE_TABLE_STATIONS_SQL__)
+        self.connection.commit()
     
     def find(self, name, genre, country):
         # TODO implement
@@ -55,8 +57,8 @@ class Stations(db.Db):
         self.cursor.execute(__INSERT_STATION_SQL__, ("radio-browser", station.name, station.genre, station.country, station.language, station.description, serialize_urls(station.urls)))
         self.connection.commit()
 
-    def delete_all(self, added_by):
-        self.cursor.execute(__DELETE_BY_ADDED_BY_SQL__)
+    def delete_all(self):
+        self.cursor.execute(__DELETE_ALL_SQL__)
         self.connection.commit()
 
     def get_random(self):
