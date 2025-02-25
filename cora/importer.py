@@ -27,6 +27,7 @@ def import_stations(db):
     try:
         #db.begin_transaction()
         # TODO create csv content and import it
+        list = []
         for station in data:
             #print(station)
             name = station["name"]
@@ -37,9 +38,13 @@ def import_stations(db):
             # TODO only add the second if it differs
             urls = [station["url"], station["url_resolved"]]
             #print("adding " + name)
-            db.save(stations.Station(name, genre, country, language, description, urls))
+            #db.save(stations.Station(name, genre, country, language, description, urls))
+            #print(';'.join((name, genre, country, language, description, json.dumps(urls))))
+            list.append([name, 'radio-browser', genre, country, language, description, json.dumps(urls)])
             count += 1
         #db.commit()
+        #db.executemany('insert into stations (name, genre, country, language, descriptions, urls), values(?, ?, ?, ?, ?, ?);', ';'.join((name, genre, country, language, description, json.dumps(urls))))
+        db.executemany('insert into stations (name, addedBy, genre, country, language, description, urls) values(?, ?, ?, ?, ?, ?, ?);', list)
         print("imported " + str(count) + " stations in " + str(time.time() - start) + " s")
     except Exception as e:
         print("error: " + str(e))
