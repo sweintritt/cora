@@ -25,5 +25,5 @@ try:
     player.stop()
     db.close()
 except Exception as e:
-    e.print_exc()
+    print(e)
     sys.exit(0)
