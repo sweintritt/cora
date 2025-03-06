@@ -10,12 +10,13 @@ class PlayCommand(command.Command):
 
     def execute(self, args):
         print("execute play")
-        print(args)
-        # player.set_url('http://94.23.51.96:8001') # Cinemix
-        # player.play()
-        # playing = True
-        #while playing:
-        #    print("Press any key to stop playing\n")
-        #    key = input()
-        #    playing = False
-        #player.stop()
+        print(args.id)
+        station = self.stations.find_by_id(args.id)
+        self.player.set_url(station.urls[0])
+        self.player.play()
+        playing = True
+        while playing:
+            print("Press any key to stop playing\n")
+            key = input()
+            playing = False
+        self.player.stop()
