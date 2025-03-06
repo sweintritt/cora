@@ -1,11 +1,13 @@
 #!/bin/python
 
 import argparse
+import sys
+
 import import_command
+import list_command
 import play_command
 import player
 import stations
-import sys
 
 parser = argparse.ArgumentParser(
                     prog='cora',
@@ -18,6 +20,7 @@ db.open(file="test.sqlite")
 
 import_command = import_command.ImportCommand(db, None, player, subparsers)
 play_command = play_command.PlayCommand(db, None, player, subparsers)
+list_command = list_command.ListCommand(db, None, player, subparsers)
 
 try:
     args = parser.parse_args(sys.argv[1:])

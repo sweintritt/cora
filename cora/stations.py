@@ -27,15 +27,15 @@ def deserialize_urls(value):
     return json.loads(value)
 
 class Stations(db.Db):
-    
+
     def __init__(self):
         super().__init__()
-    
+
     def open(self, file):
         super().open(file)
         self.execute(__CREATE_TABLE_STATIONS_SQL__)
         self.connection.commit()
-    
+
     def find(self, name, genre, country):
         # TODO implement
         pass
@@ -43,9 +43,8 @@ class Stations(db.Db):
     def find_by_id(self, id):
         result = self.cursor.execute(__FIND_STATION_BY_ID_SQL__, (id,))
         id, name, added_by, genre, country, language, description, urls = result.fetchone()
-        print(urls)
         return Station(id, name, genre, country, language, description, urls)
-    
+
     def save(self, station):
         self.cursor.execute(__INSERT_STATION_SQL__, ("radio-browser", station.name, station.genre, station.country, station.language, station.description, serialize_urls(station.urls)))
         self.connection.commit()

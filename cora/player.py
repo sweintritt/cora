@@ -1,3 +1,4 @@
+import os
 import time
 from threading import Thread
 
@@ -7,6 +8,7 @@ import vlc
 class Player():
 
     def __init__(self):
+        os.environ["VLC_VERBOSE"] = str("-1")
         self.player = None
         self.thread = None
 
@@ -15,7 +17,6 @@ class Player():
         self.player = vlc.MediaPlayer('http://94.23.51.96:8001')
 
     def play(self):
-        print(self.player.get_media())
         self.player.play()
         self.thread = Thread(target = self.run)
         self.thread.run()

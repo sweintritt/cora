@@ -14,6 +14,4 @@ class ImportCommand(command.Command):
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
-        print("execute import")
-        print(args)
         importer.import_stations(self.stations)

@@ -1,5 +1,6 @@
 import command
 
+
 class PlayCommand(command.Command):
 
     def __init__(self, stations, settings, player, subparsers):
@@ -9,8 +10,6 @@ class PlayCommand(command.Command):
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
-        print("execute play")
-        print(args.id)
         station = self.stations.find_by_id(args.id)
         self.player.set_url(station.urls[0])
         self.player.play()
