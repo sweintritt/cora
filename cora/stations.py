@@ -20,14 +20,6 @@ class Station:
         self.description = description
         self.urls        = urls
 
-    def __init__(self, name, genre, country, language, description, urls):
-        self.name        = name
-        self.genre       = genre
-        self.country     = country
-        self.language    = language
-        self.description = description
-        self.urls        = urls
-
 def serialize_urls(urls):
     return json.dumps(urls)
 
@@ -49,8 +41,9 @@ class Stations(db.Db):
         pass
 
     def find_by_id(self, id):
-        result = self.cursor.execute(__FIND_STATION_SQL__, id)
+        result = self.cursor.execute(__FIND_STATION_BY_ID_SQL__, (id,))
         id, name, added_by, genre, country, language, description, urls = result.fetchone()
+        print(urls)
         return Station(id, name, genre, country, language, description, urls)
     
     def save(self, station):
