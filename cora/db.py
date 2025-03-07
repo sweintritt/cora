@@ -1,5 +1,7 @@
+import logging
 import sqlite3
 
+logger = logging.getLogger(__name__)
 
 class Db:
 
@@ -16,15 +18,15 @@ class Db:
         self.connection.close()
 
     def begin_transaction(self):
-        print("begin transaction")
+        logger.debug("begin transaction")
         self.cursor.execute("begin transaction;")
 
     def commit(self):
-        print("commmit")
+        logger.debug("commmit")
         self.cursor.execute("commit;")
 
     def rollback(self):
-        print("rollback")
+        logger.debug("rollback")
         self.cursor.execute("rollback;")
 
     def execute(self, query):

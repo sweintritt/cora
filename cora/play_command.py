@@ -1,5 +1,9 @@
+
+import logging
+
 import command
 
+logger = logging.getLogger(__name__)
 
 class PlayCommand(command.Command):
 
@@ -15,7 +19,7 @@ class PlayCommand(command.Command):
         self.player.play()
         playing = True
         while playing:
-            print("Press any key to stop playing\n")
+            logger.info("Press any key to stop playing\n")
             key = input()
             playing = False
         self.player.stop()

@@ -1,11 +1,13 @@
+import logging
 import os
 import time
 from threading import Thread
 
 import vlc
 
+logger = logging.getLogger(__name__)
 
-class Player():
+class Player:
 
     def __init__(self):
         os.environ["VLC_VERBOSE"] = str("-1")
@@ -27,7 +29,7 @@ class Player():
             time.sleep(10)
             meta = self.player.get_media().get_meta(12) # vlc.Meta 12: 'NowPlaying',
             if meta != previous:
-                print(meta)
+                logger.info(meta)
                 previous = meta
 
     def stop(self):

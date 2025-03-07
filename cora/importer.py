@@ -1,10 +1,13 @@
 
 import json
+import logging
 import time
 import traceback
 
 import requests
 import stations
+
+logger = logging.getLogger(__name__)
 
 # TODO Add actual version
 __USER_USER_AGENT__   = "cora/0.10.0 (com.github/sweintritt/cora)"
@@ -18,11 +21,11 @@ def get_stations():
     return json.loads(response.content)
 
 def import_stations(db):
-    print("loading stations")
+    logger.debug("loading stations")
     start = time.time()
     data = get_stations()
     # TODO clear database
-    print("recieved " + str(len(data)) + " stations in " + str(time.time() - start) + " s")
+    logger.debug("recieved " + str(len(data)) + " stations in " + str(time.time() - start) + " s")
     count = 0
     start = time.time()
     try:
@@ -41,8 +44,8 @@ def import_stations(db):
             count += 1
         #db.commit()
         db.executemany('insert into stations (name, addedBy, genre, country, language, description, urls) values(?, ?, ?, ?, ?, ?, ?);', list)
-        print("imported " + str(count) + " stations in " + str(time.time() - start) + " s")
+        logger.info("imported " + str(count) + " stations in " + str(time.time() - start) + " s")
     except Exception as e:
-        print("error: " + str(e))
+        logger.error("error: " + str(e))
         traceback.print_exc()
         #db.rollback()
