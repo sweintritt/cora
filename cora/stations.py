@@ -1,14 +1,18 @@
 import json
+import logging
 
 import db
 
 __CREATE_TABLE_STATIONS_SQL__ = "CREATE TABLE IF NOT EXISTS stations (name TEXT NOT NULL, addedBy TEXT NOT NULL, genre TEXT NOT NULL, country TEXT NOT NULL, language TEXT NOT NULL, description TEXT, urls TEXT NOT NULL)"
 __FIND_STATION_BY_ID_SQL__    = "SELECT rowid, * FROM stations WHERE rowid = ?;"
 __FIND_STATION_SQL__          = "SELECT rowid, * FROM stations WHERE name LIKE ? AND genre LIKE ? AND country LIKE ? ;"
+__FIND_STATION_BY_KEYWORDS_SQL__ = "SELECT rowid FROM (SELECT rowid, name || ' ' || description || ' ' || genre || ' ' || country || ' ' || language as searchstring FROM stations) WHERE searchstring LIKE ? ORDER BY random() LIMIT 1;"
 __DELETE_ALL_SQL__            = "DELETE FROM stations;"
 __INSERT_STATION_SQL__        = "INSERT INTO stations (addedBy, name, genre, country, language, description, urls) VALUES (?, ?, ?, ?, ?, ?, ?);"
 __GET_ALL_IDS_SQL__           = "SELECT rowid FROM stations;"
 __SELECT_RANDOM_STATION_SQL__ = "SELECT rowid, * FROM stations ORDER BY random() limit 1;"
+
+logger = logging.getLogger(__name__)
 
 class Station:
     def __init__(self, id, name, genre, country, language, description, urls):
@@ -36,14 +40,17 @@ class Stations(db.Db):
         self.execute(__CREATE_TABLE_STATIONS_SQL__)
         self.connection.commit()
 
-    def find(self, name, genre, country):
-        # TODO implement
-        pass
-
     def find_by_id(self, id):
         result = self.cursor.execute(__FIND_STATION_BY_ID_SQL__, (id,))
         id, name, added_by, genre, country, language, description, urls = result.fetchone()
-        return Station(id, name, genre, country, language, description, urls)
+        return Station(id, name, genre, country, language, description, deserialize_urls(urls))
+
+    def find_by_keywords(self, keywords):
+        result = self.cursor.execute(__FIND_STATION_BY_KEYWORDS_SQL__, (keywords,))
+        id = result.fetchone()
+        logger.debug('id:%s', str(id))
+        # TODO might not have found anything
+        return self.find_by_id(id[0])
 
     def save(self, station):
         self.cursor.execute(__INSERT_STATION_SQL__, ("radio-browser", station.name, station.genre, station.country, station.language, station.description, serialize_urls(station.urls)))

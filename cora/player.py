@@ -12,16 +12,18 @@ class Player:
     def __init__(self):
         os.environ["VLC_VERBOSE"] = str("-1")
         self.player = None
-        self.thread = None
+        self.printTitleThread = None
+        self.playThread = None
 
     def set_url(self, url):
-        #self.player = vlc.MediaPlayer(url)
-        self.player = vlc.MediaPlayer('http://94.23.51.96:8001')
+        logger.debug("url:" + url)
+        self.player = vlc.MediaPlayer(url)
 
     def play(self):
-        self.player.play()
-        self.thread = Thread(target = self.run)
-        self.thread.run()
+        self.playThread = Thread(target = self.player.play)
+        self.playThread.run()
+        self.printTitleThread = Thread(target = self.run)
+        self.printTitleThread.run()
 
     def run(self):
         previous = ""
@@ -33,5 +35,11 @@ class Player:
                 previous = meta
 
     def stop(self):
-        self.player().stop()
-        self.thread.stop()
+        if self.player is not None:
+            self.player().stop()
+
+        if self.printTitleThread is not None:
+            self.printTitleThread.stop()
+
+        if self.playThread is not None:
+            self.playThread.stop()
