@@ -24,12 +24,13 @@ def import_stations(db):
     logger.debug("loading stations")
     start = time.time()
     data = get_stations()
-    # TODO clear database
+    db.delete_all()
     logger.debug("recieved " + str(len(data)) + " stations in " + str(time.time() - start) + " s")
     count = 0
     start = time.time()
     try:
-        #db.begin_transaction()
+        # TODO Without the transaktion executemany will create a new one on every insert
+        db.begin_transaction()
         db.execute("delete from stations;")
         list = []
         for station in data:
@@ -38,14 +39,16 @@ def import_stations(db):
             country = station["country"]
             language = station["language"]
             description = station["name"]
-            # TODO only add the second if it differs
-            urls = [station["url"], station["url_resolved"]]
+            if station["url"] != station["url_resolved"]:
+                urls = [station["url"], station["url_resolved"]]
+            else:
+                urls = [station["url"]]
             list.append([name, 'radio-browser', genre, country, language, description, json.dumps(urls)])
             count += 1
-        #db.commit()
         db.executemany('insert into stations (name, addedBy, genre, country, language, description, urls) values(?, ?, ?, ?, ?, ?, ?);', list)
+        db.commit()
         logger.info("imported " + str(count) + " stations in " + str(time.time() - start) + " s")
     except Exception as e:
         logger.error("error: " + str(e))
         traceback.print_exc()
-        #db.rollback()
+        db.rollback()
