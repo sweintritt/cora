@@ -16,6 +16,7 @@ class Player:
         self.metadata_timer = None
         self.playing = False
         self.timer = None
+        self.playing_title = None
 
     def set_url(self, url):
         logger.debug("url:" + url)
@@ -29,14 +30,11 @@ class Player:
         self.metadata_timer.start()
 
     def check_metadata(self):
-        previous = ""
-        while self.playing:
-            logger.debug("checking stream metadata")
-            meta = self.player.get_media().get_meta(12) # vlc.Meta 12: 'NowPlaying',
-            if meta != previous:
-                logger.info(meta)
-                previous = meta
-        logger.debug("check_metadata exited")
+        logger.debug("checking stream metadata")
+        meta = self.player.get_media().get_meta(12) # vlc.Meta 12: 'NowPlaying',
+        if meta != self.playing_title:
+            logger.info(meta)
+            self.playing_title = meta
 
     def stop(self):
         self.playing = False
