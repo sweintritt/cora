@@ -13,8 +13,8 @@ class Player:
         os.environ["VLC_VERBOSE"] = str("-1")
         self.player = None
         self.play_thread = None
-        self.metadata_timer = None
-        self.playing = False
+        self.metadata_thread = None
+        self.playing = None
         self.timer = None
         self.playing_title = None
 
@@ -25,22 +25,23 @@ class Player:
     def play(self):
         self.play_thread = threading.Thread(target = self.player.play)
         self.play_thread.start()
-        self.playing = True
-        self.metadata_timer = threading.Timer(5, self.check_metadata)
-        self.metadata_timer.start()
+        self.playing = threading.Event()
+        self.metadata_thread = threading.Timer(5, self.check_metadata)
+        self.metadata_thread.start()
 
     def check_metadata(self):
-        logger.debug("checking stream metadata")
-        meta = self.player.get_media().get_meta(12) # vlc.Meta 12: 'NowPlaying',
-        if meta != self.playing_title:
-            logger.info(meta)
-            self.playing_title = meta
+        while not self.playing.wait(5):
+            logger.debug("checking stream metadata")
+            meta = self.player.get_media().get_meta(12) # vlc.Meta 12: 'NowPlaying',
+            if meta != self.playing_title:
+                logger.info(meta)
+                self.playing_title = meta
 
     def stop(self):
-        self.playing = False
+        self.playing.set()
 
         if self.player is not None:
             self.player.stop()
 
         if self.metadata_timer is not None:
-            self.metadata_timer.cancel()
+            self.metadata_stop()
