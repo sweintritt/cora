@@ -49,8 +49,10 @@ class Stations(db.Db):
         result = self.cursor.execute(__FIND_STATION_BY_KEYWORDS_SQL__, (keywords,))
         id = result.fetchone()
         logger.debug('id:%s', str(id))
-        # TODO might not have found anything
-        return self.find_by_id(id[0])
+        if id is not None:
+            return self.find_by_id(id[0])
+        else:
+            return None
 
     def save(self, station):
         self.cursor.execute(__INSERT_STATION_SQL__, ("radio-browser", station.name, station.genre, station.country, station.language, station.description, serialize_urls(station.urls)))
