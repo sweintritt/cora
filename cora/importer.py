@@ -29,7 +29,6 @@ def import_stations(db):
     count = 0
     start = time.time()
     try:
-        # TODO Without the transaktion executemany will create a new one on every insert
         db.begin_transaction()
         db.execute("delete from stations;")
         list = []
