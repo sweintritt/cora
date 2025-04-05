@@ -40,7 +40,7 @@ if __name__ == '__main__':
         args = parser.parse_args(sys.argv[1:])
 
         if args.debug:
-            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(levelname)s - %(message)s")
+            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(asctime)s %(levelname)-5s [%(name)-20s] %(message)s")
         else:
             logging.basicConfig(stream=sys.stdout, level=logging.INFO, format="%(message)s")
 

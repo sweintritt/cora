@@ -26,7 +26,7 @@ class Player:
         self.play_thread = threading.Thread(target = self.player.play)
         self.play_thread.start()
         self.playing = threading.Event()
-        self.metadata_thread = threading.Timer(5, self.check_metadata)
+        self.metadata_thread = threading.Thread(target = self.check_metadata)
         self.metadata_thread.start()
 
     def check_metadata(self):
@@ -38,10 +38,14 @@ class Player:
                 self.playing_title = meta
 
     def stop(self):
-        self.playing.set()
+        if self.playing is not None:
+            self.playing.set()
 
         if self.player is not None:
             self.player.stop()
 
-        if self.metadata_timer is not None:
-            self.metadata_stop()
+        if self.metadata_thread is not None:
+            self.metadata_thread.join()
+
+        if self.play_thread is not None:
+            self.play_thread.join()
