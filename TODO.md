@@ -1,7 +1,8 @@
 # ToDos
 
 - Switch to python
-- Simple curses gui
+- shutdown with ctrl c
+- Simple tui
 - Implement favorites
 - Merge releases to main
 - write documentation

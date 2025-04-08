@@ -38,7 +38,8 @@ if __name__ == '__main__':
 
     try:
         args = parser.parse_args(sys.argv[1:])
-
+        # TODO: get todos to work
+        # WARN: try it
         if args.debug:
             logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(asctime)s %(levelname)-5s [%(name)-20s] %(message)s")
         else:

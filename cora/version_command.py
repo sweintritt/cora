@@ -14,5 +14,5 @@ class VersionCommand(command.Command):
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
-        # TODO How to save the current version?
+        # TODO: How to save the current version?
         logger.info("cora - Version 0.1.0")

@@ -22,7 +22,7 @@ class PlayCommand(command.Command):
             station = self.stations.find_by_id(id)
         except ValueError:
             logger.debug(args.search[0] + " is not an id")
-            # TODO add special values like 'last'
+            # TODO: add special values like 'last'
             keywords = '%' + '%'.join(args.search) + '%'
             logger.debug("search: " + keywords)
             station = self.stations.find_by_keywords(keywords)
