@@ -14,6 +14,7 @@ __SELECT_RANDOM_STATION_SQL__ = "SELECT rowid, * FROM stations ORDER BY random()
 
 logger = logging.getLogger(__name__)
 
+
 class Station:
     def __init__(self, id, name, genre, country, language, description, urls):
         self.id          = id
@@ -66,7 +67,7 @@ class Stations(db.Db):
         result = self.cursor.execute(__SELECT_RANDOM_STATION_SQL__)
         id, name, added_by, genre, country, language, description, urls = result.fetchone()
         return Station(id, name, genre, country, language, description, urls)
- 
+
     def get_all_ids(self):
         result = self.cursor.execute(__GET_ALL_IDS_SQL__)
         return result.fetchall()

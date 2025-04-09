@@ -1,5 +1,11 @@
 # ToDos
 
+# Current
+
+- Implement settings
+
+# Backlog
+
 - Switch to python
 - shutdown with ctrl c
 - Simple tui

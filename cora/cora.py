@@ -10,6 +10,7 @@ import import_command
 import list_command
 import play_command
 import player
+import settings
 import stations
 import version_command
 
@@ -25,21 +26,23 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(required=True)
 
     player = player.Player()
-    db = stations.Stations()
+    stations = stations.Stations()
+    settings = settings.Settings()
     home_dir = os.path.expanduser('~')
     file = home_dir + '/.cora2.sqlite'
     print(file)
-    db.open(file=file)
+    # TODO: Save Version
+    # TODO: Only one filehandle would be better
+    stations.open(file=file)
+    settings.open(file=file)
 
-    import_command = import_command.ImportCommand(db, None, player, subparsers)
-    play_command = play_command.PlayCommand(db, None, player, subparsers)
-    list_command = list_command.ListCommand(db, None, player, subparsers)
-    version_command = version_command.VersionCommand(db, None, player, subparsers)
+    import_command = import_command.ImportCommand(stations, settings, player, subparsers)
+    play_command = play_command.PlayCommand(stations, settings, player, subparsers)
+    list_command = list_command.ListCommand(stations, settings, player, subparsers)
+    version_command = version_command.VersionCommand(stations, settings, player, subparsers)
 
     try:
         args = parser.parse_args(sys.argv[1:])
-        # TODO: get todos to work
-        # WARN: try it
         if args.debug:
             logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(asctime)s %(levelname)-5s [%(name)-20s] %(message)s")
         else:
