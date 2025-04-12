@@ -50,7 +50,8 @@ if __name__ == '__main__':
 
         args.func(args)
         player.stop()
-        db.close()
+        stations.close()
+        settings.close()
     except Exception as e:
         logger.error(e)
         traceback.print_exc()

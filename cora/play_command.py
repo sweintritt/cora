@@ -4,6 +4,8 @@ import logging
 
 import command
 
+__LAST_PLAYED__ = "last.played"
+
 logger = logging.getLogger(__name__)
 
 class PlayCommand(command.Command):
@@ -22,16 +24,21 @@ class PlayCommand(command.Command):
             station = self.stations.find_by_id(id)
         except ValueError:
             logger.debug(args.search[0] + " is not an id")
-            # TODO: add special values like 'last'
-            keywords = '%' + '%'.join(args.search) + '%'
-            logger.debug("search: " + keywords)
-            station = self.stations.find_by_keywords(keywords)
+            if args.search[0] == 'last':
+                id = self.settings.get(__LAST_PLAYED__)
+                logger.debug("last played: " + str(id))
+                station = self.stations.find_by_id(id)
+            else:
+                keywords = '%' + '%'.join(args.search) + '%'
+                logger.debug("search: " + keywords)
+                station = self.stations.find_by_keywords(keywords)
 
         if station is None:
             logger.info("No station found for " + str(args.search))
         else:
             logger.info("playing " + station.name.strip())
             self.player.set_url(station.urls[0])
+            self.settings.save(__LAST_PLAYED__, station.id)
             self.player.play()
             playing = True
             while playing:
