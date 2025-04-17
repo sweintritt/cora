@@ -12,17 +12,6 @@ If you run any cora command for the first time, it will create an empty database
 To import station data jus run `cora import`. This will import all stations from https://www.radio-browser.info/ and store it in the local
 databse. The database will not be updated automatically. To update the database, simply run `import` again.
 
-## RadioSurce
-
-If you have a copy of a CSV from RadioSure (because the page is no longer available), you can run the import to add the stations into your
-local database. You have to unzip the current version of the RadioSure database and import it.
-
-```bash
-$ wget http://www.radiosure.com/rsdbms/stations2.zip
-$ unzip stations2.zip
-$ cora import --input stations-2021-07-28.rsd --type radio-sure 
-```
-
 # Search for station
 
 The `list` command will return all stations from the database, you can then simply use 
@@ -41,6 +30,8 @@ id:25400", name:"100Hitz - 90s Alternative Hitz", addedBy:"radio-sure", genre:"9
 ```
 
 or use the `find` command
+
+TODO: Add example
 
 # Show detailed infos about a station
 

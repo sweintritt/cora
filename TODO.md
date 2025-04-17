@@ -2,10 +2,13 @@
 
 # Current
 
-- Implement settings
+- Implement search
 
 # Backlog
 
+- find Example in README
+- Implement version. Read version from settings
+- Implement play with specific url
 - Switch to python
 - shutdown with ctrl c
 - Simple tui

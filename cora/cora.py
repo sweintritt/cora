@@ -7,6 +7,7 @@ import sys
 import traceback
 
 import import_command
+import info_command
 import list_command
 import play_command
 import player
@@ -30,13 +31,13 @@ if __name__ == '__main__':
     settings = settings.Settings()
     home_dir = os.path.expanduser('~')
     file = home_dir + '/.cora2.sqlite'
-    print(file)
     # TODO: Save Version
     # TODO: Only one filehandle would be better
     stations.open(file=file)
     settings.open(file=file)
 
     import_command = import_command.ImportCommand(stations, settings, player, subparsers)
+    info_command = info_command.InfoCommand(stations, settings, player, subparsers)
     play_command = play_command.PlayCommand(stations, settings, player, subparsers)
     list_command = list_command.ListCommand(stations, settings, player, subparsers)
     version_command = version_command.VersionCommand(stations, settings, player, subparsers)
