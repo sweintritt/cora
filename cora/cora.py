@@ -11,6 +11,7 @@ import info_command
 import list_command
 import play_command
 import player
+import search_command
 import settings
 import stations
 import version_command
@@ -38,7 +39,7 @@ if __name__ == '__main__':
 
     import_command = import_command.ImportCommand(stations, settings, player, subparsers)
     info_command = info_command.InfoCommand(stations, settings, player, subparsers)
-    play_command = play_command.PlayCommand(stations, settings, player, subparsers)
+    search_command = search_command.SearchCommand(stations, settings, player, subparsers)
     list_command = list_command.ListCommand(stations, settings, player, subparsers)
     version_command = version_command.VersionCommand(stations, settings, player, subparsers)
 

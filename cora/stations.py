@@ -6,6 +6,7 @@ import db
 __CREATE_TABLE_STATIONS_SQL__ = "CREATE TABLE IF NOT EXISTS stations (name TEXT NOT NULL, addedBy TEXT NOT NULL, genre TEXT NOT NULL, country TEXT NOT NULL, language TEXT NOT NULL, description TEXT, urls TEXT NOT NULL)"
 __FIND_STATION_BY_ID_SQL__    = "SELECT rowid, * FROM stations WHERE rowid = ?;"
 __FIND_STATION_SQL__          = "SELECT rowid, * FROM stations WHERE name LIKE ? AND genre LIKE ? AND country LIKE ? ;"
+__FIND_STATIONS_BY_KEYWORDS_SQL__ = "SELECT rowid FROM (SELECT rowid, name || ' ' || description || ' ' || genre || ' ' || country || ' ' || language as searchstring FROM stations) WHERE searchstring LIKE ? ORDER BY rowid;"
 __FIND_STATION_BY_KEYWORDS_SQL__ = "SELECT rowid FROM (SELECT rowid, name || ' ' || description || ' ' || genre || ' ' || country || ' ' || language as searchstring FROM stations) WHERE searchstring LIKE ? ORDER BY random() LIMIT 1;"
 __DELETE_ALL_SQL__            = "DELETE FROM stations;"
 __INSERT_STATION_SQL__        = "INSERT INTO stations (addedBy, name, genre, country, language, description, urls) VALUES (?, ?, ?, ?, ?, ?, ?);"
@@ -45,6 +46,17 @@ class Stations(db.Db):
         result = self.cursor.execute(__FIND_STATION_BY_ID_SQL__, (id,))
         id, name, added_by, genre, country, language, description, urls = result.fetchone()
         return Station(id, name, genre, country, language, description, deserialize_urls(urls))
+
+    def find_all_by_keywords(self, keywords):
+        result = self.cursor.execute(__FIND_STATIONS_BY_KEYWORDS_SQL__, (keywords,))
+        ids = result.fetchall()
+        logger.debug('ids:%s', str(ids))
+        results = []
+ 
+        for id in ids:
+            results.append(self.find_by_id(id[0]))
+
+        return results
 
     def find_by_keywords(self, keywords):
         result = self.cursor.execute(__FIND_STATION_BY_KEYWORDS_SQL__, (keywords,))
