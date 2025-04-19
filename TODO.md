@@ -2,15 +2,15 @@
 
 # Current
 
-- Implement search
+- shutdown with ctrl c
 
 # Backlog
 
-- find Example in README
+- Proofread readme
+- Update changelog
 - Implement version. Read version from settings
 - Implement play with specific url
 - Switch to python
-- shutdown with ctrl c
 - Simple tui
 - Implement favorites
 - Merge releases to main

@@ -23,6 +23,7 @@ if __name__ == '__main__':
                         prog='cora',
                         description='Play internet radio streams on your console')
     parser.add_argument('-d', '--debug',
+                        help='Show debug output',
                         action=argparse.BooleanOptionalAction,
                         required=False)
     subparsers = parser.add_subparsers(required=True)
@@ -39,6 +40,7 @@ if __name__ == '__main__':
 
     import_command = import_command.ImportCommand(stations, settings, player, subparsers)
     info_command = info_command.InfoCommand(stations, settings, player, subparsers)
+    play_command = play_command.PlayCommand(stations, settings, player, subparsers)
     search_command = search_command.SearchCommand(stations, settings, player, subparsers)
     list_command = list_command.ListCommand(stations, settings, player, subparsers)
     version_command = version_command.VersionCommand(stations, settings, player, subparsers)

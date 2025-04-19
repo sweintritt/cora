@@ -1,7 +1,6 @@
-cora
-=====
+# cora
 
-cora (**Co**nsole **Ra**dio) is a very simple command line application to play internet radio streams. 
+cora (**Co**nsole **Ra**dio) is a very simple command line application to play internet radio streams.
 
 # Import a stations database
 
@@ -14,8 +13,22 @@ databse. The database will not be updated automatically. To update the database,
 
 # Search for station
 
-The `list` command will return all stations from the database, you can then simply use 
-`grep` to filter the list
+The `search` command will search for stations based on a list of given keywords.
+
+```bash
+$ cora search 90s alternative
+id:1323", name:"a-0 Alternative Nation (90s)", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
+id:9470", name:"AceRadio.Net - 90s Alternative Rock", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
+id:9830", name:"Bestnet Radio - 90s Alternative", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
+id:10930", name:"iHeart Smells Like the 90s", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
+id:17085", name:"90s90s Grunge", addedBy:"radio-sure", genre:"Rock-Alternative", country:"Germany", language:"German"
+id:20661", name:"GotRadio - Alternative Attic (90s Alternative)", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
+id:22420", name:"Big R Radio - 90s Alternative Rock", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
+id:25400", name:"100Hitz - 90s Alternative Hitz", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
+```
+
+An alternative is to use the `list` command. `list` will return all stations from the
+database, you can then simply use `grep` to filter the list
 
 ```bash
 $ cora list | grep -i 90s | grep -i alternative
@@ -28,10 +41,6 @@ id:20661", name:"GotRadio - Alternative Attic (90s Alternative)", addedBy:"radio
 id:22420", name:"Big R Radio - 90s Alternative Rock", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
 id:25400", name:"100Hitz - 90s Alternative Hitz", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
 ```
-
-or use the `find` command
-
-TODO: Add example
 
 # Show detailed infos about a station
 
@@ -48,7 +57,7 @@ $ cora info 22420
      added by: radio-sure
        url[0]: http://bigrradio.cdnstream1.com/5187_128
        url[1]: http://107.155.111.170:8030
-       url[2]: http://bigrradio.cdnstream1.com/5187_48  
+       url[2]: http://bigrradio.cdnstream1.com/5187_48
 ```
 
 # Start playing
@@ -82,7 +91,7 @@ $ cora info 22420
      added by: radio-sure
        url[0]: http://bigrradio.cdnstream1.com/5187_128
        url[1]: http://107.155.111.170:8030
-       url[2]: http://bigrradio.cdnstream1.com/5187_48  
+       url[2]: http://bigrradio.cdnstream1.com/5187_48
 
 $ cora play 22420:1
 ```
@@ -97,6 +106,7 @@ If you just want to play a random station just call
 $ cora play random
 
 ```
+
 ## Play last station
 
 If you want to listen to the station you played the last time call
@@ -134,14 +144,14 @@ DESCRIPTION
   -h, --help
               Show help page
 
-  -f, --file <VALUE> 
+  -f, --file <VALUE>
               Database file. Default is /home/sweintritt/.cora.sqlite
 
-  -i, --input <VALUE> 
+  -i, --input <VALUE>
               Input to import stations from. Depends on the type an could be
               a file or URL.
 
-  -t, --type <VALUE> 
+  -t, --type <VALUE>
               Type of imported data. Supported types are: 'radio-sure', which
               requires a file as input and 'radio-browser',
               which requires a URL. 'radio-browser' is the default
@@ -172,13 +182,13 @@ User `cpack --help` to see other available generators.
 
 ## Dependencies
 
-* [gstreamer](https://gstreamer.freedesktop.org/) for playback,
+- [gstreamer](https://gstreamer.freedesktop.org/) for playback,
 
 ## Coverage
 
 After running the unit tests, code coverage can be viewed by running ´make coverage´. The
 report will be available in `<build-dir/coverage` as html and xml.
-This requires *gcovr* to be installed.
+This requires _gcovr_ to be installed.
 
 ## Run tests
 

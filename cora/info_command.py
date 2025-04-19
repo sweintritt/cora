@@ -11,7 +11,7 @@ class InfoCommand(command.Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)
-        parser = subparsers.add_parser('info')
+        parser = subparsers.add_parser('info', help='Show detail info for a station')
         parser.add_argument('id', nargs=argparse.REMAINDER)
         parser.set_defaults(func=self.execute)
 
