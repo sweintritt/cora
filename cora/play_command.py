@@ -38,12 +38,16 @@ class PlayCommand(command.Command):
             logger.info("No station found for " + str(args.keywords))
         else:
             logger.info("playing " + station.name.strip())
-            self.player.set_url(station.urls[0])
-            self.settings.save(__LAST_PLAYED__, station.id)
-            self.player.play()
-            playing = True
-            while playing:
-                logger.info("Press any key to stop playing")
-                key = input()
-                playing = False
+            try:
+                self.player.set_url(station.urls[0])
+                self.settings.save(__LAST_PLAYED__, station.id)
+                self.player.play()
+                playing = True
+                while playing:
+                    logger.info("Press any key to stop playing")
+                    key = input()
+                    playing = False
+            except KeyboardInterrupt:
+                # Handle interrupt nicely
+                pass
             self.player.stop()

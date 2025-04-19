@@ -74,7 +74,7 @@ Band of Brothers (Michael Kamen) - The Mission Begins
 August Rush (Mark Mancina) - August's Rhapsody
 ```
 
-While playing cora will list the played songs. To stop, just press enter.
+While playing cora will list the played songs. To stop, just press *enter* or *ctrl-c*
 
 ## Select a specific url
 
