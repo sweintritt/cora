@@ -11,6 +11,7 @@ class ListCommand(command.Command):
         super().__init__(stations, settings, player)
         parser = subparsers.add_parser('list', help='List all available stations')
         parser.set_defaults(func=self.execute)
+        logger.
 
     def execute(self, args):
         ids = self.stations.get_all_ids()

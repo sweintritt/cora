@@ -6,19 +6,20 @@ import os
 import sys
 import traceback
 
-import import_command
-import info_command
-import list_command
-import play_command
-import player
-import search_command
-import settings
-import stations
-import version_command
+from cora.import_command import import_command
+from cora.info_command import info_command
+from cora.list_command import list_command
+from cora.play_command import play_command
+from cora.player import player
+from cora.search_command import search_command
+from cora.settings import settings
+from cora.stations import stations
+from cora.version_command import version_command
 
 logger = logging.getLogger(__name__)
 
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser(
                         prog='cora',
                         description='Play internet radio streams on your console')

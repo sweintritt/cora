@@ -1,0 +1,102 @@
+[project]
+dynamic = ["version"]
+name = "cora"
+description = "cora is a very simple command line application to play internet radio streams."
+readme = "README.md"
+license = {text = "MIT"}
+#license = "MIT"
+#license-files = [ "LICENSE.txt" ]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  #"Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Multimedia",
+  "Topic :: Multimedia :: Sound/Audio",
+  "Topic :: Multimedia :: Sound/Audio :: Players",
+]
+authors = [
+  { name = "Stephan Weintritt", email = "45856463+sweintritt@users.noreply.github.com" },
+]
+dependencies = [
+  "argparse",
+  "json",
+  "logging",
+  "requests",
+  "sqlite3",
+  "sys",
+  "threading",
+  "time",
+  "traceback",
+  "os",
+  "vlc",
+]
+requires-python = ">=3.13"
+
+[project.scripts]
+cora = "cora.cora:main"
+
+[project.urls]
+Homepage = "https://github.com/sweintritt"
+Documentation = "https://github.com/sweintritt/REAMDE.md"
+Source = "https://github.com/sweintritt"
+Changelog = "https://github.com/sweintritt/CHANGELOG.md"
+
+[build-system]
+requires = ["setuptools>=69.2.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = false
+
+[tool.setuptools.dynamic]
+version = {attr = "cora.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["contrib", "docs", "tests*", "tasks"]
+
+######################################################################################
+# pytest
+#
+
+[tool.pytest.ini_options]
+addopts = "--ignore tests/tests_cache -r aR --color=yes"
+xfail_strict = true
+
+######################################################################################
+# coverage
+#
+
+[tool.coverage.run]
+branch = true
+# Centralized absolute file prefix for coverage files.
+data_file = "${COVERAGE_OUTPUT_DIR}/.coverage"
+# By default, each covered process will try to truncate and then write to
+# `data_file`, but with `parallel`, they will write to separate files suffixed
+# with hostname, pid, and a timestamp.
+parallel = true
+# If not set, then at the termination of each worker (when using pytest-xdist),
+# the following is traced: "Coverage.py warning: Module cora was previously
+# imported, but not measured (module-not-measured)"
+disable_warnings = "module-not-measured"
+
+[tool.coverage.paths]
+# We intentionally use "source0" here because pytest-cov unconditionally sets
+# "source" after loading the config.
+source0 = [
+    # The primary source code path which other paths will be combined into.
+    "src/cora/",
+    # Unit test source directory e.g.
+    # `.tox/coverage-py3/lib/pythonX.Y/site-packages/cora/...`
+    "*/site-packages/cora/",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    # This excludes typing-specific code, which will be validated by mypy anyway.
+    "if TYPE_CHECKING",
+]

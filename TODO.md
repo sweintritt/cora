@@ -2,10 +2,12 @@
 
 # Current
 
-- Implement version. Read version from settings
+- setuptools toml is recommended
+- "work" mail adress?
 
 # Backlog
 
+- Implement version. Read version from settings
 - Proofread readme
 - Update changelog
 - Implement play with specific url
