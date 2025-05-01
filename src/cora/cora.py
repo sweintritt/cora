@@ -33,6 +33,7 @@ def main():
     _stations = Stations()
     _settings = Settings()
     home_dir = os.path.expanduser('~')
+    # TODO: Default Value in init script
     file = home_dir + '/.cora2.sqlite'
     # TODO: Save Version
     # TODO: Only one filehandle would be better
