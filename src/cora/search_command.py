@@ -2,12 +2,12 @@
 import argparse
 import logging
 
-import command
+from cora.command import Command
 
 logger = logging.getLogger(__name__)
 
 
-class SearchCommand(command.Command):
+class SearchCommand(Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)

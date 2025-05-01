@@ -2,14 +2,14 @@
 import argparse
 import logging
 
-import command
+from cora.command import Command
 
 __LAST_PLAYED__ = "last.played"
 
 logger = logging.getLogger(__name__)
 
 
-class PlayCommand(command.Command):
+class PlayCommand(Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)

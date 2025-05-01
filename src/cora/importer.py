@@ -5,7 +5,6 @@ import time
 import traceback
 
 import requests
-import stations
 
 logger = logging.getLogger(__name__)
 

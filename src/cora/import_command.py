@@ -1,8 +1,8 @@
-import command
-import importer
+from cora.command import Command
+from cora.importer import import_stations
 
 
-class ImportCommand(command.Command):
+class ImportCommand(Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)
@@ -14,4 +14,4 @@ class ImportCommand(command.Command):
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
-        importer.import_stations(self.stations)
+        import_stations(self.stations)

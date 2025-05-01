@@ -1,7 +1,7 @@
 import json
 import logging
 
-import db
+from cora.db import Db
 
 __CREATE_TABLE_STATIONS_SQL__ = "CREATE TABLE IF NOT EXISTS stations (name TEXT NOT NULL, addedBy TEXT NOT NULL, genre TEXT NOT NULL, country TEXT NOT NULL, language TEXT NOT NULL, description TEXT, urls TEXT NOT NULL)"
 __FIND_STATION_BY_ID_SQL__    = "SELECT rowid, * FROM stations WHERE rowid = ?;"
@@ -26,13 +26,16 @@ class Station:
         self.description = description
         self.urls        = urls
 
+
 def serialize_urls(urls):
     return json.dumps(urls)
+
 
 def deserialize_urls(value):
     return json.loads(value)
 
-class Stations(db.Db):
+
+class Stations(Db):
 
     def __init__(self):
         super().__init__()
@@ -52,7 +55,7 @@ class Stations(db.Db):
         ids = result.fetchall()
         logger.debug('ids:%s', str(ids))
         results = []
- 
+
         for id in ids:
             results.append(self.find_by_id(id[0]))
 

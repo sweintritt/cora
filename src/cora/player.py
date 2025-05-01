@@ -6,6 +6,7 @@ import vlc
 
 logger = logging.getLogger(__name__)
 
+
 class Player:
 
     def __init__(self):

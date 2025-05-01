@@ -1,17 +1,16 @@
 import logging
 
-import command
+from cora.command import Command
 
 logger = logging.getLogger(__name__)
 
 
-class ListCommand(command.Command):
+class ListCommand(Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)
         parser = subparsers.add_parser('list', help='List all available stations')
         parser.set_defaults(func=self.execute)
-        logger.
 
     def execute(self, args):
         ids = self.stations.get_all_ids()

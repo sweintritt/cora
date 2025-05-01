@@ -1,6 +1,6 @@
 import logging
 
-import db
+from cora.db import Db
 
 __CREATE_TABLE_SQL__ = """CREATE TABLE IF NOT EXISTS settings
     (key TEXT NOT NULL PRIMARY KEY, value TEXT NOT NULL);"""
@@ -11,7 +11,7 @@ __SAVE_SETTING_SQL__ = """INSERT OR REPLACE INTO settings (key, value)
 logger = logging.getLogger(__name__)
 
 
-class Settings(db.Db):
+class Settings(Db):
     """
     Store and retrieve settings
     """

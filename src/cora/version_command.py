@@ -1,13 +1,12 @@
 
-import argparse
 import logging
 
-import command
+from cora.command import Command
 
 logger = logging.getLogger(__name__)
 
 
-class VersionCommand(command.Command):
+class VersionCommand(Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)
