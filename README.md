@@ -74,7 +74,7 @@ Band of Brothers (Michael Kamen) - The Mission Begins
 August Rush (Mark Mancina) - August's Rhapsody
 ```
 
-While playing cora will list the played songs. To stop, just press *enter* or *ctrl-c*
+While playing cora will list the played songs. To stop, just press _enter_ or _ctrl-c_
 
 ## Select a specific url
 
@@ -163,16 +163,18 @@ DESCRIPTION
 The project can be build with
 
 ```bash
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
+# Build RPM-Package
+$ python -m build -C format=rpm
+# Clean
+$ python setup.py clean
 ```
 
 ## Install
 
 To install cora, run `cpack` in the build folder to create a installable package for your
 system and install it. For example an RPM package
+
+**TODO: write**
 
 ```bash
 $ cpack -G RPM
