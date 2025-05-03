@@ -62,3 +62,7 @@ def main():
         logger.error(e)
         traceback.print_exc()
         sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
