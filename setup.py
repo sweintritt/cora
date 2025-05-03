@@ -8,9 +8,15 @@ from setuptools import setup
 class CleanCommand(Clean):
     def run(self):
         Clean.run(self)
-        folders_to_remove = ['./build', './dist', './*.egg-info']
+        folders_to_remove = [
+            './build',
+            './dist',
+            './src/cora.egg-info'
+        ]
+
         for folder in folders_to_remove:
             shutil.rmtree(folder, ignore_errors=True)
+
         for root, dirs, files in os.walk('.'):
             for dir_ in dirs:
                 if dir_ == '__pycache__':
