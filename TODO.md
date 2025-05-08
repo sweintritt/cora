@@ -2,7 +2,6 @@
 
 # Current
 
-- setuptools toml is recommended
 - "work" mail adress?
 
 # Backlog
@@ -11,7 +10,6 @@
 - Proofread readme
 - Update changelog
 - Implement play with specific url
-- Switch to python
 - Simple tui
 - Implement favorites
 - Merge releases to main

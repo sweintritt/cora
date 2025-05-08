@@ -164,7 +164,10 @@ The project can be build with
 
 ```bash
 # Build RPM-Package
-$ python -m build -C format=rpm
+$ python setup.py bdist_rpm
+# TODO: This should also work
+# $ python -m build -C format=rpm
+
 # Clean
 $ python setup.py clean
 ```

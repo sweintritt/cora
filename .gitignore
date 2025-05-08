@@ -7,3 +7,5 @@ test.sqlite
 cora.session.sql
 *.iml
 .idea/
+dist/
+*/cora.egg-info/
