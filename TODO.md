@@ -6,6 +6,7 @@
 
 # Backlog
 
+- Update Makefile
 - Implement version. Read version from settings
 - Proofread readme
 - Update changelog
