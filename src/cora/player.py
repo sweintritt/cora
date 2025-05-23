@@ -24,16 +24,16 @@ class Player:
         self.player = vlc.MediaPlayer(url)
 
     def play(self):
-        self.play_thread = threading.Thread(target = self.player.play)
+        self.play_thread = threading.Thread(target=self.player.play)
         self.play_thread.start()
         self.playing = threading.Event()
-        self.metadata_thread = threading.Thread(target = self.check_metadata)
+        self.metadata_thread = threading.Thread(target=self.check_metadata)
         self.metadata_thread.start()
 
     def check_metadata(self):
         while not self.playing.wait(5):
             logger.debug("checking stream metadata")
-            meta = self.player.get_media().get_meta(12) # vlc.Meta 12: 'NowPlaying',
+            meta = self.player.get_media().get_meta(12)  # vlc.Meta 12: 'NowPlaying',
             if meta != self.playing_title:
                 logger.info(meta)
                 self.playing_title = meta

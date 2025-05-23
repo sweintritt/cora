@@ -1,6 +1,7 @@
 # cora
 
-cora (**Co**nsole **Ra**dio) is a very simple command line application to play internet radio streams.
+cora (**Co**nsole **Ra**dio) is a very simple command line application to play
+internet radio streams.
 
 # Import a stations database
 
@@ -8,8 +9,9 @@ If you run any cora command for the first time, it will create an empty database
 
 ## RadioBrowser
 
-To import station data jus run `cora import`. This will import all stations from https://www.radio-browser.info/ and store it in the local
-databse. The database will not be updated automatically. To update the database, simply run `import` again.
+To import station data jus run `cora import`. This will import all stations from
+https://www.radio-browser.info/ and store it in the local databse. The database will
+not be updated automatically. To update the database, simply run `import` again.
 
 # Search for station
 
