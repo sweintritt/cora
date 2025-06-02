@@ -20,36 +20,44 @@ class PlayCommand(Command):
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
-        logger.debug("keywords: " + str(args.keywords))
+        logger.debug("keywords: %s", str(args.keywords))
+        with_url = False
 
         try:
-            id = int(args.keywords[0])
-            station = self.stations.find_by_id(id)
+            station_id = int(args.keywords[0])
+            with_url = len(args.keywords) > 1
+            logger.debug("with url: %d", len(args.keywords))
+            station = self.stations.find_by_id(station_id)
         except ValueError:
-            logger.debug(args.keywords[0] + " is not an id")
+            logger.debug("%s is not an id", args.keywords[0])
             if args.keywords[0] == 'last':
-                id = self.settings.get(__LAST_PLAYED__)
-                logger.debug("last played: " + str(id))
-                station = self.stations.find_by_id(id)
+                station_id = self.settings.get(__LAST_PLAYED__)
+                logger.debug("last played: %d", station_id)
+                station = self.stations.find_by_id(station_id)
             if args.keywords[0] == 'random':
                 station = self.stations.get_random()
             else:
                 keywords = '%' + '%'.join(args.keywords) + '%'
-                logger.debug("keywords: " + keywords)
+                logger.debug("keywords: %s", keywords)
                 station = self.stations.find_by_keywords(keywords)
 
         if station is None:
-            logger.info("No station found for " + str(args.keywords))
+            logger.info("No station found for %s", args.keywords)
         else:
-            logger.info("playing " + station.name.strip())
+            logger.info("playing %s", station.name.strip())
             try:
-                self.player.set_url(station.urls[0])
+                logger.debug("with url: %s", str(with_url))
+                url_index = int(args.keywords[1])
+                if with_url and url_index < len(args.keywords):
+                    self.player.set_url(station.urls[url_index])
+                else:
+                    self.player.set_url(station.urls[0])
                 self.settings.save(__LAST_PLAYED__, station.id)
                 self.player.play()
                 playing = True
                 while playing:
                     logger.info("Press any key to stop playing")
-                    key = input()
+                    input()
                     playing = False
             except KeyboardInterrupt:
                 # Handle interrupt nicely
