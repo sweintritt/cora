@@ -19,14 +19,15 @@ The `search` command will search for stations based on a list of given keywords.
 
 ```bash
 $ cora search 90s alternative
-id:1323", name:"a-0 Alternative Nation (90s)", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:9470", name:"AceRadio.Net - 90s Alternative Rock", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:9830", name:"Bestnet Radio - 90s Alternative", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
-id:10930", name:"iHeart Smells Like the 90s", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:17085", name:"90s90s Grunge", addedBy:"radio-sure", genre:"Rock-Alternative", country:"Germany", language:"German"
-id:20661", name:"GotRadio - Alternative Attic (90s Alternative)", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
-id:22420", name:"Big R Radio - 90s Alternative Rock", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:25400", name:"100Hitz - 90s Alternative Hitz", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
+id:976, name:1.FM 90s Alternative Radio, genre:90s,alternative,alternative rock,rock, country:Switzerland
+id:1145, name:100Hitz - 90s Alternative Hitz, genre:90s alternative, country:The United States Of America
+id:1618, name:113.FM Alt-X, genre:90s,alternative / indie,alternative rock, country:The United States Of America
+id:1690, name:181.FM - 90's Alternative, genre:90s,alternative,waynesboro, country:The United States Of America
+id:2734, name:90s Pinoy Alternative, genre:, country:The Philippines
+id:2735, name:90s Pinoy Alternative, genre:alternative,opm, country:The Philippines
+id:2765, name:90s90s Rock (HLS), genre:90s,alternative rock,hard rock,rock, country:Germany
+id:3030, name:95.5 Buzz HD2, genre:2000s,90s,alternative,rock, country:The United States Of America
+id:4521, name:Allzic Radio 90s, genre:90s,alternative,classic hits,pop,pop rock, country:France
 ```
 
 An alternative is to use the `list` command. `list` will return all stations from the
@@ -34,14 +35,15 @@ database, you can then simply use `grep` to filter the list
 
 ```bash
 $ cora list | grep -i 90s | grep -i alternative
-id:1323", name:"a-0 Alternative Nation (90s)", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:9470", name:"AceRadio.Net - 90s Alternative Rock", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:9830", name:"Bestnet Radio - 90s Alternative", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
-id:10930", name:"iHeart Smells Like the 90s", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:17085", name:"90s90s Grunge", addedBy:"radio-sure", genre:"Rock-Alternative", country:"Germany", language:"German"
-id:20661", name:"GotRadio - Alternative Attic (90s Alternative)", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
-id:22420", name:"Big R Radio - 90s Alternative Rock", addedBy:"radio-sure", genre:"Rock-Alternative", country:"USA", language:"English"
-id:25400", name:"100Hitz - 90s Alternative Hitz", addedBy:"radio-sure", genre:"90s", country:"USA", language:"English"
+id:976, name:1.FM 90s Alternative Radio, genre:90s,alternative,alternative rock,rock, country:Switzerland
+id:1145, name:100Hitz - 90s Alternative Hitz, genre:90s alternative, country:The United States Of America
+id:1618, name:113.FM Alt-X, genre:90s,alternative / indie,alternative rock, country:The United States Of America
+id:1690, name:181.FM - 90's Alternative, genre:90s,alternative,waynesboro, country:The United States Of America
+id:2734, name:90s Pinoy Alternative, genre:, country:The Philippines
+id:2735, name:90s Pinoy Alternative, genre:alternative,opm, country:The Philippines
+id:2765, name:90s90s Rock (HLS), genre:90s,alternative rock,hard rock,rock, country:Germany
+id:3030, name:95.5 Buzz HD2, genre:2000s,90s,alternative,rock, country:The United States Of America
+id:4521, name:Allzic Radio 90s, genre:90s,alternative,classic hits,pop,pop rock, country:France
 ```
 
 # Show detailed infos about a station
@@ -52,14 +54,11 @@ id of the station.
 ```bash
 $ cora info 22420
       station: Big R Radio - 90s Alternative Rock
-        genre: Rock-Alternative
-      country: USA
-     language: English
-  description: -
-     added by: radio-sure
+        genre: 90s,alternative rock
+      country: The United States Of America
+     language: english
+  description: Big R Radio - 90s Alternative Rock
        url[0]: http://bigrradio.cdnstream1.com/5187_128
-       url[1]: http://107.155.111.170:8030
-       url[2]: http://bigrradio.cdnstream1.com/5187_48
 ```
 
 # Start playing
@@ -95,7 +94,7 @@ $ cora info 22420
        url[1]: http://107.155.111.170:8030
        url[2]: http://bigrradio.cdnstream1.com/5187_48
 
-$ cora play 22420:1
+$ cora play 22420 1
 ```
 
 If the given position doest not exist the first url (position 0) is used.
@@ -106,7 +105,6 @@ If you just want to play a random station just call
 
 ```bash
 $ cora play random
-
 ```
 
 ## Play last station
@@ -160,42 +158,18 @@ DESCRIPTION
               and provides a default url.
 ```
 
-# Build
-
-The project can be build with
-
-```bash
-# Build RPM-Package
-$ python setup.py bdist_rpm
-# TODO: This should also work
-# $ python -m build -C format=rpm
-
-# Clean
-$ python setup.py clean
-```
-
 ## Install
 
-To install cora, run `cpack` in the build folder to create a installable package for your
-system and install it. For example an RPM package
-
-**TODO: write**
+To install cora, you can create (currently only) an rpm packge and install it.
 
 ```bash
-$ cpack -G RPM
+$ make rpm
 ```
 
-User `cpack --help` to see other available generators.
-
-## Dependencies
+# Dependencies
 
 - [gstreamer](https://gstreamer.freedesktop.org/) for playback,
-
-## Coverage
-
-After running the unit tests, code coverage can be viewed by running ´make coverage´. The
-report will be available in `<build-dir/coverage` as html and xml.
-This requires _gcovr_ to be installed.
+TODO: VLC
 
 ## Run tests
 

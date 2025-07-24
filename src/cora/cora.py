@@ -21,8 +21,9 @@ logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(
-                        prog='cora',
-                        description='Play internet radio streams on your console')
+        prog='cora',
+        description='Play internet radio streams on your console',
+        formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-d', '--debug',
                         help='Show debug output',
                         action=argparse.BooleanOptionalAction,
@@ -50,9 +51,11 @@ def main():
     try:
         args = parser.parse_args(sys.argv[1:])
         if args.debug:
-            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(asctime)s %(levelname)-5s [%(name)-20s] %(message)s")
+            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG,
+                                format="%(asctime)s %(levelname)-5s [%(name)-20s] %(message)s")
         else:
-            logging.basicConfig(stream=sys.stdout, level=logging.INFO, format="%(message)s")
+            logging.basicConfig(stream=sys.stdout,
+                                level=logging.INFO, format="%(message)s")
 
         args.func(args)
         _player.stop()
