@@ -6,6 +6,8 @@ import os
 import sys
 import traceback
 
+import cora
+
 from cora.import_command import ImportCommand
 from cora.info_command import InfoCommand
 from cora.list_command import ListCommand
@@ -22,7 +24,7 @@ logger = logging.getLogger(__name__)
 def main():
     parser = argparse.ArgumentParser(
         prog='cora',
-        description='Play internet radio streams on your console',
+        description='Play internet radio streams on your console v' + cora.__version__,
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-d', '--debug',
                         help='Show debug output',

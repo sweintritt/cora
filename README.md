@@ -117,45 +117,40 @@ $ cora play last
 
 ## Help
 
-To see all available commands just use the `help` command
+To see all available commands just use the `help` option without a command
 
 ```bash
-$ cora help
-cora - listen to internet radio stations
-   help     Show help page
-   import   Import radio stations from different sources
-   info     Show information about a station, given by id
-   list     List all available stations
-   play     Play a station, given by id
-   version  Show the version
+$ cora --help
+usage: cora [-h] [-d | --debug | --no-debug] {import,info,play,search,list,version} ...
+
+Play internet radio streams on your console
+
+positional arguments:
+  {import,info,play,search,list,version}
+    import              Import stations from radio-browser.info
+    info                Show detail info for a station
+    play                Play a station given by ID or list of keywords
+    search              Search for stations
+    list                List all available stations
+    version             Show the version
+
+options:
+  -h, --help            show this help message and exit
+  -d, --debug, --no-debug
+                        Show debug output
 ```
 
-and the `--help` option so see all about a specific command
+and the `--help` option with a command to see all about a specific command
 
 ```bash
-$ cora import --help
-NAME
-  import - Import radio stations from different sources
+$ cora play --help
+usage: cora play [-h] ...
 
-SYNOPSIS
-  import [OPTIONS]
+positional arguments:
+  keywords    An ID or a list of keywords
 
-DESCRIPTION
-  -h, --help
-              Show help page
-
-  -f, --file <VALUE>
-              Database file. Default is /home/sweintritt/.cora.sqlite
-
-  -i, --input <VALUE>
-              Input to import stations from. Depends on the type an could be
-              a file or URL.
-
-  -t, --type <VALUE>
-              Type of imported data. Supported types are: 'radio-sure', which
-              requires a file as input and 'radio-browser',
-              which requires a URL. 'radio-browser' is the default
-              and provides a default url.
+options:
+  -h, --help  show this help message and exit
 ```
 
 ## Install
@@ -168,8 +163,7 @@ $ make rpm
 
 # Dependencies
 
-- [gstreamer](https://gstreamer.freedesktop.org/) for playback,
-TODO: VLC
+- [vlc](https://code.videolan.org/videolan/vlc) for playback
 
 ## Run tests
 

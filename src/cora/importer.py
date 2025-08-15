@@ -6,10 +6,11 @@ import traceback
 
 import requests
 
+import cora
+
 logger = logging.getLogger(__name__)
 
-# TODO: Add actual version
-__USER_USER_AGENT__   = "cora/0.10.0 (com.github/sweintritt/cora)"
+__USER_USER_AGENT__   = "cora/" + cora.__version__  + " (com.github/sweintritt/cora)"
 __RADIO_BROWSER_URL__ = "https://de1.api.radio-browser.info/json/stations"
 
 def get_stations():
