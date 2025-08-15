@@ -18,23 +18,23 @@ class PlayCommand(Command):
         parser.add_argument('keywords',
                             nargs=argparse.REMAINDER,
                             # TODO:Newlines are not printed
-                            help='''
-                                An ID or a list of keywords.\n\n
+                            help="""
+An ID or a list of keywords.
 
-                                Special keywords are
+Special keywords are
 
-                                - random - plays a random station
-                                - last   - plays the last played station
+- random - plays a random station
+- last   - plays the last played station
 
-                                If a station has multiple URLs, you can specify the URL index
-                                by appending the index to the keyword, e.g. 'play 123 1' will play
-                                the second URL of station 123. If no index is given, the first URL
-                                will be used.
-                                This only works if an ID is given and the station has multiple URLs.
+If a station has multiple URLs, you can specify the URL index
+by appending the index to the keyword, e.g. 'play 123 1' will play
+the second URL of station 123. If no index is given, the first URL
+will be used.
+This only works if an ID is given and the station has multiple URLs.
 
-                                Otherwise the list of keywords is used to search for stations. And
-                                if multiple stations match, the first one will be played.
-                                ''')
+Otherwise the list of keywords is used to search for stations. And
+if multiple stations match, the first one will be played.
+""")
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
