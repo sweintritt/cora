@@ -5,6 +5,7 @@
 ### Changed
 
 * Switched to python
+* Easier search for stations by providing keywords to the play command
 
 ### Added
 
