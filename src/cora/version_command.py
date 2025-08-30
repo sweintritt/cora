@@ -1,6 +1,7 @@
 
 import logging
 
+import cora
 from cora.command import Command
 
 logger = logging.getLogger(__name__)
@@ -14,5 +15,4 @@ class VersionCommand(Command):
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
-        # TODO: How to save the current version?
-        logger.info("cora - Version 0.1.0")
+        logger.info("cora - Version %s", cora.__version__)
