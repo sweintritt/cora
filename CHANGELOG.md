@@ -4,7 +4,8 @@
 
 ### Fixed
 
-- version command now shows current version
+- Version command now shows current version
+- Using only one database connection
 
 ## [v0.10.0] - 2025-08-29
 
