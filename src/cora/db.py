@@ -18,6 +18,7 @@ class Db:
     def user(self, connection):
         self.connection = connection
         self.connection.isolation_level = None
+        self.cursor = self.connection.cursor()
 
     def close(self):
         self.connection.close()
