@@ -8,15 +8,15 @@ import traceback
 
 import cora
 
-from cora.import_command import ImportCommand
-from cora.info_command import InfoCommand
-from cora.list_command import ListCommand
-from cora.play_command import PlayCommand
-from cora.player import Player
-from cora.search_command import SearchCommand
-from cora.settings import Settings
-from cora.stations import Stations
-from cora.version_command import VersionCommand
+from .import_command import ImportCommand
+from .info_command import InfoCommand
+from .play_command import PlayCommand
+from .version_command import VersionCommand
+from .search_command import SearchCommand
+from .list_command import ListCommand
+from .player import Player
+from .settings import Settings
+from .stations import Stations
 
 logger = logging.getLogger(__name__)
 
@@ -32,23 +32,17 @@ def main():
                         required=False)
     subparsers = parser.add_subparsers(required=True)
 
-    _player = Player()
-    _stations = Stations()
-    _settings = Settings()
+    player = Player()
+    stations = Stations()
+    settings = Settings()
     home_dir = os.path.expanduser('~')
-    # TODO: Default Value in init script
-    file = home_dir + '/.cora2.sqlite'
-    # TODO: Save Version
-    # TODO: Only one filehandle would be better
-    _stations.open(file=file)
-    _settings.open(file=file)
-
-    ImportCommand(_stations, _settings, _player, subparsers)
-    InfoCommand(_stations, _settings, _player, subparsers)
-    PlayCommand(_stations, _settings, _player, subparsers)
-    SearchCommand(_stations, _settings, _player, subparsers)
-    ListCommand(_stations, _settings, _player, subparsers)
-    VersionCommand(_stations, _settings, _player, subparsers)
+    file = home_dir + "/" + cora.__filename__
+    ImportCommand(stations, settings, player, subparsers)
+    InfoCommand(stations, settings, player, subparsers)
+    PlayCommand(stations, settings, player, subparsers)
+    SearchCommand(stations, settings, player, subparsers)
+    ListCommand(stations, settings, player, subparsers)
+    VersionCommand(stations, settings, player, subparsers)
 
     try:
         args = parser.parse_args(sys.argv[1:])
@@ -59,13 +53,15 @@ def main():
             logging.basicConfig(stream=sys.stdout,
                                 level=logging.INFO, format="%(message)s")
 
+        logger.debug("opening %s", file)
+        stations.open(file=file)
+        settings.user(connection=stations.connection)
         args.func(args)
-        _player.stop()
-        _stations.close()
-        _settings.close()
+        player.stop()
+        stations.close()
+        settings.close()
     except Exception as e:
         logger.error(e)
-        traceback.print_exc()
         sys.exit(0)
 
 

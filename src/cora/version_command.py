@@ -2,12 +2,11 @@
 import logging
 
 import cora
-from cora.command import Command
 
 logger = logging.getLogger(__name__)
 
 
-class VersionCommand(Command):
+class VersionCommand(cora.command.Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)

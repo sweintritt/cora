@@ -7,13 +7,17 @@ logger = logging.getLogger(__name__)
 class Db:
 
     def __init__(self):
-        self.cursor = None
         self.connection = None
+        self.cursor = None
 
     def open(self, file):
         self.connection = sqlite3.connect(file)
         self.connection.isolation_level = None
         self.cursor = self.connection.cursor()
+
+    def user(self, connection):
+        self.connection = connection
+        self.connection.isolation_level = None
 
     def close(self):
         self.connection.close()
@@ -34,4 +38,5 @@ class Db:
         self.cursor.execute(query)
 
     def executemany(self, query, data):
+        self.cursor.executemany(query, data)
         self.cursor.executemany(query, data)
