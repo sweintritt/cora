@@ -24,7 +24,9 @@ class Settings(Db):
     def get(self, key):
         result = self.cursor.execute(__GET_SETTING_SQL__, (key,))
         value = result.fetchone()
+        logger.debug("get %s: %s", key, value)
         if value is not None:
+            logger.debug("returning %s", value[0])
             return value[0]
         else:
             return None

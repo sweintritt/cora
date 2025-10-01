@@ -39,37 +39,30 @@ if multiple stations match, the first one will be played.
 
     def execute(self, args):
         logger.debug("keywords: %s", str(args.keywords))
-        with_url = False
+        url_index = 0
 
-        try:
+        if args.keywords[0] == 'last':
+            station_id = self.settings.get(__LAST_PLAYED__)
+            station = self.stations.find_by_id(station_id)
+        elif args.keywords[0] == 'random':
+            station = self.stations.get_random()
+        elif args.keywords[0].isdigit():
             station_id = int(args.keywords[0])
-            with_url = len(args.keywords) > 1
+            if len(args.keywords) > 1:
+                url_index = int(args.keywords[1])
             logger.debug("with url: %d", len(args.keywords))
             station = self.stations.find_by_id(station_id)
-        except ValueError:
-            logger.debug("%s is not an id", args.keywords[0])
-            if args.keywords[0] == 'last':
-                station_id = self.settings.get(__LAST_PLAYED__)
-                logger.debug("last played: %d", station_id)
-                station = self.stations.find_by_id(station_id)
-            if args.keywords[0] == 'random':
-                station = self.stations.get_random()
-            else:
-                keywords = '%' + '%'.join(args.keywords) + '%'
-                logger.debug("keywords: %s", keywords)
-                station = self.stations.find_by_keywords(keywords)
+        else:
+            keywords = '%' + '%'.join(args.keywords) + '%'
+            logger.debug("keywords: %s", keywords)
+            station = self.stations.find_by_keywords(keywords)
 
         if station is None:
             logger.info("No station found for %s", args.keywords)
         else:
             logger.info("playing %s", station.name.strip())
             try:
-                logger.debug("with url: %s", str(with_url))
-                url_index = int(args.keywords[1])
-                if with_url and url_index < len(args.keywords):
-                    self.player.set_url(station.urls[url_index])
-                else:
-                    self.player.set_url(station.urls[0])
+                self.player.set_url(station.urls[url_index])
                 self.settings.save(__LAST_PLAYED__, station.id)
                 self.player.play()
                 playing = True

@@ -62,6 +62,7 @@ def main():
         settings.close()
     except Exception as e:
         logger.error(e)
+        traceback.print_exc()
         sys.exit(0)
 
 
