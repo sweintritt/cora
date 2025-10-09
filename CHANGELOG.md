@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [v0.11.0] - 2025-10-09
+
 ### Fixed
 
 - Version command now shows current version
