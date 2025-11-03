@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Handling not existing IDs nicely
+
 ## [v0.11.0] - 2025-10-09
 
 ### Fixed

@@ -1,4 +1,3 @@
-
 import argparse
 import logging
 
@@ -11,8 +10,8 @@ class InfoCommand(Command):
 
     def __init__(self, stations, settings, player, subparsers):
         super().__init__(stations, settings, player)
-        parser = subparsers.add_parser('info', help='Show detail info for a station')
-        parser.add_argument('id', nargs=argparse.REMAINDER)
+        parser = subparsers.add_parser("info", help="Show detail info for a station")
+        parser.add_argument("id", nargs=argparse.REMAINDER)
         parser.set_defaults(func=self.execute)
 
     def execute(self, args):
@@ -26,7 +25,7 @@ class InfoCommand(Command):
             return
 
         if station is None:
-            logger.info("No station found for %s", str(args.search))
+            logger.info("No station found for %s", str(id))
         else:
             logger.info("")
             logger.info("      station: %s", station.name.strip())

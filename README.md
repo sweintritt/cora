@@ -22,7 +22,7 @@ $ cora search 90s alternative
 id:976, name:1.FM 90s Alternative Radio, genre:90s,alternative,alternative rock,rock, country:Switzerland
 id:1145, name:100Hitz - 90s Alternative Hitz, genre:90s alternative, country:The United States Of America
 id:1618, name:113.FM Alt-X, genre:90s,alternative / indie,alternative rock, country:The United States Of America
-id:1690, name:181.FM - 90's Alternative, genre:90s,alternative,waynesboro, country:The United States Of America
+id:1690, name:181.FM - 90s Alternative, genre:90s,alternative,waynesboro, country:The United States Of America
 id:2734, name:90s Pinoy Alternative, genre:, country:The Philippines
 id:2735, name:90s Pinoy Alternative, genre:alternative,opm, country:The Philippines
 id:2765, name:90s90s Rock (HLS), genre:90s,alternative rock,hard rock,rock, country:Germany
@@ -38,7 +38,7 @@ $ cora list | grep -i 90s | grep -i alternative
 id:976, name:1.FM 90s Alternative Radio, genre:90s,alternative,alternative rock,rock, country:Switzerland
 id:1145, name:100Hitz - 90s Alternative Hitz, genre:90s alternative, country:The United States Of America
 id:1618, name:113.FM Alt-X, genre:90s,alternative / indie,alternative rock, country:The United States Of America
-id:1690, name:181.FM - 90's Alternative, genre:90s,alternative,waynesboro, country:The United States Of America
+id:1690, name:181.FM - 90s Alternative, genre:90s,alternative,waynesboro, country:The United States Of America
 id:2734, name:90s Pinoy Alternative, genre:, country:The Philippines
 id:2735, name:90s Pinoy Alternative, genre:alternative,opm, country:The Philippines
 id:2765, name:90s90s Rock (HLS), genre:90s,alternative rock,hard rock,rock, country:Germany
@@ -72,7 +72,7 @@ Press enter to stop playing
 Soldaat van Oranje (Rogier Van Otterloo) - Soldaat van Oranje
 Edward Scissorhands (Danny Elfman) - Death!
 Band of Brothers (Michael Kamen) - The Mission Begins
-August Rush (Mark Mancina) - August's Rhapsody
+August Rush (Mark Mancina) - Augusts Rhapsody
 ```
 
 While playing cora will list the played songs. To stop, just press _enter_ or _ctrl-c_
