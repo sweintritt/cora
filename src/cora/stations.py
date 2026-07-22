@@ -46,7 +46,7 @@ class Stations(Db):
     def open(self, file):
         super().open(file)
         self.execute(__CREATE_TABLE_STATIONS_SQL__)
-        self.connection.commit()
+        self.commit()
 
     def find_by_id(self, id):
         result = self.cursor.execute(__FIND_STATION_BY_ID_SQL__, (id,))
@@ -78,32 +78,16 @@ class Stations(Db):
         else:
             return None
 
-    def save(self, station):
-        self.cursor.execute(
-            __INSERT_STATION_SQL__,
-            (
-                "radio-browser",
-                station.name,
-                station.genre,
-                station.country,
-                station.language,
-                station.description,
-                serialize_urls(station.urls),
-            ),
-        )
-        self.connection.commit()
-
     def delete_all(self):
         self.cursor.execute(__DELETE_ALL_SQL__)
-        self.connection.commit()
 
     def get_random(self):
-        result = self.cursor.execute(__SELECT_RANDOM_STATION_SQL__)
+        result = self.execute(__SELECT_RANDOM_STATION_SQL__)
         id, name, added_by, genre, country, language, description, urls = (
             result.fetchone()
         )
         return Station(id, name, genre, country, language, description, urls)
 
     def get_all_ids(self):
-        result = self.cursor.execute(__GET_ALL_IDS_SQL__)
+        result = self.execute(__GET_ALL_IDS_SQL__)
         return result.fetchall()

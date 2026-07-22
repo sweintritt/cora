@@ -61,8 +61,7 @@ def main():
         stations.close()
         settings.close()
     except Exception as e:
-        logger.error(e)
-        traceback.print_exc()
+        logger.exception(e)
         sys.exit(0)
 
 

@@ -13,19 +13,6 @@ class TestStringMethods(unittest.TestCase):
         self.stations = stations.Stations()
         self.stations.open(':memory:')
 
-    # FIXME: Error: trancsaction not active
-    def test_transaction(self):
-        self.stations.begin_transaction()
-        station = stations.Station(1, "Cinemix", "Soundtracks", "USA",
-                                   "English", "Best of Soundtracks", "http://cinemix.us/cine.asx")
-        self.stations.save(station)
-        # self.stations.commit()
-
-    def test_save(self):
-        station = stations.Station(2, "Cinemix", "Soundtracks", "USA",
-                                   "English", "Best of Soundtracks", "http://cinemix.us/cine.asx")
-        self.stations.save(station)
-
     def test_serialize_urls(self):
         urls = ["http://gitarrenradio.stream.laut.fm/gitarrenradio?t302=2022-12-15_04-07-05&uuid=42e7cbbd-073f-4bad-b732-5a16e13f3538",
                 "http://stream.laut.fm/gitarrenradio",

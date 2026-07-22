@@ -4,21 +4,22 @@
 
 ### Fixed
 
-- Handling not existing IDs nicely
+- Handling not existing IDs nicely.
+- Import command now uses a given URL.
 
 ## [v0.11.0] - 2025-10-09
 
 ### Fixed
 
-- Version command now shows current version
-- Using only one database connection
+- Version command now shows current version.
+- Using only one database connection.
 
 ## [v0.10.0] - 2025-08-29
 
 ### Changed
 
-- Switched to python
-- Easier search for stations by providing keywords to the play command
+- Switched to python.
+- Easier search for stations by providing keywords to the play command.
 
 ### Added
 
