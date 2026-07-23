@@ -6,6 +6,11 @@
 
 - Handling not existing IDs nicely.
 - Import command now uses a given URL.
+- Loading all stations again.
+
+### Changed
+
+- Loading not all stations at once to show progress while importing.
 
 ## [v0.11.0] - 2025-10-09
 
