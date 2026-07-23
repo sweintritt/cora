@@ -40,15 +40,15 @@ def deserialize_urls(value):
 
 class Stations(Db):
 
-    def __init__(self):
+    def __init__(self: Stations):
         super().__init__()
 
-    def open(self, file):
+    def open(self: Stations, file):
         super().open(file)
         self.execute(__CREATE_TABLE_STATIONS_SQL__)
         self.commit()
 
-    def find_by_id(self, id):
+    def find_by_id(self: Stations, id):
         result = self.cursor.execute(__FIND_STATION_BY_ID_SQL__, (id,))
         values = result.fetchone()
         logger.debug("values: %s", str(values))
@@ -58,7 +58,7 @@ class Stations(Db):
                 id, name, genre, country, language, description, deserialize_urls(urls)
             )
 
-    def find_all_by_keywords(self, keywords):
+    def find_all_by_keywords(self: Stations, keywords):
         result = self.cursor.execute(__FIND_STATIONS_BY_KEYWORDS_SQL__, (keywords,))
         ids = result.fetchall()
         logger.debug("ids:%s", str(ids))
@@ -69,7 +69,7 @@ class Stations(Db):
 
         return results
 
-    def find_by_keywords(self, keywords):
+    def find_by_keywords(self: Stations, keywords):
         result = self.cursor.execute(__FIND_STATION_BY_KEYWORDS_SQL__, (keywords,))
         id = result.fetchone()
         logger.debug("id:%s", str(id))
@@ -78,16 +78,16 @@ class Stations(Db):
         else:
             return None
 
-    def delete_all(self):
+    def delete_all(self: Stations):
         self.cursor.execute(__DELETE_ALL_SQL__)
 
-    def get_random(self):
+    def get_random(self: Stations):
         result = self.execute(__SELECT_RANDOM_STATION_SQL__)
         id, name, added_by, genre, country, language, description, urls = (
             result.fetchone()
         )
         return Station(id, name, genre, country, language, description, urls)
 
-    def get_all_ids(self):
+    def get_all_ids(self: Stations):
         result = self.execute(__GET_ALL_IDS_SQL__)
         return result.fetchall()

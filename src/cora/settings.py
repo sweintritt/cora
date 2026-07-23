@@ -16,12 +16,12 @@ class Settings(Db):
     Store and retrieve settings
     """
 
-    def open(self, file):
+    def open(self: Settings, file):
         super().open(file)
         self.execute(__CREATE_TABLE_SQL__)
         self.connection.commit()
 
-    def get(self, key):
+    def get(self: Settings, key):
         result = self.cursor.execute(__GET_SETTING_SQL__, (key,))
         value = result.fetchone()
         logger.debug("get %s: %s", key, value)
@@ -31,5 +31,5 @@ class Settings(Db):
         else:
             return None
 
-    def save(self, key, value):
+    def save(self: Settings, key: str, value: str):
         self.cursor.execute(__SAVE_SETTING_SQL__, (key, value))

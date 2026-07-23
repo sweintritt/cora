@@ -1,7 +1,7 @@
 from typing import Sequence
 
-from cora.command import Command
 from cora.importer import import_stations
+from cora.command import Command
 from cora.player import Player
 from cora.settings import Settings
 from cora.stations import Stations

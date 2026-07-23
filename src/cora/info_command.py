@@ -2,13 +2,16 @@ import argparse
 import logging
 
 from cora.command import Command
+from cora.player import Player
+from cora.settings import Settings
+from cora.stations import Stations
 
 logger = logging.getLogger(__name__)
 
 
 class InfoCommand(Command):
 
-    def __init__(self, stations, settings, player, subparsers):
+    def __init__(self: Command, stations: Stations, settings: Settings, player: Player, subparsers):
         super().__init__(stations, settings, player)
         parser = subparsers.add_parser("info", help="Show detail info for a station")
         parser.add_argument("id", nargs=argparse.REMAINDER)
@@ -18,8 +21,7 @@ class InfoCommand(Command):
         logger.debug("search: %s", str(args.id))
 
         try:
-            id = int(args.id[0])
-            station = self.stations.find_by_id(id)
+            station = self.stations.find_by_id(int(args.id[0]))
         except ValueError:
             logger.error("You must provide an ID.")
             return
