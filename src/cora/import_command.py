@@ -16,8 +16,7 @@ class ImportCommand(Command):
         parser.add_argument('--url',
                             type=str,
                             help="URL to the radio browser API",
-                            required=False,
-                            default='https://de1.api.radio-browser.info/json/stations')
+                            required=False)
         parser.set_defaults(func=self.execute)
 
     def execute(self: Command, args: Sequence[str]):
