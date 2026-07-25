@@ -1,6 +1,8 @@
 import argparse
 import logging
 
+from typing import Sequence
+
 from cora.command import Command
 from cora.player import Player
 from cora.settings import Settings
@@ -17,7 +19,7 @@ class InfoCommand(Command):
         parser.add_argument("id", nargs=argparse.REMAINDER)
         parser.set_defaults(func=self.execute)
 
-    def execute(self, args):
+    def execute(self: Command, args: Sequence[str]):
         logger.debug("search: %s", str(args.id))
 
         try:
