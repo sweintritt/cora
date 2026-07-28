@@ -80,7 +80,7 @@ class Stations(Db):
         else:
             return None
 
-    def delete_all(self: Stations):
+    def delete_all(self: Stations) -> None:
         self.cursor.execute(__DELETE_ALL_SQL__)
 
     def get_random(self: Stations) -> Station | None:
