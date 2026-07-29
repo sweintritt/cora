@@ -15,7 +15,7 @@ from .stations import Stations
 logger = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     try:
         parser = add_commands()
         args = parser.parse_args(sys.argv[1:])

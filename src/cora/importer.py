@@ -42,7 +42,7 @@ def insert(db: Stations, data) -> int:
     db.executemany('insert into stations (name, addedBy, genre, country, language, description, urls) values(?, ?, ?, ?, ?, ?, ?);', results)
     return count
 
-def import_stations(db: Stations, url: str):
+def import_stations(db: Stations, url: str) -> None:
     logger.debug("loading stations")
     start = time.time()
     count = 0
