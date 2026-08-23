@@ -6,37 +6,37 @@ logger = logging.getLogger(__name__)
 
 class Db:
 
-    def __init__(self: Db) -> None:
+    def __init__(self) -> None:
         self.connection = None
         self.cursor = None
 
-    def open(self: Db, file: str) -> None:
+    def open(self, file: str) -> None:
         self.connection = sqlite3.connect(file)
         self.connection.isolation_level = None
         self.cursor = self.connection.cursor()
 
-    def user(self: Db, connection: sqlite3.Connection) -> None:
+    def user(self, connection: sqlite3.Connection) -> None:
         self.connection = connection
         self.connection.isolation_level = None
         self.cursor = self.connection.cursor()
 
-    def close(self: Db) -> None:
+    def close(self) -> None:
         self.connection.close()
 
-    def begin_transaction(self: Db) -> None:
+    def begin_transaction(self) -> None:
         logger.debug("begin transaction")
         self.cursor.execute("begin transaction;")
 
-    def commit(self: Db) -> None:
+    def commit(self) -> None:
         logger.debug("commmit")
         self.connection.commit()
 
-    def rollback(self: Db) -> None:
+    def rollback(self) -> None:
         logger.debug("rollback")
         self.connection.rollback()
 
-    def execute(self: Db, query: str) -> sqlite3.Cursor:
+    def execute(self, query: str) -> sqlite3.Cursor:
         return self.cursor.execute(query)
 
-    def executemany(self: Db, query: str, data) -> None:
+    def executemany(self, query: str, data) -> None:
         self.cursor.executemany(query, data)
