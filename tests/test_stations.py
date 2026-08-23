@@ -27,3 +27,15 @@ class TestStringMethods(unittest.TestCase):
                                                            "http://stream.laut.fm/gitarrenradio",
                                                            "http://gitarrefm.stream.laut.fm/gitarrefm?t302=2022-12-15_19-19-28&uuid=7568ea93-45a9-4f8e-8e14-52539e298353",
                                                            "http://stream.laut.fm/gitarrefm"])
+
+    def test_find_by_keywords_ignores_keyword_order(self):
+        self.stations.cursor.execute(
+            "INSERT INTO stations VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("Morning Jazz", "test", "jazz", "Germany", "English", "Relaxing music", "[]"),
+        )
+
+        first = self.stations.find_all_by_keywords(["jazz", "morning"])
+        second = self.stations.find_all_by_keywords(["morning", "jazz"])
+
+        self.assertEqual([station.name for station in first], ["Morning Jazz"])
+        self.assertEqual([station.name for station in second], ["Morning Jazz"])

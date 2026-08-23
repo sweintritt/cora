@@ -72,9 +72,7 @@ def cmd_version(_args: Sequence[str], _stations: Stations, _settings: Settings, 
 
 def cmd_search(args: Sequence[str], stations: Stations, _settings: Settings, _player: Player) -> None:
     logger.debug("keywords: %s", str(args.keywords))
-    keywords = '%' + '%'.join(args.keywords) + '%'
-    logger.debug("keywords: %s", keywords)
-    results = stations.find_all_by_keywords(keywords)
+    results = stations.find_all_by_keywords(args.keywords)
 
     if not results:
         logger.info("No stations found")
@@ -133,9 +131,7 @@ def cmd_play(args: Sequence[str], stations: Stations, settings: Settings, player
         logger.debug("with url: %d", len(args.keywords))
         station = stations.find_by_id(station_id)
     else:
-        keywords = '%' + '%'.join(args.keywords) + '%'
-        logger.debug("keywords: %s", keywords)
-        station = stations.find_by_keywords(keywords)
+        station = stations.find_by_keywords(args.keywords)
 
     if station is None:
         logger.info("No station found for %s", args.keywords)

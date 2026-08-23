@@ -5,11 +5,17 @@ from typing import Sequence
 
 from cora.db import Db
 
-__CREATE_TABLE_STATIONS_SQL__ = "CREATE TABLE IF NOT EXISTS stations (name TEXT NOT NULL, addedBy TEXT NOT NULL, genre TEXT NOT NULL, country TEXT NOT NULL, language TEXT NOT NULL, description TEXT, urls TEXT NOT NULL)"
+__CREATE_TABLE_STATIONS_SQL__ = """CREATE TABLE IF NOT EXISTS stations (
+                                   name        TEXT NOT NULL,
+                                   addedBy     TEXT NOT NULL,
+                                   genre       TEXT NOT NULL,
+                                   country     TEXT NOT NULL,
+                                   language    TEXT NOT NULL,
+                                   description TEXT,
+                                   urls        TEXT NOT NULL)"""
 __FIND_STATION_BY_ID_SQL__ = "SELECT rowid, * FROM stations WHERE rowid = ?;"
 __FIND_STATION_SQL__ = "SELECT rowid, * FROM stations WHERE name LIKE ? AND genre LIKE ? AND country LIKE ? ;"
-__FIND_STATIONS_BY_KEYWORDS_SQL__ = "SELECT rowid FROM (SELECT rowid, name || ' ' || description || ' ' || genre || ' ' || country || ' ' || language as searchstring FROM stations) WHERE searchstring LIKE ? ORDER BY rowid;"
-__FIND_STATION_BY_KEYWORDS_SQL__ = "SELECT rowid FROM (SELECT rowid, name || ' ' || description || ' ' || genre || ' ' || country || ' ' || language as searchstring FROM stations) WHERE searchstring LIKE ? ORDER BY random() LIMIT 1;"
+__GET_SEARCHSTRING__ = "SELECT rowid, name || ' ' || description || ' ' || genre || ' ' || country || ' ' || language as searchstring FROM stations"
 __DELETE_ALL_SQL__ = "DELETE FROM stations;"
 __INSERT_STATION_SQL__ = "INSERT INTO stations (addedBy, name, genre, country, language, description, urls) VALUES (?, ?, ?, ?, ?, ?, ?);"
 __GET_ALL_IDS_SQL__ = "SELECT rowid FROM stations;"
@@ -61,7 +67,7 @@ class Stations(Db):
             )
 
     def find_all_by_keywords(self: Stations, keywords: Sequence[str]) -> Sequence[Station]:
-        result = self.cursor.execute(__FIND_STATIONS_BY_KEYWORDS_SQL__, (keywords,))
+        result = self._find_keyword_ids(keywords, "ORDER BY rowid")
         ids = result.fetchall()
         logger.debug("ids:%s", str(ids))
         results = []
@@ -72,13 +78,21 @@ class Stations(Db):
         return results
 
     def find_by_keywords(self: Stations, keywords: Sequence[str]) -> Station | None:
-        result = self.cursor.execute(__FIND_STATION_BY_KEYWORDS_SQL__, (keywords,))
+        result = self._find_keyword_ids(keywords, "ORDER BY random() LIMIT 1")
         stationid = result.fetchone()
         logger.debug("id:%s", str(stationid))
         if stationid is not None:
             return self.find_by_id(stationid[0])
         else:
             return None
+
+    def _find_keyword_ids(self: Stations, keywords: Sequence[str], ordering: str):
+        keyword_list = list(keywords)
+        conditions = " AND ".join("searchstring LIKE ?" for _ in keyword_list)
+        conditions = conditions or "1"
+        query = "SELECT rowid FROM (" + __GET_SEARCHSTRING__ + ") WHERE " + conditions + " " + ordering + ";"
+        parameters = ["%" + keyword + "%" for keyword in keyword_list]
+        return self.cursor.execute(query, parameters)
 
     def delete_all(self: Stations) -> None:
         self.cursor.execute(__DELETE_ALL_SQL__)
