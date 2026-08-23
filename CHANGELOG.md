@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- The order of keywords is no not relevant to find stations.
+
 ## [v0.12.0] - 2026-07-29
 
 ### Fixed

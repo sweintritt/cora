@@ -7,4 +7,4 @@ clean:
 	python setup.py clean
 
 test:
-	python -m unittest discover -s tests/ -v
+	PYTHONPATH=src python -m unittest discover -s tests/ -v
