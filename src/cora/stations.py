@@ -48,15 +48,15 @@ def deserialize_urls(value):
 
 class Stations(Db):
 
-    def __init__(self: Stations) -> None:
+    def __init__(self) -> None:
         super().__init__()
 
-    def open(self: Stations, file) -> None:
+    def open(self, file) -> None:
         super().open(file)
         self.execute(__CREATE_TABLE_STATIONS_SQL__)
         self.commit()
 
-    def find_by_id(self: Stations, stationid: int) -> Station | None:
+    def find_by_id(self, stationid: int) -> Station | None:
         result = self.cursor.execute(__FIND_STATION_BY_ID_SQL__, (stationid,))
         values = result.fetchone()
         logger.debug("values: %s", str(values))
@@ -66,7 +66,7 @@ class Stations(Db):
                 stationid, name, genre, country, language, description, deserialize_urls(urls)
             )
 
-    def find_all_by_keywords(self: Stations, keywords: Sequence[str]) -> Sequence[Station]:
+    def find_all_by_keywords(self, keywords: Sequence[str]) -> Sequence[Station]:
         result = self._find_keyword_ids(keywords, "ORDER BY rowid")
         ids = result.fetchall()
         logger.debug("ids:%s", str(ids))
@@ -77,7 +77,7 @@ class Stations(Db):
 
         return results
 
-    def find_by_keywords(self: Stations, keywords: Sequence[str]) -> Station | None:
+    def find_by_keywords(self, keywords: Sequence[str]) -> Station | None:
         result = self._find_keyword_ids(keywords, "ORDER BY random() LIMIT 1")
         stationid = result.fetchone()
         logger.debug("id:%s", str(stationid))
@@ -86,7 +86,7 @@ class Stations(Db):
         else:
             return None
 
-    def _find_keyword_ids(self: Stations, keywords: Sequence[str], ordering: str):
+    def _find_keyword_ids(self, keywords: Sequence[str], ordering: str):
         keyword_list = list(keywords)
         conditions = " AND ".join("searchstring LIKE ?" for _ in keyword_list)
         conditions = conditions or "1"
@@ -94,10 +94,10 @@ class Stations(Db):
         parameters = ["%" + keyword + "%" for keyword in keyword_list]
         return self.cursor.execute(query, parameters)
 
-    def delete_all(self: Stations) -> None:
+    def delete_all(self) -> None:
         self.cursor.execute(__DELETE_ALL_SQL__)
 
-    def get_random(self: Stations) -> Station | None:
+    def get_random(self) -> Station | None:
         result = self.execute(__SELECT_RANDOM_STATION_SQL__)
         stationid, name, added_by, genre, country, language, description, urls = (
             result.fetchone()
@@ -105,6 +105,6 @@ class Stations(Db):
         # TODO What if nothing is found
         return Station(stationid, name, genre, country, language, description, urls)
 
-    def get_all_ids(self: Stations) -> Sequence[int]:
+    def get_all_ids(self) -> Sequence[int]:
         result = self.execute(__GET_ALL_IDS_SQL__)
         return result.fetchall()
