@@ -29,15 +29,14 @@ class Db:
 
     def commit(self: Db) -> None:
         logger.debug("commmit")
-        self.connection.commit();
+        self.connection.commit()
 
     def rollback(self: Db) -> None:
         logger.debug("rollback")
-        self.connection.rollback();
+        self.connection.rollback()
 
     def execute(self: Db, query: str) -> sqlite3.Cursor:
         return self.cursor.execute(query)
 
     def executemany(self: Db, query: str, data) -> None:
-        self.cursor.executemany(query, data)
         self.cursor.executemany(query, data)
