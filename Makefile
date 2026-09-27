@@ -5,6 +5,8 @@ rpm:
 
 clean:
 	python setup.py clean
+	cargo clean
 
 test:
+	cargo test
 	PYTHONPATH=src python -m unittest discover -s tests/ -v

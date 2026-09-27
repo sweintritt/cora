@@ -3,6 +3,7 @@ __pycache__
 data/
 build/
 build-*/
+target/
 test.sqlite
 cora.session.sql
 *.iml

@@ -161,6 +161,12 @@ To install cora, you can create (currently only) an rpm packge and install it.
 $ make rpm
 ```
 
+The application is also available as a Rust binary. Build it with `cargo build
+--release`; the resulting `target/release/cora` binary uses the same SQLite
+database (`~/.cora.sqlite`) and command set as the Python application. VLC's
+libVLC shared library is required for the `play` command; the CLI does not
+launch `vlc` or `cvlc`.
+
 # Dependencies
 
 - [vlc](https://code.videolan.org/videolan/vlc) for playback
@@ -170,3 +176,5 @@ $ make rpm
 ```bash
 $ make test
 ```
+
+This runs both the Rust and legacy Python test suites.
