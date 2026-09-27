@@ -153,19 +153,33 @@ options:
   -h, --help  show this help message and exit
 ```
 
-## Install
+## Build and install
 
-To install cora, you can create (currently only) an rpm packge and install it.
+Build the release binary:
 
 ```bash
-$ make rpm
+$ cargo build --release
 ```
 
-The application is also available as a Rust binary. Build it with `cargo build
---release`; the resulting `target/release/cora` binary uses the same SQLite
-database (`~/.cora.sqlite`) and command set as the Python application. VLC's
+The resulting `target/release/cora` binary stores its database in
+`~/.cora.sqlite`. VLC's
 libVLC shared library is required for the `play` command; the CLI does not
 launch `vlc` or `cvlc`.
+
+To build an RPM, install the Cargo RPM generator once and run:
+
+```bash
+$ cargo install cargo-generate-rpm
+$ cargo generate-rpm
+```
+
+The package is written to `target/generate-rpm/`.
+
+Run the binary directly from the Cargo build tree:
+
+```bash
+$ cargo run -- --help
+```
 
 # Dependencies
 
@@ -174,7 +188,11 @@ launch `vlc` or `cvlc`.
 ## Run tests
 
 ```bash
-$ make test
+$ cargo test
 ```
 
-This runs both the Rust and legacy Python test suites.
+Clean generated build artifacts with:
+
+```bash
+$ cargo clean
+```
