@@ -2,6 +2,7 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use cora::{import_stations, Player, Settings, Stations, LAST_PLAYED};
 use std::io;
+use std::path::Path;
 
 #[derive(Parser)]
 #[command(name = "cora", about = "Play internet radio streams on your console")]
@@ -33,6 +34,11 @@ enum Command {
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
+    let home = std::env::var_os("HOME").ok_or_else(|| anyhow::anyhow!("HOME is not set"))?;
+    run_with_home(cli, Path::new(&home))
+}
+
+fn run_with_home(cli: Cli, home: &Path) -> Result<()> {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or(if cli.debug {
         "debug"
     } else {
@@ -40,8 +46,11 @@ fn main() -> Result<()> {
     }))
     .format_timestamp(None)
     .init();
-    let home = std::env::var_os("HOME").ok_or_else(|| anyhow::anyhow!("HOME is not set"))?;
-    let path = std::path::PathBuf::from(home).join(".cora.sqlite");
+    run(cli, home)
+}
+
+fn run(cli: Cli, home: &Path) -> Result<()> {
+    let path = home.join(".cora.sqlite");
     let stations = Stations::open(&path)?;
     let settings = Settings::open(&path)?;
     let mut player = Player::new();
@@ -133,5 +142,205 @@ fn print_info(station: &cora::Station) {
     println!("  description: {}", station.description.trim());
     for (index, url) in station.urls.iter().enumerate() {
         println!("       url[{index}]: {url}");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn station() -> cora::Station {
+        cora::Station {
+            id: 0,
+            name: "Test FM".into(),
+            genre: "rock".into(),
+            country: "Germany".into(),
+            language: "German".into(),
+            description: "A test station".into(),
+            urls: vec!["https://example.test/stream".into()],
+        }
+    }
+
+    fn temp_home() -> std::path::PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "cora-test-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir(&path).unwrap();
+        path
+    }
+
+    fn run_command(command: Command) -> Result<()> {
+        let home = temp_home();
+        let result = run(
+            Cli {
+                debug: false,
+                command,
+            },
+            &home,
+        );
+        std::fs::remove_dir_all(home).unwrap();
+        result
+    }
+
+    fn serve_response(body: &str) -> (String, std::thread::JoinHandle<()>) {
+        use std::io::{Read, Write};
+        use std::net::TcpListener;
+
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let body = body.to_owned();
+        let handle = std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let mut request = [0; 1024];
+            stream.read(&mut request).unwrap();
+            write!(
+                stream,
+                "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                body.len(),
+                body
+            )
+            .unwrap();
+        });
+        (format!("http://{address}/stations"), handle)
+    }
+
+    #[test]
+    fn run_handles_database_commands() {
+        let home = temp_home();
+        let path = home.join(".cora.sqlite");
+        let stations = Stations::open(&path).unwrap();
+        stations.insert(&[station()]).unwrap();
+
+        run(
+            Cli {
+                debug: false,
+                command: Command::Search {
+                    keywords: vec!["Test".into()],
+                },
+            },
+            &home,
+        )
+        .unwrap();
+        run(
+            Cli {
+                debug: false,
+                command: Command::Info { id: 1 },
+            },
+            &home,
+        )
+        .unwrap();
+        run(
+            Cli {
+                debug: false,
+                command: Command::List,
+            },
+            &home,
+        )
+        .unwrap();
+        std::fs::remove_dir_all(home).unwrap();
+    }
+
+    #[test]
+    fn play_requires_keywords() {
+        let db = Stations::open(":memory:").unwrap();
+        let settings = Settings::open(":memory:").unwrap();
+        let mut player = Player::new();
+
+        assert!(play(&[], &db, &settings, &mut player).is_err());
+    }
+
+    #[test]
+    fn play_handles_missing_station_and_stream_url() {
+        let db = Stations::open(":memory:").unwrap();
+        let settings = Settings::open(":memory:").unwrap();
+        let mut player = Player::new();
+
+        play(&["missing".into()], &db, &settings, &mut player).unwrap();
+
+        let mut station = station();
+        station.urls.clear();
+        db.insert(&[station]).unwrap();
+        assert!(play(&["1".into()], &db, &settings, &mut player).is_err());
+        assert!(play(&["random".into()], &db, &settings, &mut player).is_err());
+        settings.save(LAST_PLAYED, 1).unwrap();
+        assert!(play(&["last".into()], &db, &settings, &mut player).is_err());
+    }
+
+    #[test]
+    fn station_formatters_handle_all_fields() {
+        let station = station();
+        print_station(&station);
+        print_info(&station);
+    }
+
+    #[test]
+    fn run_handles_empty_results_and_version() {
+        run_command(Command::Search {
+            keywords: vec!["missing".into()],
+        })
+        .unwrap();
+        run_command(Command::Info { id: 1 }).unwrap();
+        run_command(Command::List).unwrap();
+        run_command(Command::Version).unwrap();
+    }
+
+    #[test]
+    fn run_imports_stations_and_dispatches_play() {
+        let home = temp_home();
+        let (url, server) = serve_response(
+            r#"[{
+                "name": "Imported",
+                "tags": "",
+                "country": "",
+                "language": "",
+                "url": "https://example.test/stream",
+                "url_resolved": "https://example.test/stream"
+            }]"#,
+        );
+        run(
+            Cli {
+                debug: false,
+                command: Command::Import { url: Some(url) },
+            },
+            &home,
+        )
+        .unwrap();
+        server.join().unwrap();
+
+        assert_eq!(
+            Stations::open(home.join(".cora.sqlite"))
+                .unwrap()
+                .get_all()
+                .unwrap()[0]
+                .name,
+            "Imported"
+        );
+        assert!(run(
+            Cli {
+                debug: false,
+                command: Command::Play { keywords: vec![] },
+            },
+            &home,
+        )
+        .is_err());
+        std::fs::remove_dir_all(home).unwrap();
+    }
+
+    #[test]
+    fn run_with_home_initializes_logging() {
+        let home = temp_home();
+        run_with_home(
+            Cli {
+                debug: false,
+                command: Command::Version,
+            },
+            &home,
+        )
+        .unwrap();
+        std::fs::remove_dir_all(home).unwrap();
     }
 }

@@ -18,3 +18,15 @@ jobs:
 
       - name: Run tests
         run: cargo test
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Tarpaulin
+        run: cargo install cargo-tarpaulin --locked
+      - name: Check code coverage
+        run: cargo tarpaulin --workspace --exclude-files src/player.rs --fail-under 90 --out Stdout

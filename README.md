@@ -191,6 +191,15 @@ $ cargo run -- --help
 $ cargo test
 ```
 
+## Check code coverage
+
+Install Tarpaulin once, then run it from the repository root:
+
+```bash
+$ cargo install cargo-tarpaulin --locked
+$ cargo tarpaulin --workspace --exclude-files src/player.rs --fail-under 90 --out Stdout
+```
+
 Clean generated build artifacts with:
 
 ```bash
