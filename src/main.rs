@@ -15,18 +15,24 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    #[command(about = "Import stations from radio-browser.info")]
     Import {
         #[arg(long)]
         url: Option<String>,
     },
+    #[command(about = "Search for stations")]
     Search {
         keywords: Vec<String>,
     },
+    #[command(about = "Show detailed information for a station")]
     Info {
         id: i64,
     },
+    #[command(about = "List all available stations")]
     List,
+    #[command(about = "Show the version")]
     Version,
+    #[command(about = "Play a station by ID or keywords")]
     Play {
         keywords: Vec<String>,
     },
@@ -148,6 +154,7 @@ fn print_info(station: &cora::Station) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use clap::CommandFactory;
 
     fn station() -> cora::Station {
         cora::Station {
@@ -206,6 +213,25 @@ mod tests {
             .unwrap();
         });
         (format!("http://{address}/stations"), handle)
+    }
+
+    #[test]
+    fn command_help_lists_descriptions() {
+        let mut command = Cli::command();
+        let mut help = Vec::new();
+        command.write_long_help(&mut help).unwrap();
+        let help = String::from_utf8(help).unwrap();
+
+        for description in [
+            "Import stations from radio-browser.info",
+            "Search for stations",
+            "Show detailed information for a station",
+            "List all available stations",
+            "Show the version",
+            "Play a station by ID or keywords",
+        ] {
+            assert!(help.contains(description), "missing: {description}");
+        }
     }
 
     #[test]

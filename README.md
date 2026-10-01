@@ -130,7 +130,7 @@ $ cora play last
 
 ## Help
 
-To see all available commands just use the `help` option without a command
+To see all available commands, use the `--help` option without a command:
 
 ```bash
 $ cora --help
@@ -139,12 +139,12 @@ Play internet radio streams on your console
 Usage: cora [OPTIONS] <COMMAND>
 
 Commands:
-  import   
-  search   
-  info     
-  list     
-  version  
-  play     
+  import   Import stations from radio-browser.info
+  search   Search for stations
+  info     Show detailed information for a station
+  list     List all available stations
+  version  Show the version
+  play     Play a station by ID or keywords
   help     Print this message or the help of the given subcommand(s)
 
 Options:
@@ -152,17 +152,19 @@ Options:
   -h, --help   Print help
 ```
 
-and the `--help` option with a command to see all about a specific command
+Use `--help` with a command to see its options:
 
 ```bash
 $ cora play --help
-usage: cora play [-h] ...
+Play a station by ID or keywords
 
-positional arguments:
-  keywords    An ID or a list of keywords
+Usage: cora play [KEYWORDS]...
 
-options:
-  -h, --help  show this help message and exit
+Arguments:
+  [KEYWORDS]...
+
+Options:
+  -h, --help  Print help
 ```
 
 ## Build and install
