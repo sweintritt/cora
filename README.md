@@ -94,7 +94,7 @@ While playing cora will list the played songs. To stop, just press _enter_ or _c
 ## Select a specific url
 
 If you want to select a specific url of the station, shown by the output of the `show`
-command, add a colon and the shown position of the url in the list of the `info` command.
+command, add the shown index of the url in the list of the `info` command.
 
 ```bash
 $ cora info 22420
@@ -103,7 +103,6 @@ $ cora info 22420
       country: USA
      language: English
   description: -
-     added by: radio-sure
        url[0]: http://bigrradio.cdnstream1.com/5187_128
        url[1]: http://107.155.111.170:8030
        url[2]: http://bigrradio.cdnstream1.com/5187_48
@@ -135,23 +134,22 @@ To see all available commands just use the `help` option without a command
 
 ```bash
 $ cora --help
-usage: cora [-h] [-d | --debug | --no-debug] {import,info,play,search,list,version} ...
-
 Play internet radio streams on your console
 
-positional arguments:
-  {import,info,play,search,list,version}
-    import              Import stations from radio-browser.info
-    info                Show detail info for a station
-    play                Play a station given by ID or list of keywords
-    search              Search for stations
-    list                List all available stations
-    version             Show the version
+Usage: cora [OPTIONS] <COMMAND>
 
-options:
-  -h, --help            show this help message and exit
-  -d, --debug, --no-debug
-                        Show debug output
+Commands:
+  import   
+  search   
+  info     
+  list     
+  version  
+  play     
+  help     Print this message or the help of the given subcommand(s)
+
+Options:
+  -d, --debug  
+  -h, --help   Print help
 ```
 
 and the `--help` option with a command to see all about a specific command
@@ -169,10 +167,21 @@ options:
 
 ## Build and install
 
+### Prerequisites
+
+Install the [Rust toolchain](https://www.rust-lang.org/tools/install), which
+includes Cargo. libVLC is required at runtime for the `play` command.
+
 Build the release binary:
 
 ```bash
 $ cargo build --release
+```
+
+Install `cora` into Cargo's binary directory (usually `~/.cargo/bin`):
+
+```bash
+$ cargo install --path .
 ```
 
 The resulting `target/release/cora` binary stores its database in
