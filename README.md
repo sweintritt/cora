@@ -63,7 +63,21 @@ $ cora info 22420
 
 # Start playing
 
-To play a station run the `play` command with the id of the station
+Use the play command and a list of keywords like this
+
+```bash
+$ cora play 90s Alternative Rock
+playing Big R Radio - 90s Alternative Rock
+```
+cora will search for stations matching the keywords and select one
+from the found results. The selection is randomly. So if you dont
+like it. Just run the command again to pick another station matching
+the keywords or edit your search.
+
+## Select a specific station
+
+If using keywords will not select the station you want, you can
+select a specific station by id.
 
 ```bash
 $ cora play 25719
