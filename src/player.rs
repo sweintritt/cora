@@ -103,7 +103,7 @@ impl Player {
         unsafe {
             let free =
                 symbol::<unsafe extern "C" fn(*mut std::ffi::c_void)>(library, b"libvlc_free\0")?;
-            let get_meta = symbol::<unsafe extern "C" fn(*mut std::ffi::c_void, i32) -> *mut i8>(
+            let get_meta = symbol::<unsafe extern "C" fn(*mut std::ffi::c_void, i32) -> *mut std::ffi::c_char>(
                 library,
                 b"libvlc_media_get_meta\0",
             )?;
