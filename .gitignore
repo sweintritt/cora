@@ -3,6 +3,8 @@ __pycache__
 data/
 build/
 build-*/
+target/
+tarpaulin-report.html
 test.sqlite
 cora.session.sql
 *.iml
