@@ -3,6 +3,8 @@ use clap::{Parser, Subcommand};
 use cora::{import_stations, Player, Settings, Stations, LAST_PLAYED};
 use std::io;
 use std::path::Path;
+use std::sync::mpsc;
+use std::time::Duration;
 
 #[derive(Parser)]
 #[command(name = "cora", about = "Play internet radio streams on your console")]
@@ -21,21 +23,15 @@ enum Command {
         url: Option<String>,
     },
     #[command(about = "Search for stations")]
-    Search {
-        keywords: Vec<String>,
-    },
+    Search { keywords: Vec<String> },
     #[command(about = "Show detailed information for a station")]
-    Info {
-        id: i64,
-    },
+    Info { id: i64 },
     #[command(about = "List all available stations")]
     List,
     #[command(about = "Show the version")]
     Version,
     #[command(about = "Play a station by ID or keywords")]
-    Play {
-        keywords: Vec<String>,
-    },
+    Play { keywords: Vec<String> },
 }
 
 fn main() -> Result<()> {
@@ -128,9 +124,36 @@ fn play(
     player.play(url)?;
     settings.save(LAST_PLAYED, station.id)?;
     println!("Press enter to stop playing");
-    let mut input = String::new();
-    io::stdin().read_line(&mut input)?;
-    Ok(())
+    wait_for_stop(player)
+}
+
+fn wait_for_stop(player: &Player) -> Result<()> {
+    let (stop_sender, stop_receiver) = mpsc::channel();
+    std::thread::spawn(move || {
+        let mut input = String::new();
+        let _ = stop_sender.send(io::stdin().read_line(&mut input));
+    });
+
+    let mut playing_title = None;
+    loop {
+        match stop_receiver.recv_timeout(Duration::from_secs(5)) {
+            Ok(result) => {
+                result?;
+                return Ok(());
+            }
+            Err(mpsc::RecvTimeoutError::Timeout) => {
+                if let Some(title) = player.now_playing()? {
+                    if playing_title.as_deref() != Some(title.as_str()) {
+                        println!("{title}");
+                        playing_title = Some(title);
+                    }
+                }
+            }
+            Err(mpsc::RecvTimeoutError::Disconnected) => {
+                return Err(anyhow::anyhow!("the stop-input listener disconnected"));
+            }
+        }
+    }
 }
 
 fn print_station(station: &cora::Station) {

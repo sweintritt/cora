@@ -92,6 +92,32 @@ impl Player {
         self.instance = std::ptr::null_mut();
         Ok(())
     }
+
+    pub fn now_playing(&self) -> Result<Option<String>> {
+        let Some(library) = self.lib.as_ref() else {
+            return Ok(None);
+        };
+        if self.media.is_null() {
+            return Ok(None);
+        }
+        unsafe {
+            let free =
+                symbol::<unsafe extern "C" fn(*mut std::ffi::c_void)>(library, b"libvlc_free\0")?;
+            let get_meta = symbol::<unsafe extern "C" fn(*mut std::ffi::c_void, i32) -> *mut i8>(
+                library,
+                b"libvlc_media_get_meta\0",
+            )?;
+            let value = get_meta(self.media, 12);
+            if value.is_null() {
+                return Ok(None);
+            }
+            let title = std::ffi::CStr::from_ptr(value)
+                .to_string_lossy()
+                .into_owned();
+            free(value.cast());
+            Ok((!title.is_empty()).then_some(title))
+        }
+    }
 }
 
 impl Drop for Player {
@@ -138,5 +164,15 @@ unsafe fn release_instance(library: &libloading::Library, instance: *mut std::ff
         symbol::<unsafe extern "C" fn(*mut std::ffi::c_void)>(library, b"libvlc_release\0")
     {
         release(instance);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Player;
+
+    #[test]
+    fn stopped_player_has_no_now_playing_metadata() {
+        assert_eq!(Player::new().now_playing().unwrap(), None);
     }
 }
