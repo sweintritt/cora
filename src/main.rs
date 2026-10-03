@@ -124,19 +124,37 @@ fn play(
     player.play(url)?;
     settings.save(LAST_PLAYED, station.id)?;
     println!("Press enter to stop playing");
-    wait_for_stop(player)
+    wait_for_stop(
+        player,
+        || {
+            let mut input = String::new();
+            io::stdin().read_line(&mut input)
+        },
+        Duration::from_secs(5),
+    )
 }
 
-fn wait_for_stop(player: &Player) -> Result<()> {
+fn wait_for_stop(
+    player: &Player,
+    read_input: impl FnOnce() -> io::Result<usize> + Send + 'static,
+    poll_interval: Duration,
+) -> Result<()> {
     let (stop_sender, stop_receiver) = mpsc::channel();
     std::thread::spawn(move || {
-        let mut input = String::new();
-        let _ = stop_sender.send(io::stdin().read_line(&mut input));
+        let _ = stop_sender.send(read_input());
     });
 
+    wait_for_stop_with_receiver(player, stop_receiver, poll_interval)
+}
+
+fn wait_for_stop_with_receiver(
+    player: &Player,
+    stop_receiver: mpsc::Receiver<io::Result<usize>>,
+    poll_interval: Duration,
+) -> Result<()> {
     let mut playing_title = None;
     loop {
-        match stop_receiver.recv_timeout(Duration::from_secs(5)) {
+        match stop_receiver.recv_timeout(poll_interval) {
             Ok(result) => {
                 result?;
                 return Ok(());
@@ -303,6 +321,32 @@ mod tests {
     }
 
     #[test]
+    fn wait_for_stop_returns_input_result() {
+        wait_for_stop(&Player::new(), || Ok(0), Duration::from_secs(1)).unwrap();
+        assert!(wait_for_stop(
+            &Player::new(),
+            || Err(io::Error::other("input failed")),
+            Duration::from_secs(1)
+        )
+        .is_err());
+        wait_for_stop(
+            &Player::new(),
+            || {
+                std::thread::sleep(Duration::from_millis(10));
+                Ok(0)
+            },
+            Duration::from_millis(1),
+        )
+        .unwrap();
+
+        let (sender, receiver) = mpsc::channel();
+        drop(sender);
+        assert!(
+            wait_for_stop_with_receiver(&Player::new(), receiver, Duration::from_secs(1)).is_err()
+        );
+    }
+
+    #[test]
     fn play_handles_missing_station_and_stream_url() {
         let db = Stations::open(":memory:").unwrap();
         let settings = Settings::open(":memory:").unwrap();
@@ -310,13 +354,17 @@ mod tests {
 
         play(&["missing".into()], &db, &settings, &mut player).unwrap();
 
-        let mut station = station();
-        station.urls.clear();
-        db.insert(&[station]).unwrap();
+        let mut station_without_url = station();
+        station_without_url.urls.clear();
+        db.insert(&[station_without_url]).unwrap();
         assert!(play(&["1".into()], &db, &settings, &mut player).is_err());
         assert!(play(&["random".into()], &db, &settings, &mut player).is_err());
         settings.save(LAST_PLAYED, 1).unwrap();
         assert!(play(&["last".into()], &db, &settings, &mut player).is_err());
+
+        db.delete_all().unwrap();
+        db.insert(&[station()]).unwrap();
+        assert!(play(&["1".into()], &db, &settings, &mut player).is_err());
     }
 
     #[test]
