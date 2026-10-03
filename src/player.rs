@@ -30,7 +30,7 @@ impl Player {
                 bail!("libVLC could not create an instance");
             }
             let new_media = symbol::<
-                unsafe extern "C" fn(*mut std::ffi::c_void, *const i8) -> *mut std::ffi::c_void,
+                unsafe extern "C" fn(*mut std::ffi::c_void, *const std::ffi::c_char) -> *mut std::ffi::c_void,
             >(&library, b"libvlc_media_new_location\0")?;
             let media = new_media(instance, url.as_ptr());
             if media.is_null() {
