@@ -70,9 +70,8 @@ $ cora play 90s Alternative Rock
 playing Big R Radio - 90s Alternative Rock
 ```
 cora will search for stations matching the keywords and select one
-from the found results. The selection is randomly. So if you dont
-like it. Just run the command again to pick another station matching
-the keywords or edit your search.
+at random. If you don't like it, run the command again to pick another
+station matching the keywords, or edit your search.
 
 ## Select a specific station
 
