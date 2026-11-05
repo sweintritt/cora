@@ -99,11 +99,13 @@ class Stations(Db):
 
     def get_random(self) -> Station | None:
         result = self.execute(__SELECT_RANDOM_STATION_SQL__)
-        stationid, name, added_by, genre, country, language, description, urls = (
-            result.fetchone()
+        values = result.fetchone()
+        if values is None:
+            return None
+        stationid, name, added_by, genre, country, language, description, urls = values
+        return Station(
+            stationid, name, genre, country, language, description, deserialize_urls(urls)
         )
-        # TODO What if nothing is found
-        return Station(stationid, name, genre, country, language, description, urls)
 
     def get_all_ids(self) -> Sequence[int]:
         result = self.execute(__GET_ALL_IDS_SQL__)

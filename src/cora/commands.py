@@ -3,12 +3,15 @@ import argparse
 import logging
 import cora
 
-from typing import Sequence
+from typing import TYPE_CHECKING, Sequence
 
 from cora.importer import import_stations
-from cora.player import Player
 from cora.settings import Settings
 from cora.stations import Stations
+from cora.tui import run_tui
+
+if TYPE_CHECKING:
+    from cora.player import Player
 
 __LAST_PLAYED__ = "last.played"
 
@@ -39,6 +42,7 @@ def add_commands() -> argparse.ArgumentParser:
     info_parser.set_defaults(func=cmd_info)
 
     subparsers.add_parser('list', help='List all available stations').set_defaults(func=cmd_list)
+    subparsers.add_parser('tui', help='Browse and play stations in a terminal UI').set_defaults(func=cmd_tui)
     subparsers.add_parser('version', help='Show the version').set_defaults(func=cmd_version)
 
     play_parser = subparsers.add_parser(
@@ -66,11 +70,11 @@ def add_commands() -> argparse.ArgumentParser:
     return parser
 
 
-def cmd_version(_args: Sequence[str], _stations: Stations, _settings: Settings, _player: Player) -> None:
+def cmd_version(_args: Sequence[str], _stations: Stations, _settings: Settings, _player: "Player") -> None:
     logger.info("cora - Version %s", cora.__version__)
 
 
-def cmd_search(args: Sequence[str], stations: Stations, _settings: Settings, _player: Player) -> None:
+def cmd_search(args: Sequence[str], stations: Stations, _settings: Settings, _player: "Player") -> None:
     logger.debug("keywords: %s", str(args.keywords))
     results = stations.find_all_by_keywords(args.keywords)
 
@@ -81,7 +85,7 @@ def cmd_search(args: Sequence[str], stations: Stations, _settings: Settings, _pl
             logger.info("id:" + str(r.id) + ", name:" + r.name + ", genre:" + r.genre + ", country:" + r.country)
 
 
-def cmd_list(_args: Sequence[str], stations: Stations, _settings: Settings, _player: Player) -> None:
+def cmd_list(_args: Sequence[str], stations: Stations, _settings: Settings, _player: "Player") -> None:
     ids = stations.get_all_ids()
     for id in ids:
         station = stations.find_by_id(id[0])
@@ -89,7 +93,11 @@ def cmd_list(_args: Sequence[str], stations: Stations, _settings: Settings, _pla
                     station.name, station.genre, station.country)
 
 
-def cmd_info(args: Sequence[str], stations: Stations, _settings: Settings, _player: Player) -> None:
+def cmd_tui(_args: Sequence[str], stations: Stations, settings: Settings, player: "Player") -> None:
+    run_tui(stations, settings, player)
+
+
+def cmd_info(args: Sequence[str], stations: Stations, _settings: Settings, _player: "Player") -> None:
     logger.debug("search: %s", str(args.id))
 
     try:
@@ -111,11 +119,11 @@ def cmd_info(args: Sequence[str], stations: Stations, _settings: Settings, _play
             logger.info("       url[%d]: %s", i, url)
 
 
-def cmd_import(args: Sequence[str], stations: Stations, _settings: Settings, _player: Player) -> None:
+def cmd_import(args: Sequence[str], stations: Stations, _settings: Settings, _player: "Player") -> None:
     import_stations(stations, args.url)
 
 
-def cmd_play(args: Sequence[str], stations: Stations, settings: Settings, player: Player) -> None:
+def cmd_play(args: Sequence[str], stations: Stations, settings: Settings, player: "Player") -> None:
     logger.debug("keywords: %s", str(args.keywords))
     url_index = 0
 

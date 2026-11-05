@@ -30,6 +30,13 @@ id:3030, name:95.5 Buzz HD2, genre:2000s,90s,alternative,rock, country:The Unite
 id:4521, name:Allzic Radio 90s, genre:90s,alternative,classic hits,pop,pop rock, country:France
 ```
 
+# Terminal UI
+
+Run `cora tui` to browse stations interactively. Use the arrow keys or `j`/`k`
+to select a station, `/` to search, Enter to play, Space to pause or resume,
+and `h` to show all keyboard controls. The interface requires a terminal of at
+least 80 columns by 24 rows.
+
 An alternative is to use the `list` command. `list` will return all stations from the
 database, you can then simply use `grep` to filter the list
 
