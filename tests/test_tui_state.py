@@ -1,7 +1,10 @@
+import asyncio
 import unittest
+from unittest.mock import patch
 
 from cora.playback import PlaybackState
 from cora.stations import Station
+from cora.tui import CoraApp
 from cora.tui_state import TuiState
 
 
@@ -49,3 +52,68 @@ class TuiStateTests(unittest.TestCase):
             self.state.update_playback(PlaybackState.PLAYING, "", title)
 
         self.assertEqual(["five", "four", "three", "two"], self.state.history)
+
+
+class CoraAppTests(unittest.TestCase):
+    def test_sections_have_headers(self) -> None:
+        class EmptyStations:
+            def find_all_by_keywords(self, keywords):
+                return []
+
+        class Settings:
+            def save(self, key, value):
+                pass
+
+        class Player:
+            def get_state(self):
+                return PlaybackState.STOPPED
+
+            def get_now_playing(self):
+                return ""
+
+            def get_error(self):
+                return ""
+
+        async def verify_headers() -> None:
+            app = CoraApp(EmptyStations(), Settings(), Player())
+            async with app.run_test():
+                self.assertEqual("cora", app.query_one("#station-list").border_title)
+                self.assertEqual("stopped", app.query_one("#playing").border_title)
+                self.assertEqual("history", app.query_one("#history").border_title)
+
+        asyncio.run(verify_headers())
+
+    def test_keyboard_shortcuts_work_when_search_is_hidden(self) -> None:
+        stations = [
+            station(1, "Jazz One"),
+            station(2, "Rock Two"),
+        ]
+
+        class Stations:
+            def find_all_by_keywords(self, keywords):
+                return stations
+
+        class Settings:
+            def save(self, key, value):
+                pass
+
+        class Player:
+            def get_state(self):
+                return PlaybackState.STOPPED
+
+            def get_now_playing(self):
+                return ""
+
+            def get_error(self):
+                return ""
+
+        async def verify_shortcuts() -> None:
+            app = CoraApp(Stations(), Settings(), Player())
+            with patch("cora.tui.terminal_is_large_enough", return_value=True):
+                async with app.run_test(size=(100, 30)) as pilot:
+                    await pilot.pause()
+                    self.assertIsNone(app.focused)
+                    await pilot.press("j")
+                    self.assertEqual(1, app.state.selected)
+
+        asyncio.run(verify_shortcuts())

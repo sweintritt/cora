@@ -39,7 +39,7 @@ class CoraApp(App[None]):
     #station-list, #playing, #history, #status { border: round #ABB2BF; }
     #station-list { height: 1fr; }
     #panels { height: 7; }
-    #playing, #history { width: 1fr; padding: 0 1; }
+    #playing, #history { width: 1fr; height: 1fr; padding: 0 1; }
     #status { height: 3; color: #56B6C2; padding: 0 1; }
     .selected { color: #61AFEF; text-style: bold; }
     .muted { color: #5C6370; }
@@ -79,10 +79,16 @@ class CoraApp(App[None]):
 
     def compose(self) -> ComposeResult:
         """Compose the station list, playback panels, search input, and footer."""
-        yield Static(id="station-list")
+        station_list = Static(id="station-list")
+        station_list.border_title = "cora"
+        yield station_list
         with Horizontal(id="panels"):
-            yield Static(id="playing")
-            yield Static(id="history")
+            playing = Static(id="playing")
+            playing.border_title = PlaybackState.STOPPED.value
+            yield playing
+            history = Static(id="history")
+            history.border_title = "history"
+            yield history
         with Vertical(id="status"):
             yield Input(placeholder="Search stations", id="search")
             yield Static(id="hint")
@@ -91,6 +97,7 @@ class CoraApp(App[None]):
     def on_mount(self) -> None:
         """Start periodic refreshes and render the initial interface."""
         self.set_interval(0.25, self._refresh)
+        self.call_after_refresh(self.set_focus, None)
         self._render()
 
     def on_resize(self) -> None:
@@ -109,6 +116,7 @@ class CoraApp(App[None]):
                 raise
             return
         self.query_one("#search", Input).display = False
+        self.set_focus(None)
         self._render()
 
     def on_key(self, event) -> None:
@@ -272,7 +280,9 @@ class CoraApp(App[None]):
         station = escape(self.state.active_station.name) if self.state.active_station else ""
         current = escape(self.state.history[0]) if self.state.history else ""
         error = escape(self.state.playback_error) if state is PlaybackState.ERROR else ""
-        self.query_one("#playing", Static).update(
+        playing = self.query_one("#playing", Static)
+        playing.border_title = state.value
+        playing.update(
             f"[{self._state_class(state)}]{state.value}[/]\n{station}\n{error or current}"
         )
         history = self.state.history + [""] * (4 - len(self.state.history))
