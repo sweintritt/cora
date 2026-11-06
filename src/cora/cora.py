@@ -8,9 +8,9 @@ import cora
 
 from .commands import add_commands
 
-from .player import Player
 from .settings import Settings
 from .stations import Stations
+from .tui import print_minimum_size_message, terminal_is_large_enough
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +26,14 @@ def main() -> None:
             logging.basicConfig(stream=sys.stdout,
                                 level=logging.INFO, format="%(message)s")
 
-        player = Player()
         stations = Stations()
         settings = Settings()
+        if args.func.__name__ == "cmd_tui" and not terminal_is_large_enough():
+            print_minimum_size_message()
+            return
+
+        from .player import Player
+        player = Player()
         home_dir = os.path.expanduser('~')
         file = home_dir + "/" + cora.__filename__
 

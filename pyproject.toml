@@ -31,6 +31,7 @@ dependencies = [
   "traceback",
   "os",
   "vlc",
+  "textual>=0.58",
 ]
 requires-python = ">=3.13"
 

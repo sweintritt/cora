@@ -12,11 +12,13 @@ class Db:
 
     def open(self, file: str) -> None:
         self.connection = sqlite3.connect(file)
+        self.connection.execute("PRAGMA busy_timeout = 5000")
         self.connection.isolation_level = None
         self.cursor = self.connection.cursor()
 
     def user(self, connection: sqlite3.Connection) -> None:
         self.connection = connection
+        self.connection.execute("PRAGMA busy_timeout = 5000")
         self.connection.isolation_level = None
         self.cursor = self.connection.cursor()
 
